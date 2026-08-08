@@ -27,13 +27,13 @@ export function loadMembers(filePath) {
   const claimedBy = new Map(); // normalized key -> index into members
   members.forEach((m, i) => {
     const keys = [m.id, m.name, ...(m.aliases ?? [])].filter((k) => k != null);
-    for (const raw of keys) {
-      const key = norm(raw);
+    for (const label of keys) {
+      const key = norm(label);
       const claimant = claimedBy.get(key);
       if (claimant !== undefined && claimant !== i) {
         const other = members[claimant];
         throw new Error(
-          `Member registry has a duplicate alias "${raw}" claimed by both ` +
+          `Member registry has a duplicate alias "${label}" claimed by both ` +
             `"${other.id ?? other.name}" and "${m.id ?? m.name}"`
         );
       }
