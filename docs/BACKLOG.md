@@ -165,6 +165,33 @@ If you're using an AI assistant to work on the Toolkit, follow these (verbatim f
 
 ---
 
+## Composted 2026-08-09 — pre-Linear triage
+
+Items removed from `HEARTBEAT.md` during the pre-Linear-seeding triage pass (Task 8 of the linear-seeding plan — every remaining open HEARTBEAT item now carries a `task-YYMMDD-owner-slug` id + resolvable owner so `npm run linear:audit` passes). These items were time-expired or long-stale rather than actively wrong; preserved here rather than deleted. Full per-section rationale: `memory/2026-08-09.md`.
+
+### From "Hackathon — May (cross-layer)" (entire section)
+- **Invite Ethereum Localism folks via Telegram** (Rather) — `compost` — the May hackathon date never got set and the window has long passed.
+- **Join Open Civics Consortium chat via website; coordinate hackathon invite** (Luiz) — `compost` — same, time-expired.
+- **Confirm Geo Protocol participation and format** — `compost` — same, time-expired; Geo Protocol scoping continues elsewhere (`task-260716-luiz-geo-protocol-scoping`).
+- **Set the hackathon date and format (knowledge-swarming hack)** — `compost` — never scheduled; overtaken by the Knowledge Commoning Swarm / Pulse cadence.
+
+### From "Historic carryovers (from backfilled meetings — needs team triage)" (entire section)
+Raised at the 2026-04-26 meeting-history backfill; the file itself flagged these "status unclear." No resolution has surfaced in the ~3.5 months since — archiving rather than continuing to carry them as active.
+- **Drew Simon — share knowledge commons starter links + details in group chat** — `archive` — raised 260212; status unclear.
+- **Hub post about knowledge commons / federation collaboration** (Afo — raised 260225) — `archive` — never confirmed sent.
+- **Bright community collaboration — concrete ideas + connection to toolkit** (Luiz to discuss with Rather; raised 260212) — `archive` — status unclear.
+- **Onboarding guides refresh: Local Node Onboarding + Network Initiative Onboarding** (raised 260312) — `archive` — status unclear.
+- **Integrate Safe (smart wallet) content into the toolkit** (raised 260312) — `archive` — status unclear.
+- **Style guide derived from ReFi DAO 200+ blog posts** (raised 260212) — `archive` — partial existence at `docs/writing-system.md`; cross-reference with `content-updates/heen-ai/add-planning-docs` branch's `content-style-guide.md` per Phase 4 reconciliation if revived.
+
+### From "Knowledge Commoning Swarm" — Pulse-1 pre-work only
+Pulse 1 ran 2026-05-09/10; these three items were logistics/prep for getting *to* Pulse 1 and are now moot. The forward-looking item in that section (observing Pulse-1 outcomes to adjust the Swarm Contribution Pack v0.1 scope) stays active in `HEARTBEAT.md` as `task-260507-luiz-adjust-swarm-contribution-pack`.
+- **Luiz — join OpenCivics planning call** (2026-05-07, for Pulse 1 logistics) — `compost` — the call and Pulse 1 both already happened.
+- **Team — attend Pulse 1** (partial attendance acceptable; Matty out for Philadelphia wedding) — `compost` — event already occurred.
+- **Pre-Pulse-1: draft `00-README.md` + `05-tool-option-pattern-protocol-deployment-case.md` + `07-six-affordances-translation.md`** for the Swarm Contribution Pack v0.1 — `compost` — explicitly pre-Pulse-1 prep work; event has passed.
+
+---
+
 ## Backlog maintenance process (from master doc §16.13)
 
 1. Add raw note or future seed.
