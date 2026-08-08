@@ -52,13 +52,13 @@ members:
     aliases: [Durgadas, Regis, "Regis (Durgadas)", Das, Dodos]
     linear_email: null
 
-  # MERGED ON EVIDENCE, NOT YET TEAM-RATIFIED — raise at the next biweekly to confirm.
-  # "Hina" appears only in repo-transfer prose; it never appears in any meeting attendee list,
-  # while Heenal does (once with the surname, 260521 planning call). The repo's own note
-  # processor flagged the equivalence twice on the poor-transcription 07-16 notes, and the
-  # same task is labelled task-260716-luiz-repo-migration-hina in one line and "the Heenal
-  # migration" in another. Merging is the reversible direction; the opposite error forks the
-  # Linear member list.
+  # RESOLVED. "Hina" and "Heenal" are one person — confirmed by the operator 2026-08-09.
+  # The evidence that prompted the question: "Hina" appears only in repo-transfer prose and
+  # never in any meeting attendee list, while Heenal does (once with the surname, 260521
+  # planning call); the repo's own note processor flagged the equivalence twice on the
+  # poor-transcription 07-16 notes; and the same task is labelled
+  # task-260716-luiz-repo-migration-hina in one line and "the Heenal migration" in another.
+  # This is the second identity fork closed before seeding, after Regis Chapman = Durgadas.
   - id: heenal
     name: Heenal Rajani
     role: content
