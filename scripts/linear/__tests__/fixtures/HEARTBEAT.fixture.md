@@ -85,7 +85,7 @@ Two meetings the same day: the morning **Matty 1-on-1** (framework build done + 
 - [ ] **Master 6-Part refactor** — awaits Matty's final handoff. — `task-260715-handoff-master-refactor`
 - [ ] **Share pack** ([`draft`](docs/comms/drafts/2026-07-15-share-pack.md)) — drafted, awaiting operator send. — `task-260715-handoff-share-pack`
 
-### Synthetic edge cases (not in the real file — added for coverage; see heartbeat.test.mjs)
+### Synthetic edge cases (not in the real file — added for coverage; see heartbeat.test.mjs) *(★ asterisk-italic annotation)*
 
 - [ ] **Luiz — file the Q3 infra report** (due: 2026-09-01) — `task-990101-luiz-q3-infra-report`
 - [ ] Loop in **Rather — the Cloudflare lead** before scheduling the call.

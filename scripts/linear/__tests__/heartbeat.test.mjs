@@ -42,6 +42,17 @@ test("records the section heading, cleaned of its _(...)_ annotation", () => {
   assert.equal(item.section, "2026-08-06 engineering sync — process infrastructure landed");
 });
 
+test("cleans a *(...)* heading annotation as well as the _(...)_ form", () => {
+  // No real heading uses the asterisk convention today, so this behaviour is defensive only —
+  // and therefore the one place a mutation survived the suite until this test existed.
+  const item = parseHeartbeat(md).find((i) => i.section.startsWith("Synthetic edge cases"));
+  assert.ok(item, "expected at least one item under the synthetic section");
+  assert.ok(
+    !item.section.includes("asterisk-italic"),
+    `*(...)* annotation leaked into section: ${item.section}`
+  );
+});
+
 test("distinguishes open, done and superseded", () => {
   const items = parseHeartbeat(md);
   assert.equal(byId(items, "task-260806-luiz-rather-org-access").state, "open");
