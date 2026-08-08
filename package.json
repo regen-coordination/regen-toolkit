@@ -29,6 +29,7 @@
     "linear:extract": "node scripts/linear/extract.mjs",
     "linear:plan": "node scripts/linear/plan.mjs",
     "linear:apply": "node scripts/linear/apply.mjs",
+    "linear:verify": "node scripts/linear/verify.mjs",
     "compile:knowledge": "node scripts/compile-knowledge.mjs && node scripts/update-knowledge-index.mjs",
     "lint:knowledge": "node scripts/lint-knowledge.mjs",
     "knowledge": "npm run compile:knowledge && npm run lint:knowledge && npm run generate:kb-viz",
