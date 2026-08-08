@@ -24,6 +24,7 @@
     "validate:schemas": "node scripts/validate-identity.mjs",
     "validate:structure": "node scripts/validate-structure.mjs",
     "test:linear": "node --test \"scripts/linear/__tests__/*.test.mjs\"",
+    "linear:audit": "node scripts/linear/audit.mjs",
     "compile:knowledge": "node scripts/compile-knowledge.mjs && node scripts/update-knowledge-index.mjs",
     "lint:knowledge": "node scripts/lint-knowledge.mjs",
     "knowledge": "npm run compile:knowledge && npm run lint:knowledge && npm run generate:kb-viz",
