@@ -2,6 +2,9 @@
 // Spec §6 asked for reuse of the framework's validateObject (packages/toolkit-framework/src/index.mjs);
 // it only does required/enum/axis/array-type against its own ontology schemas — no regex, no cross-field —
 // so it cannot express the id format or "cycle requires an estimate". Standalone, returns string[] to flatMap.
+import fs from "node:fs";
+import yaml from "js-yaml";
+
 export const PROJECTS = ["repo-contribution", "knowledge-curation", "org-os-framework"];
 export const ESTIMATES = [1, 2, 4, 8];
 const ID_RE = /^task-\d{6}-[a-z0-9]+-[a-z0-9-]+$/;
@@ -39,4 +42,19 @@ export function validateTask(task) {
     errors.push(`${where}: cycle ${task.cycle} requires an estimate`);
   }
   return errors;
+}
+
+// Thin read-parse wrapper, mirroring loadMembers' idiom: throws once with a clear message
+// rather than degrading silently. validateTask itself stays pure and I/O-free — callers run
+// it over whatever loadTasks returns.
+export function loadTasks(filePath) {
+  let raw;
+  try {
+    raw = fs.readFileSync(filePath, "utf8");
+  } catch (err) {
+    if (err.code === "ENOENT") throw new Error(`Task registry not found: ${filePath}`);
+    throw err;
+  }
+  const doc = yaml.load(raw, { filename: filePath }) ?? {};
+  return doc.tasks ?? [];
 }

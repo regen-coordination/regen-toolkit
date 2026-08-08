@@ -1,0 +1,2639 @@
+schema_version: "1.0"
+tasks:
+  - id: task-260806-luiz-rather-org-access
+    title: Grant Rather GitHub org access
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-luiz-linear-seed-repo
+    title: Seed Linear from the regen-toolkit-os branch
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 8
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs:
+        - docs/reports/2026-08-06-engineering-sync-integration.md
+  - id: task-260806-luiz-four-slice-merge
+    title: Execute the four-slice merge
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+      - gate/promotion
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs:
+        - docs/reports/2026-08-06-engineering-sync-integration.md
+  - id: task-260806-luiz-knowledge-flow-visual
+    title: Build the knowledge-source to commons to orgs flow visualization
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-luiz-engine-validation-linear
+    title: Put engine and reprocessing validation on Linear
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-luiz-orgos-session
+    title: Host the dedicated org-os session
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-luiz-linear-email
+    title: Confirm the Linear account email
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-rather-cloudflare-setup
+    title: Finish Cloudflare Workers hosting handover to Rather
+    owner: rather
+    project: repo-contribution
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by:
+      - task-260806-luiz-rather-org-access
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-rather-orgos-app-collab
+    title: Collaborate with Rather on org-os to his app integration
+    owner: rather
+    project: org-os-framework
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-rather-standards-reference-impl
+    title: Build standards-to-code reference implementation with Regis
+    owner: rather
+    project: org-os-framework
+    layer: 6
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-rather-harmonica-purchase
+    title: Draft and submit the Harmonica purchase proposal
+    owner: rather
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-rather-business-modeling-bot
+    title: Share the business-modelling bot when shareable
+    owner: rather
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-afo-coordination-group
+    title: Create the dedicated coordination group
+    owner: afo
+    project: null
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-afo-linear-seed
+    title: Seed Linear from call notes and import existing GitHub issues
+    owner: afo
+    project: org-os-framework
+    layer: 10
+    estimate: 4
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-afo-linear-github-training
+    title: Run the Claude Code + Linear + GitHub training session
+    owner: afo
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-afo-review-integrity-suite
+    title: Review the integrity suite site
+    owner: afo
+    project: org-os-framework
+    layer: 6
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-regis-standards-process-doc
+    title: Write the standards-to-process document
+    owner: durgadas
+    project: org-os-framework
+    layer: 6
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-regis-github-onboarding
+    title: Complete GitHub collaboration onboarding for Regis
+    owner: durgadas
+    project: repo-contribution
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-matty-engineering-priorities-linear
+    title: Feed the four-stage engineering priority frame into Linear
+    owner: matty
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-team-join-linear
+    title: Join the Linear workspace
+    owner: team
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-team-boost-bread-fund
+    title: Apply this week's boosts to the BREAD fund
+    owner: team
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260716-luiz-repo-migration-hina
+    title: Share repo-migration details with Hina
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-staging-dev-site
+    title: Set up the staging/dev site for side-by-side content review
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs:
+        - docs/reports/2026-07-16-planning-call-integration.md
+  - id: task-260716-luiz-review-pr-merge
+    title: Drive the review to PR to merge checkpoint
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+      - gate/review
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs:
+        - docs/reports/2026-07-16-planning-call-integration.md
+  - id: task-260716-luiz-name-flagging-privacy-gate
+    title: Verify and test the name-flagging/removal privacy gate
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+      - gate/privacy
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-canvas-viz-intro-doc
+    title: Improve Obsidian canvas visualizations and write a one-page intro doc
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by:
+      - task-260806-luiz-knowledge-flow-visual
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-agent-onboarding-onepager
+    title: Write the repo-access and agent-onboarding one-pager
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-geo-protocol-scoping
+    title: Open a Geo Protocol scoping doc
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-confirm-source-systems
+    title: Confirm the ~69 source systems and integrate the ReFi DAO carbon-copy project DB
+    owner: luiz
+    project: knowledge-curation
+    layer: 3
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-ron-teretsky-bread-coop
+    title: Connect with Ron Teretsky and schedule the Bread Co-op call
+    owner: luiz
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-rather-astro-fix
+    title: Fix the broken Astro content collections
+    owner: rather
+    project: repo-contribution
+    layer: 10
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-durgadas-craft-temper
+    title: Share the CRAFT evidence/claims layer and Temper
+    owner: durgadas
+    project: knowledge-curation
+    layer: 1
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-trinity-learn-teach-content
+    title: Create learn-and-teach content for less-technical contributors
+    owner: trinity
+    project: knowledge-curation
+    layer: 2
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-team-artizen-profiles
+    title: Create Artizen profiles and hold boosts for a coordinated push
+    owner: team
+    project: null
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-monty-toolkit-funding
+    title: Present toolkit funding strategy at the next Regen Coordination sync
+    owner: monty
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-apply-metagov
+    title: Apply to join Metagov
+    owner: luiz
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-joint-shareable-version-dod
+    title: Define what a shareable initial version means
+    owner: team
+    project: knowledge-curation
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260716
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260715-handoff-master-refactor
+    title: Complete the Master 6-Part refactor
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260715
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Handoff Integration — Matty's Jul 2026 iteration
+      refs: []
+  - id: task-260715-handoff-share-pack
+    title: Send the handoff share pack
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260715
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Handoff Integration — Matty's Jul 2026 iteration
+      refs: []
+  - id: task-260719-luiz-dev-instance-build
+    title: Build the KB content routes for the dev review surface
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260719
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Dev instance build — the live review surface
+      refs:
+        - docs/plans/dev-instance-build.md
+  - id: task-260719-luiz-dev-instance-deploy
+    title: Deploy the dev instance from fork and report the URL
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: 1
+    labels:
+      - origin/meeting-260719
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Dev instance build — the live review surface
+      refs:
+        - docs/plans/dev-instance-build.md
+  - id: task-260616-luiz-framework-instance-split-p1
+    title: Advance the framework/instance split (Convergence P1)
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260616
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Convergence — IN PROGRESS
+      refs:
+        - docs/plans/CONVERGENCE-PIPELINE.md
+  - id: task-260616-luiz-resource-db-v3-lift-p2
+    title: Run the crosswalk-driven Resource DB V3 lift (Convergence P2)
+    owner: luiz
+    project: knowledge-curation
+    layer: 3
+    estimate: 8
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260616
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Convergence — IN PROGRESS
+      refs:
+        - docs/plans/CONVERGENCE-PIPELINE.md
+  - id: task-260616-luiz-multi-instance-deploy
+    title: Deploy the framework to refi-dao-os and refi-bcn-os (Convergence P9/P10)
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260616
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Convergence — IN PROGRESS
+      refs:
+        - docs/plans/CONVERGENCE-PIPELINE.md
+  - id: task-260702-luiz-send-3-messages
+    title: Send the 3 share-pack messages (Matty, group, Rather)
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Share with Matty + group — the concrete startpoint
+      refs: []
+  - id: task-260702-luiz-sync-with-rather
+    title: Sync with Rather on the schema/JSON-LD substrate
+    owner: luiz
+    project: org-os-framework
+    layer: 1
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Share with Matty + group — the concrete startpoint
+      refs: []
+  - id: task-260702-team-ratify-top5-decisions
+    title: Ratify the top-5 decisions (R1, R7, R8, R3, D1)
+    owner: team
+    project: org-os-framework
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Share with Matty + group — the concrete startpoint
+      refs: []
+  - id: task-260702-luiz-full-iteration-next-week
+    title: Run the full framework iteration for the week
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Share with Matty + group — the concrete startpoint
+      refs: []
+  - id: task-260702-luiz-schedule-the-call
+    title: Schedule the structure-ratification call
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Share with Matty + group — the concrete startpoint
+      refs: []
+  - id: task-260702-luiz-verify-site-pages
+    title: Verify the 2 site pages against the master doc
+    owner: luiz
+    project: knowledge-curation
+    layer: 2
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-luiz-publish-permissions-dev-env
+    title: Request website publish permissions and a dev environment
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-luiz-test-framework-genbrasil
+    title: Test the framework on Koi's Gen Brasil Commons artifacts
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-koi-send-genbrasil-artifacts
+    title: Send the Gen Brasil Commons artifacts for ingestion testing
+    owner: koi
+    project: knowledge-curation
+    layer: 3
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-durgadas-send-csis-links
+    title: Send the CSIS/Craft/Valcre links
+    owner: durgadas
+    project: org-os-framework
+    layer: 6
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-durgadas-ai-precision-toolkit
+    title: Release the AI Precision Toolkit and Idea Processor on Vercel
+    owner: durgadas
+    project: org-os-framework
+    layer: 9
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-matty-master-doc-iteration
+    title: Run one more master-doc iteration (ToC, Frame Language Analyzer, Options focus)
+    owner: matty
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-afo-dev-environment-permissions
+    title: Grant dev environment and publish permissions
+    owner: afo
+    project: repo-contribution
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-rather-geo-protocol-details
+    title: Share Geo Protocol integration details and build a job board
+    owner: rather
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-durgadas-infra-opinionated
+    title: Evaluate Geo Protocol and AT Protocol as connective infrastructure
+    owner: durgadas
+    project: org-os-framework
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-durgadas-frame-language-audit
+    title: Audit the master doc and framework for Frame 1 language
+    owner: durgadas
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-luiz-invite-andrea
+    title: Invite Andrea to reprocess the ReFi BCN knowledge commons
+    owner: luiz
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260702-team-grants-subgroup
+    title: Form the Grants subgroup
+    owner: team
+    project: null
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260702
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Biweekly 2026-07-02 — fresh commitments
+      refs: []
+  - id: task-260704-luiz-sp11-refi-dao-adoption
+    title: "SP11: adopt the framework into refi-dao-os from the public repo"
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 8
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260704
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Framework Build — `packages/toolkit-framework`
+      refs: []
+  - id: task-260704-luiz-batch-r1-r10-proposals
+    title: Batch the R1-R10 master-doc proposals for Matty
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260704
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Framework Build — `packages/toolkit-framework`
+      refs: []
+  - id: task-260705-luiz-refi-dao-process
+    title: Process ReFi DAO's blog knowledge through the framework
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 8
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260705
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Framework Build — `packages/toolkit-framework`
+      refs: []
+  - id: task-260705-luiz-send-share-pack
+    title: Send the framework share pack to the group and Matty
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260705
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Framework Build — `packages/toolkit-framework`
+      refs: []
+  - id: task-260705-luiz-capital-update-proposal
+    title: Draft the Capital update-proposal and framework schema fixes
+    owner: luiz
+    project: org-os-framework
+    layer: 1
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260705
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Framework Build — `packages/toolkit-framework`
+      refs: []
+  - id: task-260615-durgadas-revise-csis-posture
+    title: Revise the CSIS posture to informed-not-conformant
+    owner: durgadas
+    project: org-os-framework
+    layer: 6
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-06-15 Iteration
+      refs: []
+  - id: task-260615-luiz-track-lifecycle-decision
+    title: Track the Knowledge-Lifecycle-vs-10-layers decision
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-06-15 Iteration
+      refs: []
+  - id: task-260615-luiz-derive-toc-artifact
+    title: Derive a Theory-of-Change artifact from the master doc
+    owner: luiz
+    project: null
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-06-15 Iteration
+      refs: []
+  - id: task-260615-team-layer-by-layer-review
+    title: Run the team's layer-by-layer review of the new iteration
+    owner: team
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-06-15 Iteration
+      refs: []
+  - id: task-260521-team-revised-problem-mission-statement
+    title: Author a revised problem and mission statement
+    owner: team
+    project: null
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260521
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Theory of Change / Revised Problem Statement
+      refs: []
+  - id: task-260521-durgadas-circulate-idea-processor
+    title: Circulate the Idea Processor and theory-of-build article
+    owner: durgadas
+    project: org-os-framework
+    layer: 9
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260521
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Theory of Change / Revised Problem Statement
+      refs: []
+  - id: task-260521-team-tradeoff-triangle-exercise
+    title: Run a tradeoff-triangle prioritization exercise
+    owner: team
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260521
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Theory of Change / Revised Problem Statement
+      refs: []
+  - id: task-260604-heenal-feedback-contribution-pathway
+    title: Design the feedback/contribution pathway for V1
+    owner: heenal
+    project: knowledge-curation
+    layer: 2
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260604
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: V1 Public Site (Heenal)
+      refs: []
+  - id: task-260604-heenal-page-by-page-review
+    title: Continue page-by-page human review of V1
+    owner: heenal
+    project: knowledge-curation
+    layer: 2
+    estimate: 8
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260604
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: V1 Public Site (Heenal)
+      refs: []
+  - id: task-260604-rather-operational-contributor-journey
+    title: Consider an operational-contributor journey
+    owner: rather
+    project: knowledge-curation
+    layer: 7
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260604
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: V1 Public Site (Heenal)
+      refs: []
+  - id: task-260604-matty-hub-forum-post
+    title: Draft the hub/forum post
+    owner: matty
+    project: null
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260604
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: V1 Public Site (Heenal)
+      refs: []
+  - id: task-260604-heenal-reconcile-v1-layers
+    title: Reconcile V1 with the master-doc layers
+    owner: heenal
+    project: knowledge-curation
+    layer: 2
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260604
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: V1 Public Site (Heenal)
+      refs: []
+  - id: task-260616-luiz-resource-db-v3-full-lift
+    title: Run the full structured Resource DB V3 lift
+    owner: luiz
+    project: knowledge-curation
+    layer: 3
+    estimate: 8
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260616
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Resource Database V3
+      refs: []
+  - id: task-260616-luiz-clean-tweet-text-noise
+    title: Clean tweet-text noise in the toolkit-layer-crosswalk
+    owner: luiz
+    project: knowledge-curation
+    layer: 3
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260616
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Resource Database V3
+      refs: []
+  - id: task-260616-luiz-wire-review-queues-safeguards
+    title: Wire the resource DB's review queues to master-doc safeguards
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260616
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Resource Database V3
+      refs: []
+  - id: task-260616-brandon-curation-pass-v3
+    title: Run a curation pass on the lifted Resource DB V3 result
+    owner: brandon
+    project: knowledge-curation
+    layer: 3
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260616
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Resource Database V3
+      refs: []
+  - id: task-260604-afo-greenpill-translate
+    title: Translate the toolkit into the Greenpill Network site
+    owner: afo
+    project: null
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260604
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Greenpill Network + Andrea / RegenOS
+      refs: []
+  - id: task-260604-luiz-schedule-andrea-conversation
+    title: Schedule the Andrea and RegenOS conversation
+    owner: luiz
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260604
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Greenpill Network + Andrea / RegenOS
+      refs: []
+  - id: task-260604-luiz-share-bioregioning-telegram
+    title: Share bioregioning.org and the stewardship excerpt to Telegram
+    owner: luiz
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260604
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Greenpill Network + Andrea / RegenOS
+      refs: []
+  - id: task-260515-luiz-surface-canvases-telegram
+    title: Surface the master overview and per-layer canvases to the team
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-team-layer-ownership-resolution
+    title: Resolve layer ownership at the biweekly persona/skill-card session
+    owner: team
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-e1-ontology-refactor
+    title: "Phase E.1: refactor data/ontology/*.yaml"
+    owner: luiz
+    project: knowledge-curation
+    layer: 1
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-e2-option-library-crosswalk
+    title: "Phase E.2: cross-walk data/option-library.yaml against new master doc"
+    owner: luiz
+    project: knowledge-curation
+    layer: 5
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-e3-feedback-process-split
+    title: "Phase E.3: split data/feedback-process.yaml"
+    owner: luiz
+    project: org-os-framework
+    layer: 9
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-e4-resources-relift
+    title: "Phase E.4: refactor lift-resources.mjs and re-lift resources"
+    owner: luiz
+    project: knowledge-curation
+    layer: 3
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-e6-identity-refresh
+    title: "Phase E.6: refresh IDENTITY.md ownership"
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-e7-orgos-rewrite
+    title: "Phase E.7: rewrite the ORG-OS.md one-pager"
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-e8-root-md-rename
+    title: "Phase E.8: run the root-MD rename pass"
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-f1-f4-lift-scripts
+    title: "Phase F.1-F.4: build the new lift scripts"
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-phase-f5-tracks-registry
+    title: "Phase F.5: create the data/tracks.yaml registry"
+    owner: luiz
+    project: knowledge-curation
+    layer: 7
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260515-luiz-pulse1-retro
+    title: Write the Pulse 1 retro
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260515
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc 2026-05-15 Iteration
+      refs: []
+  - id: task-260615-luiz-draft-regenos-documentation
+    title: Draft RegenOS documentation
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs:
+        - docs/plans/regen-os-documentation.md
+  - id: task-260615-luiz-build-regenos-website
+    title: Build a simple public website for RegenOS/OrgOS
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs:
+        - docs/plans/regen-os-documentation.md
+  - id: task-260615-luiz-regenos-master-doc-description
+    title: Draft the RegenOS description for the master-doc meeting-notes tab
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []
+  - id: task-260615-luiz-add-orgos-github-link
+    title: Add the OrgOS overlay GitHub link to the master doc
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []
+  - id: task-260615-luiz-regenos-infra-writeup
+    title: Write up RegenOS vs COOP/Geo Browser/COI infra stack
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []
+  - id: task-260615-luiz-surface-framework-instance-split
+    title: Surface the framework/instance split to the team
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Framework / Instance Split
+      refs: []
+  - id: task-260615-luiz-scope-framework-instance-meaning
+    title: Scope what framework vs instance means for this repo
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Framework / Instance Split
+      refs: []
+  - id: task-260615-luiz-refi-dao-immediate-use-case
+    title: Use the framework to process ReFi DAO podcast episodes and blog posts
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Framework / Instance Split
+      refs: []
+  - id: task-260615-luiz-review-geo-browser
+    title: Review Geo Browser for infra fit
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Infra Stack & Federation
+      refs: []
+  - id: task-260615-luiz-radicle-integration
+    title: Explore Radicle (P2P Git) integration
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Infra Stack & Federation
+      refs: []
+  - id: task-260615-luiz-fix-maturity-confidence-rating
+    title: Fix the maturity/confidence rating system for tasks
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Infra Stack & Federation
+      refs: []
+  - id: task-260615-luiz-repair-notion-sync
+    title: Repair the regen-coordination Notion sync
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Infra Stack & Federation
+      refs: []
+  - id: task-260615-luiz-open-refi-commons-conversation
+    title: Open the ReFi Commons home conversation
+    owner: luiz
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: ReFi Commons + Standards + Funding
+      refs: []
+  - id: task-260615-team-identify-first-working-group
+    title: Identify the first working group both orgs agree is worth funding
+    owner: team
+    project: null
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: ReFi Commons + Standards + Funding
+      refs: []
+  - id: task-260615-luiz-advance-standards-stack
+    title: Advance the CIDS and DAO IP5 standards stack
+    owner: luiz
+    project: null
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: ReFi Commons + Standards + Funding
+      refs: []
+  - id: task-260615-matty-impact-vault-path
+    title: Map a path to seed an Impact Vault
+    owner: matty
+    project: null
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: ReFi Commons + Standards + Funding
+      refs: []
+  - id: task-260615-luiz-scale-outreach-high-trust-orgs
+    title: Scale outreach to high-trust orgs and known people
+    owner: luiz
+    project: null
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: ReFi Commons + Standards + Funding
+      refs: []
+  - id: task-260507-matty-final-master-doc-push
+    title: Push the final master-doc iteration before Swarm participation
+    owner: matty
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc & Handoff
+      refs: []
+  - id: task-260507-luiz-coordinate-handoff-announce
+    title: Coordinate and announce the master-doc handoff
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc & Handoff
+      refs: []
+  - id: task-260507-durgadas-frame-language-critique
+    title: Apply frame-language critique to master doc sections
+    owner: durgadas
+    project: knowledge-curation
+    layer: null
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc & Handoff
+      refs: []
+  - id: task-260507-team-resources-tab-session
+    title: Hold a dedicated Resources tab organization session
+    owner: team
+    project: knowledge-curation
+    layer: 3
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc & Handoff
+      refs: []
+  - id: task-260507-team-layer-ownership-declarations
+    title: Complete individual layer ownership declarations
+    owner: team
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Master Doc & Handoff
+      refs: []
+  - id: task-260507-luiz-stand-up-task-management
+    title: Stand up the shared task management surface
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: OrgOS Rollout — shared task management
+      refs: []
+  - id: task-260507-luiz-add-owner-field-heartbeat
+    title: Add per-task owner field to HEARTBEAT.md items where missing
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: OrgOS Rollout — shared task management
+      refs: []
+  - id: task-260507-luiz-decide-task-manager-vs-koi-bridge
+    title: "Decide: Task Manager web app vs KOI-bridge upgrade"
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: OrgOS Rollout — shared task management
+      refs: []
+  - id: task-260507-luiz-sketch-architecture-canvas
+    title: Sketch the toolkit architecture canvas
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Visual Architecture — Obsidian Canvas
+      refs: []
+  - id: task-260507-luiz-update-outdated-canvases
+    title: Update the outdated architecture and workflow canvases
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Visual Architecture — Obsidian Canvas
+      refs: []
+  - id: task-260507-luiz-web-based-canvas-viz
+    title: Explore a web-based canvas visualization (no Obsidian required)
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: null
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+      - needs-triage
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Visual Architecture — Obsidian Canvas
+      refs: []
+  - id: task-260507-luiz-adjust-swarm-contribution-pack
+    title: Observe Pulse 1 and adjust the Swarm Contribution Pack scope
+    owner: luiz
+    project: org-os-framework
+    layer: null
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Knowledge Commoning Swarm
+      refs: []
+  - id: task-260507-koi-develop-research-framework
+    title: Develop the research framework document
+    owner: koi
+    project: org-os-framework
+    layer: 9
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Research Framework — Evolution Layer
+      refs: []
+  - id: task-260507-koi-cross-reference-bonfires-hook
+    title: Cross-reference the Bonfires federation hook with the Swarm pack
+    owner: koi
+    project: org-os-framework
+    layer: 9
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Research Framework — Evolution Layer
+      refs: []
+  - id: task-260423-heenal-apply-matt-feedback-4-articles
+    title: Apply Matt's feedback on 4 articles
+    owner: heenal
+    project: knowledge-curation
+    layer: 2
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Knowledge Site (Layer 2 — Encyclopedia)
+      refs: []
+  - id: task-260423-heenal-phase2-expand-medium-articles
+    title: Expand 43 medium articles through the 5-stage editorial pipeline
+    owner: heenal
+    project: knowledge-curation
+    layer: 2
+    estimate: 8
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Knowledge Site (Layer 2 — Encyclopedia)
+      refs: []
+  - id: task-260423-heenal-human-review-67-drafts
+    title: Human review of all 67 published drafts
+    owner: heenal
+    project: knowledge-curation
+    layer: 2
+    estimate: 8
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Knowledge Site (Layer 2 — Encyclopedia)
+      refs: []
+  - id: task-260423-heenal-add-real-world-examples
+    title: Add real-world examples from approved source maps
+    owner: heenal
+    project: knowledge-curation
+    layer: 2
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Knowledge Site (Layer 2 — Encyclopedia)
+      refs: []
+  - id: task-260423-durgadas-dunbar-scaling-csis
+    title: Encode Dunbar-number scaling research into the CSIS standards review
+    owner: durgadas
+    project: org-os-framework
+    layer: 6
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: CSIS Integration (Layer 5/6 — Deployment & Structural Integrity)
+      refs: []
+  - id: task-260423-durgadas-six-directional-model-csis
+    title: Encode the six-directional responsibility model into the CSIS standards review
+    owner: durgadas
+    project: org-os-framework
+    layer: 6
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: CSIS Integration (Layer 5/6 — Deployment & Structural Integrity)
+      refs: []
+  - id: task-260423-durgadas-compressive-generative-standards
+    title: Make compressive vs generative standards explicit in the Deployment Layer
+    owner: durgadas
+    project: org-os-framework
+    layer: 6
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: CSIS Integration (Layer 5/6 — Deployment & Structural Integrity)
+      refs: []
+  - id: task-260423-durgadas-define-conformance-posture
+    title: Define the conformance-posture assessment framework
+    owner: durgadas
+    project: org-os-framework
+    layer: 6
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: CSIS Integration (Layer 5/6 — Deployment & Structural Integrity)
+      refs: []
+  - id: task-260423-durgadas-confirm-csis-alignment-report
+    title: Confirm CSIS x org-os Alignment Report covers the new structural-integrity questions
+    owner: durgadas
+    project: org-os-framework
+    layer: 6
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: CSIS Integration (Layer 5/6 — Deployment & Structural Integrity)
+      refs: []
+  - id: task-260423-rather-formalize-ontology-standard
+    title: Formalize Rather's ontology as the toolkit standard
+    owner: rather
+    project: knowledge-curation
+    layer: 1
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Ontology (now Layer 1 in new master doc — promoted from Layer 3)
+      refs: []
+  - id: task-260423-rather-resolve-v1-v2a-v2b
+    title: Resolve V1 vs V2a vs V2b ontology versions
+    owner: rather
+    project: knowledge-curation
+    layer: 1
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Ontology (now Layer 1 in new master doc — promoted from Layer 3)
+      refs: []
+  - id: task-260423-luiz-reconcile-ontology-object-types
+    title: Reconcile the master doc's 25 ontology object types with data/ontology
+    owner: luiz
+    project: knowledge-curation
+    layer: 1
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Ontology (now Layer 1 in new master doc — promoted from Layer 3)
+      refs: []
+  - id: task-260423-luiz-adopt-maturity-states-mapping
+    title: Map the master doc's 9 maturity states to existing status fields
+    owner: luiz
+    project: knowledge-curation
+    layer: 1
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Ontology (now Layer 1 in new master doc — promoted from Layer 3)
+      refs: []
+  - id: task-260423-brandon-curation-pass-resources-yaml
+    title: Run a curation pass on data/resources.yaml
+    owner: brandon
+    project: knowledge-curation
+    layer: 3
+    estimate: 4
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Resource Graph (now Layer 3 — Resource Graph & Ecosystem Atlas)
+      refs: []
+  - id: task-260423-luiz-relift-resources-script
+    title: Re-run lift-resources.mjs against the new master doc
+    owner: luiz
+    project: knowledge-curation
+    layer: 3
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Resource Graph (now Layer 3 — Resource Graph & Ecosystem Atlas)
+      refs: []
+  - id: task-260423-luiz-clarify-taxonomy-ontology-distinction
+    title: Clarify the taxonomy vs ontology distinction
+    owner: luiz
+    project: knowledge-curation
+    layer: 3
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260423
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Resource Graph (now Layer 3 — Resource Graph & Ecosystem Atlas)
+      refs: []
+  - id: task-260507-luiz-crosswalk-6tier-vocabulary
+    title: Cross-walk the 6-tier vocabulary against the option-library scaffold
+    owner: luiz
+    project: knowledge-curation
+    layer: 5
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Tool / Option / Pattern / Protocol / Deployment / Case
+      refs: []
+  - id: task-260809-luiz-site-build-passes
+    title: Confirm npm run build passes
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260809
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Site
+      refs: []
+  - id: task-260809-luiz-site-reachable
+    title: Confirm the live site is reachable
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260809
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Site
+      refs: []
+  - id: task-260809-luiz-data-integrity-ontology-align
+    title: Align data/ontology/ YAMLs with the master doc
+    owner: luiz
+    project: knowledge-curation
+    layer: 1
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260809
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Data Integrity
+      refs: []
+  - id: task-260809-luiz-data-integrity-option-library
+    title: Align data/option-library.yaml with the current 9 categories
+    owner: luiz
+    project: knowledge-curation
+    layer: 5
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260809
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Data Integrity
+      refs: []
+  - id: task-260809-luiz-data-integrity-wellknown-schemas
+    title: Confirm .well-known/ schemas match current data
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260809
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Data Integrity
+      refs: []
+  - id: task-260809-luiz-federation-last-sync-upstream
+    title: Check last sync with upstream framework
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260809
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Federation
+      refs: []
+  - id: task-260809-luiz-federation-peer-sync-coordination-os
+    title: Check peer sync with regen-coordination-os
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260809
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Federation
+      refs: []
+  - id: task-260507-koi-bonfires-federation-hook
+    title: Explore the Bonfires/KOI federation hook
+    owner: koi
+    project: org-os-framework
+    layer: 9
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260507
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Federation
+      refs: []
+  - id: task-260806-luiz-slice-1-framework-schemas
+    title: Slice 1 — framework and schemas with existing tests to dev and prod
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 4
+    parent: task-260806-luiz-four-slice-merge
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-luiz-slice-2-generators-validation
+    title: Slice 2 — deterministic generators and validation commands to dev and prod
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 4
+    parent: task-260806-luiz-four-slice-merge
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-luiz-slice-3-public-safe-aggregate
+    title: Slice 3 — public-safe aggregate data and selected Astro surfaces to dev and prod
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 4
+    parent: task-260806-luiz-four-slice-merge
+    cycle: 1
+    labels:
+      - origin/meeting-260806
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260806-luiz-slice-4-reviewed-knowledge-objects
+    title: Slice 4 — reviewed knowledge objects, gated on the promotion review
+    owner: luiz
+    project: repo-contribution
+    layer: 10
+    estimate: 4
+    parent: task-260806-luiz-four-slice-merge
+    cycle: null
+    labels:
+      - origin/meeting-260806
+    blocked_by:
+      - task-260716-luiz-review-pr-merge
+    source:
+      file: HEARTBEAT.md
+      section: 2026-08-06 engineering sync — process infrastructure landed
+      refs: []
+  - id: task-260719-luiz-dev-routes-by-type
+    title: Build KB content routes by object type
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: task-260719-luiz-dev-instance-build
+    cycle: 1
+    labels:
+      - origin/meeting-260719
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Dev instance build — the live review surface
+      refs: []
+  - id: task-260719-luiz-dev-routes-by-layer
+    title: Build KB content routes by layer
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: task-260719-luiz-dev-instance-build
+    cycle: 1
+    labels:
+      - origin/meeting-260719
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Dev instance build — the live review surface
+      refs: []
+  - id: task-260719-luiz-dev-provenance-badges
+    title: Add provenance and raw badges plus related-object links
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: task-260719-luiz-dev-instance-build
+    cycle: 1
+    labels:
+      - origin/meeting-260719
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Dev instance build — the live review surface
+      refs: []
+  - id: task-260719-luiz-dev-cross-links
+    title: Add old-article to reprocessed-object cross-links
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: task-260719-luiz-dev-instance-build
+    cycle: 1
+    labels:
+      - origin/meeting-260719
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: Dev instance build — the live review surface
+      refs: []
+  - id: task-260716-luiz-review-share-dev-build
+    title: Share how the dev build looks and what to check
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: task-260716-luiz-review-pr-merge
+    cycle: null
+    labels:
+      - origin/meeting-260716
+      - gate/review
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-review-checklist
+    title: Build the named-reviewer sign-off checklist
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: task-260716-luiz-review-pr-merge
+    cycle: null
+    labels:
+      - origin/meeting-260716
+      - gate/review
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-review-named-reviewer-pass
+    title: Run the named-reviewer sign-off pass per page
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: task-260716-luiz-review-pr-merge
+    cycle: null
+    labels:
+      - origin/meeting-260716
+      - gate/review
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260716-luiz-review-pr-to-main
+    title: Open and merge the PR to main
+    owner: luiz
+    project: knowledge-curation
+    layer: null
+    estimate: 4
+    parent: task-260716-luiz-review-pr-merge
+    cycle: null
+    labels:
+      - origin/meeting-260716
+      - gate/review
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: 2026-07-16 biweekly + Matty 1-on-1 — fresh commitments
+      refs: []
+  - id: task-260615-luiz-regenos-docs-what-it-is
+    title: Write what RegenOS is and the coordination-layer framing
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 4
+    parent: task-260615-luiz-draft-regenos-documentation
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []
+  - id: task-260615-luiz-regenos-docs-repo-mapping
+    title: Write the upstream/downstream repo mapping
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 4
+    parent: task-260615-luiz-draft-regenos-documentation
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []
+  - id: task-260615-luiz-regenos-docs-federation-mechanisms
+    title: Write knowledge-source vs organizational federation as two mechanisms
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 4
+    parent: task-260615-luiz-draft-regenos-documentation
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []
+  - id: task-260615-luiz-regenos-docs-adoption-filter
+    title: Write self-qualifying adoption as the federation filter
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 4
+    parent: task-260615-luiz-draft-regenos-documentation
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []
+  - id: task-260615-luiz-regenos-website-scaffold
+    title: Scaffold and design the RegenOS/OrgOS public website
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 8
+    parent: task-260615-luiz-build-regenos-website
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []
+  - id: task-260615-luiz-regenos-website-content-deploy
+    title: Populate content and deploy the RegenOS/OrgOS public website
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 8
+    parent: task-260615-luiz-build-regenos-website
+    cycle: null
+    labels:
+      - origin/meeting-260615
+    blocked_by: []
+    source:
+      file: HEARTBEAT.md
+      section: RegenOS Documentation + Public Website
+      refs: []

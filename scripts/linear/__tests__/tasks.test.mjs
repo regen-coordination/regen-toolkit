@@ -1,6 +1,20 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { validateTask } from "../lib/tasks.mjs";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { loadTasks, validateTask } from "../lib/tasks.mjs";
+
+// loadTasks fixtures are written to a scratch temp dir rather than committed files — this
+// registry has no fixtures directory of its own yet, and Task 9 stages a fixed, minimal file
+// list (data/tasks.yaml, lib/tasks.mjs, validate-tasks.mjs, this test file, package.json).
+// Self-contained temp files keep the loadTasks tests real without growing that list.
+function writeTemp(name, contents) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "tasks-test-"));
+  const file = path.join(dir, name);
+  fs.writeFileSync(file, contents);
+  return file;
+}
 
 const base = {
   id: "task-260806-luiz-linear-seed-repo",
@@ -84,4 +98,36 @@ test("rejects a fractional layer", () => {
 
 test("does not throw on a null record", () => {
   assert.deepEqual(validateTask(null), ["not a task record: null"]);
+});
+
+// --- loadTasks: thin read-parse wrapper, mirrors loadMembers' idiom ---
+
+test("loadTasks reads the tasks array from a well-formed file", () => {
+  const file = writeTemp(
+    "tasks.yaml",
+    'schema_version: "1.0"\ntasks:\n  - id: task-260806-luiz-rather-org-access\n    title: Grant Rather GitHub org access\n    owner: luiz\n'
+  );
+  const tasks = loadTasks(file);
+  assert.equal(tasks.length, 1);
+  assert.equal(tasks[0].id, "task-260806-luiz-rather-org-access");
+});
+
+test("loadTasks throws a clear error for a missing file, rather than degrading silently", () => {
+  const missing = path.join(os.tmpdir(), "tasks-test-does-not-exist", "tasks.yaml");
+  assert.throws(() => loadTasks(missing), /Task registry not found/);
+});
+
+test("loadTasks names the file in a YAML parse error", () => {
+  const file = writeTemp("tasks-malformed.yaml", "schema_version: \"1.0\"\ntasks:\n  - id: a\n  bad indentation\n");
+  assert.throws(() => loadTasks(file), (err) => {
+    assert.match(err.message, /tasks-malformed\.yaml/);
+    return true;
+  });
+});
+
+test("loadTasks returns an empty array for a doc with no tasks key", () => {
+  // yaml.load("") returns null/undefined depending on content; loadTasks must coalesce
+  // both "empty doc" and "doc missing the tasks key" to [], matching loadMembers' `?? []`.
+  const file = writeTemp("tasks-empty.yaml", 'schema_version: "1.0"\n');
+  assert.deepEqual(loadTasks(file), []);
 });
