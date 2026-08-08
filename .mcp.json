@@ -1,0 +1,22 @@
+{
+  "_comment": [
+    "Shared MCP servers for the Regen Web3 Toolkit. Committed so the whole team inherits the",
+    "same config rather than each person wiring it up locally.",
+    "",
+    "The Linear server is for CONVERSATIONAL work — marking something done, asking what is in",
+    "the current cycle, adding a comment. Bulk and deterministic work goes through",
+    "scripts/linear/* instead, because those runs need to be reproducible and idempotent.",
+    "See skills/linear-sync/SKILL.md for which to reach for, and for the ownership boundary:",
+    "anything changed here that belongs to a repo-owned field is overwritten by the next apply.",
+    "",
+    "UNVERIFIED: the url below has not been confirmed against Linear's current documentation.",
+    "Check https://linear.app/docs/mcp before relying on it, and correct it here if it differs.",
+    "Authentication is interactive OAuth on first use, so this will not work in a headless run."
+  ],
+  "mcpServers": {
+    "linear": {
+      "type": "sse",
+      "url": "https://mcp.linear.app/sse"
+    }
+  }
+}

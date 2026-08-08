@@ -85,6 +85,29 @@ When/if these are set up, record them here and in `IDENTITY.md`.
 
 ---
 
+## Linear
+
+Project management for the toolkit, adopted at the 2026-08-06 engineering sync. Afo leads the
+Linear structure; this repo owns the task registry that seeds it.
+
+| | |
+|---|---|
+| Workspace | _fill in once the team workspace URL is settled_ |
+| Team key | `LINEAR_TEAM_KEY` in `.env` — the prefix in issue identifiers, e.g. `TOOL` in `TOOL-42` |
+| Initiative | `toolkit` — **created by Afo, never by this tooling** |
+| Cycles | Two weeks, starting the day after each biweekly. Cycle 1: 2026-08-07 → 2026-08-20. |
+| Credentials | `LINEAR_API_KEY` + `LINEAR_TEAM_KEY` in `.env` (see `.env.example`) — never committed |
+| Agent guidance | [`skills/linear-sync/SKILL.md`](skills/linear-sync/SKILL.md) |
+| MCP | `.mcp.json`, for conversational use only |
+
+Repo-side sync lives in `scripts/linear/`. Ownership is split by field so nothing is owned
+twice: `data/tasks.yaml` owns identity and routing, Linear owns status, assignee and cycle
+position. Run `npm run linear:verify` to check they still agree — it is read-only and always
+safe. `npm run linear:apply --confirm` is the only command that writes, and there is no delete
+path anywhere in the pipeline.
+
+---
+
 ## Agent Runtime
 
 - **Primary runtime:** Claude Code (CLI / desktop)
