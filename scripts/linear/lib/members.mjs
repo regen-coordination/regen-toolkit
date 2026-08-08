@@ -62,6 +62,9 @@ export function validateMembers(members) {
     if (typeof m.id !== "string" || m.id.trim() === "") {
       errors.push(`${where} is missing a non-empty id`);
     }
+    if (m.name != null && typeof m.name !== "string") {
+      errors.push(`${where}.name must be a string, got ${JSON.stringify(m.name)}`);
+    }
     if (m.aliases != null && !Array.isArray(m.aliases)) {
       errors.push(`${where}.aliases must be an array of strings, got ${JSON.stringify(m.aliases)}`);
     } else if (Array.isArray(m.aliases)) {
