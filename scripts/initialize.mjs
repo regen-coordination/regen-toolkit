@@ -19,6 +19,7 @@ import yaml from "js-yaml";
 import matter from "gray-matter";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
+import { parseHeartbeat } from "./linear/lib/heartbeat.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -58,48 +59,29 @@ function parseMarkdownFrontmatter(filePath) {
   }
 }
 
+// Adapts the shared HEARTBEAT grammar (scripts/linear/lib/heartbeat.mjs) to the shape this
+// dashboard has always consumed. Two deliberate departures from a literal field rename:
+//
+// 1. `[~]` (superseded) items are dropped entirely, matching current dashboard behavior:
+//    the old regex `/^-\s+\[([ xX])\]\s+(.+)/` never matched `[~]` at all, so those lines were
+//    silently invisible (not open, not done, not counted). Mapping `state !== "open"` to `done`
+//    would newly surface them as "completed" — which misrepresents abandoned work as finished.
+//    Excluding them preserves both the operator-facing invariant (a checkmark means "done", not
+//    "abandoned") and the byte-for-byte dashboard baseline.
+// 2. `text` is left as parseHeartbeat produced it (not re-stripped of `@\w+`). The old regex
+//    stripped that pattern to remove @-mentions, but it also mangled scoped package names like
+//    `` `@org-os/kms` `` into `` `-os/kms` `` — a latent bug, not a feature. `due`/`category`/
+//    `assignee` are unaffected either way since `assignee` has no downstream reader today.
 function extractCheckboxes(markdownContent) {
-  const lines = markdownContent.split("\n");
-  const items = [];
-  let currentCategory = "";
-
-  for (const line of lines) {
-    const categoryMatch = line.match(/^#{2,3}\s+(.+)/);
-    if (categoryMatch) {
-      currentCategory = categoryMatch[1].trim();
-      continue;
-    }
-
-    const checkboxMatch = line.match(/^-\s+\[([ xX])\]\s+(.+)/);
-    if (checkboxMatch) {
-      const done = checkboxMatch[1] !== " ";
-      let text = checkboxMatch[2].trim();
-
-      const dueMatch = text.match(/\(due:\s*(\d{4}-\d{2}-\d{2})\)/i);
-      const due = dueMatch ? dueMatch[1] : null;
-
-      const assigneeMatch = text.match(/@(\w+)/);
-      const assignee = assigneeMatch ? assigneeMatch[1] : null;
-
-      text = text
-        .replace(/\(due:\s*\d{4}-\d{2}-\d{2}\)/i, "")
-        .replace(/@\w+/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
-
-      if (text.startsWith("_(") && text.endsWith(")_")) continue;
-
-      items.push({
-        text,
-        done,
-        category: currentCategory,
-        due,
-        assignee,
-      });
-    }
-  }
-
-  return items;
+  return parseHeartbeat(markdownContent)
+    .filter((item) => item.state !== "superseded")
+    .map((item) => ({
+      text: item.text,
+      done: item.state === "done",
+      category: item.section,
+      due: item.due,
+      assignee: item.ownerHint,
+    }));
 }
 
 function getRelativeAge(dateStr) {
