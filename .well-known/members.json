@@ -1,5 +1,42 @@
 {
   "@context": "https://www.daostar.org/schemas",
   "type": "DAO",
-  "members": []
+  "members": [
+    {
+      "id": "luiz"
+    },
+    {
+      "id": "matty"
+    },
+    {
+      "id": "afo"
+    },
+    {
+      "id": "rather"
+    },
+    {
+      "id": "durgadas"
+    },
+    {
+      "id": "heenal"
+    },
+    {
+      "id": "koi"
+    },
+    {
+      "id": "brandon"
+    },
+    {
+      "id": "drew"
+    },
+    {
+      "id": "trinity"
+    },
+    {
+      "id": "monty"
+    },
+    {
+      "id": "team"
+    }
+  ]
 }
