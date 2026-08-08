@@ -70,17 +70,24 @@ function parseMarkdownFrontmatter(filePath) {
 //    "abandoned") and the byte-for-byte dashboard baseline.
 // 2. `text` is left as parseHeartbeat produced it (not re-stripped of `@\w+`). The old regex
 //    stripped that pattern to remove @-mentions, but it also mangled scoped package names like
-//    `` `@org-os/kms` `` into `` `-os/kms` `` — a latent bug, not a feature. `due`/`category`/
-//    `assignee` are unaffected either way since `assignee` has no downstream reader today.
+//    `` `@org-os/kms` `` into `` `-os/kms` `` — a latent bug, not a feature.
+// 3. The old `assignee` field is gone rather than being fed from `ownerHint`. A hint is not an
+//    owner: `T1`, `SP11`, `Infra`, `Group` and `Joint` all match the `**Name —**` shape, and
+//    `--format=json` is consumed by an agent (.opencode/skills/org-os-init) that is told only
+//    to "parse it and render the dashboard" — so a field literally named `assignee` holding
+//    "T1" invites rendering a phase code as a person. Only resolveOwner (members.mjs) can make
+//    that call, and this script has no member registry. The hint is exposed under its honest
+//    name instead, and `id` is surfaced structurally since `text` no longer carries it.
 function extractCheckboxes(markdownContent) {
   return parseHeartbeat(markdownContent)
     .filter((item) => item.state !== "superseded")
     .map((item) => ({
+      id: item.id,
       text: item.text,
       done: item.state === "done",
       category: item.section,
       due: item.due,
-      assignee: item.ownerHint,
+      ownerHint: item.ownerHint,
     }));
 }
 
