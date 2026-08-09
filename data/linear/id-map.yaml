@@ -1,0 +1,123 @@
+entries:
+  task-260719-luiz-dev-cross-links:
+    created_at: '2026-08-09T00:41:48.131Z'
+    identifier: KCM-20
+    issue_id: 737e4f30-d2bc-4205-b9af-fd836a351c9e
+    last_synced: '2026-08-09T00:41:48.131Z'
+    state: active
+  task-260719-luiz-dev-instance-build:
+    created_at: '2026-08-09T00:41:45.723Z'
+    identifier: KCM-12
+    issue_id: 85f79d87-72d5-45ff-a812-0bd9ac621c24
+    last_synced: '2026-08-09T00:41:45.723Z'
+    state: active
+  task-260719-luiz-dev-instance-deploy:
+    created_at: '2026-08-09T00:41:46.050Z'
+    identifier: KCM-13
+    issue_id: d969fbaa-1380-4293-a756-45055cc3a0b2
+    last_synced: '2026-08-09T00:41:46.050Z'
+    state: active
+  task-260719-luiz-dev-provenance-badges:
+    created_at: '2026-08-09T00:41:47.846Z'
+    identifier: KCM-19
+    issue_id: dd63334c-2a27-48b8-9cb3-829f6e9d5b91
+    last_synced: '2026-08-09T00:41:47.846Z'
+    state: active
+  task-260719-luiz-dev-routes-by-layer:
+    created_at: '2026-08-09T00:41:47.505Z'
+    identifier: KCM-18
+    issue_id: 78cdcf0c-1986-479d-877f-1fdc17176b51
+    last_synced: '2026-08-09T00:41:47.505Z'
+    state: active
+  task-260719-luiz-dev-routes-by-type:
+    created_at: '2026-08-09T00:41:47.261Z'
+    identifier: KCM-17
+    issue_id: 9ba0cdea-af99-4128-9d49-021dd67ad74b
+    last_synced: '2026-08-09T00:41:47.261Z'
+    state: active
+  task-260806-afo-coordination-group:
+    created_at: '2026-08-09T00:41:44.570Z'
+    identifier: KCM-6
+    issue_id: c35a86dd-8433-4a5e-aac4-1a476ebeb706
+    last_synced: '2026-08-09T00:41:44.570Z'
+    state: active
+  task-260806-afo-linear-github-training:
+    created_at: '2026-08-09T00:41:45.042Z'
+    identifier: KCM-8
+    issue_id: fe1730ed-3451-4a12-914f-52bc004a7c7c
+    last_synced: '2026-08-09T00:41:45.042Z'
+    state: active
+  task-260806-afo-linear-seed:
+    created_at: '2026-08-09T00:41:44.880Z'
+    identifier: KCM-7
+    issue_id: aac34f9f-cd5f-4a9c-b507-eb72afed235d
+    last_synced: '2026-08-09T00:41:44.880Z'
+    state: active
+  task-260806-luiz-four-slice-merge:
+    created_at: '2026-08-09T00:41:43.947Z'
+    identifier: KCM-3
+    issue_id: ca758826-9449-4268-9e68-572074cd783b
+    last_synced: '2026-08-09T00:41:43.947Z'
+    state: active
+  task-260806-luiz-linear-email:
+    created_at: '2026-08-09T00:41:44.101Z'
+    identifier: KCM-4
+    issue_id: 57259d2b-fc93-4f10-9933-df46f737ce30
+    last_synced: '2026-08-09T00:41:44.101Z'
+    state: active
+  task-260806-luiz-linear-seed-repo:
+    created_at: '2026-08-09T00:41:43.782Z'
+    identifier: KCM-2
+    issue_id: 6ae4a591-4c75-4275-9dba-d193f601a5f9
+    last_synced: '2026-08-09T00:41:43.782Z'
+    state: active
+  task-260806-luiz-rather-org-access:
+    created_at: '2026-08-09T00:41:43.451Z'
+    identifier: KCM-1
+    issue_id: 917d982d-103b-4167-b96f-bac41ad24504
+    last_synced: '2026-08-09T00:41:43.451Z'
+    state: active
+  task-260806-luiz-slice-1-framework-schemas:
+    created_at: '2026-08-09T00:41:46.212Z'
+    identifier: KCM-14
+    issue_id: e04dc991-3cd7-4d54-a82b-4f2eef052404
+    last_synced: '2026-08-09T00:41:46.212Z'
+    state: active
+  task-260806-luiz-slice-2-generators-validation:
+    created_at: '2026-08-09T00:41:46.581Z'
+    identifier: KCM-15
+    issue_id: 0a41f92d-12b6-4a9e-8f2e-ad069f6f1df5
+    last_synced: '2026-08-09T00:41:46.581Z'
+    state: active
+  task-260806-luiz-slice-3-public-safe-aggregate:
+    created_at: '2026-08-09T00:41:46.747Z'
+    identifier: KCM-16
+    issue_id: 4a4c7a39-d566-48ee-bd62-a2f364e74eca
+    last_synced: '2026-08-09T00:41:46.747Z'
+    state: active
+  task-260806-matty-engineering-priorities-linear:
+    created_at: '2026-08-09T00:41:45.441Z'
+    identifier: KCM-10
+    issue_id: f9c0a0a5-8b6a-431c-aeee-33cbca5a6891
+    last_synced: '2026-08-09T00:41:45.441Z'
+    state: active
+  task-260806-rather-cloudflare-setup:
+    created_at: '2026-08-09T00:41:44.401Z'
+    identifier: KCM-5
+    issue_id: 63400991-742c-42a9-8521-d8d8f3b9cda7
+    last_synced: '2026-08-09T00:41:44.401Z'
+    state: active
+  task-260806-regis-github-onboarding:
+    created_at: '2026-08-09T00:41:45.195Z'
+    identifier: KCM-9
+    issue_id: e92f4307-e6cb-442e-a5e0-98553e14e6fd
+    last_synced: '2026-08-09T00:41:45.195Z'
+    state: active
+  task-260806-team-join-linear:
+    created_at: '2026-08-09T00:41:45.576Z'
+    identifier: KCM-11
+    issue_id: 44ad3e39-4071-4cae-9ba1-0604f15baaac
+    last_synced: '2026-08-09T00:41:45.576Z'
+    state: active
+schema_version: '1.0'
+team_key: KCM
