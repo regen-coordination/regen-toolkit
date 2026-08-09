@@ -9,14 +9,14 @@
     "See skills/linear-sync/SKILL.md for which to reach for, and for the ownership boundary:",
     "anything changed here that belongs to a repo-owned field is overwritten by the next apply.",
     "",
-    "UNVERIFIED: the url below has not been confirmed against Linear's current documentation.",
-    "Check https://linear.app/docs/mcp before relying on it, and correct it here if it differs.",
-    "Authentication is interactive OAuth on first use, so this will not work in a headless run."
+    "Endpoint probed 2026-08-09: https://mcp.linear.app/mcp returns 401 (exists, wants auth);",
+    "the /sse path returns 404. Authentication is interactive OAuth on first use, so this will",
+    "not work in a headless or cron run."
   ],
   "mcpServers": {
     "linear": {
-      "type": "sse",
-      "url": "https://mcp.linear.app/sse"
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
     }
   }
 }

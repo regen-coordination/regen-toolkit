@@ -92,10 +92,10 @@ Linear structure; this repo owns the task registry that seeds it.
 
 | | |
 |---|---|
-| Workspace | _fill in once the team workspace URL is settled_ |
-| Team key | `LINEAR_TEAM_KEY` in `.env` — the prefix in issue identifiers, e.g. `TOOL` in `TOOL-42` |
-| Initiative | `toolkit` — **created by Afo, never by this tooling** |
-| Cycles | Two weeks, starting the day after each biweekly. Cycle 1: 2026-08-07 → 2026-08-20. |
+| Workspace | https://linear.app/regen-coordination |
+| Team | `KCM` — Knowledge Commons. Set as `LINEAR_TEAM_KEY` in `.env`; it is the prefix in identifiers like `KCM-42`. |
+| Initiative | `Toolkit` — matched case-insensitively. **Created by Afo, never by this tooling** |
+| Cycles | Two weeks. **Cycle 1 is 2026-08-14 → 08-28** as configured in Linear — note this is a week later than "the day after the biweekly" would imply. |
 | Credentials | `LINEAR_API_KEY` + `LINEAR_TEAM_KEY` in `.env` (see `.env.example`) — never committed |
 | Agent guidance | [`skills/linear-sync/SKILL.md`](skills/linear-sync/SKILL.md) |
 | MCP | `.mcp.json`, for conversational use only |
