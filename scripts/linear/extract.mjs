@@ -34,7 +34,10 @@ if (errors.length) {
 }
 
 const manifest = buildManifest({ tasks, members, heartbeat });
-manifest.generated_at = new Date().toISOString();
+// Deliberately NOT stamped with a generated_at. The manifest is meant to be reviewed as a
+// diff, and a timestamp would make it dirty on every extract even when nothing changed —
+// burying real changes in noise. Git already records when it changed; data/linear/runs/
+// timestamps the runs themselves.
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, yaml.dump(manifest, { lineWidth: 100, noRefs: true }), "utf8");
