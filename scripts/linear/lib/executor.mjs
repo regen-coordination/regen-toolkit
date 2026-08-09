@@ -54,21 +54,25 @@
 // quietly: a follow-up task should add an explicit relation-sync pass once
 // `issueRelationCreate`'s input shape is confirmed against Linear's live schema.
 //
-// --- assignee: also NOT implemented here ---
+// --- assignee: resolved on create, never touched on update ---
 // `assignee_email` survives onto `plan.issues.create` (nothing Linear-owned exists yet at create
-// time — see planner.mjs). Resolving it to a Linear `assigneeId` needs an email -> Linear user id
-// lookup, and no such lookup exists anywhere in this pipeline yet: plan.mjs's Stage 2 read fetches
-// team issues/projects/labels/cycles, never team members or organization users. Guessing a
-// `members`/`users` query shape here, on top of the three query-shape guesses plan.mjs already
-// flags (initiatives as a top-level field, the teams(filter) shape, the team(id) field), is
-// exactly the kind of unverified-schema guess the task asked to flag rather than make quietly.
-// So: every issue this executor creates is created unassigned, regardless of `assignee_email`.
-// That is the same safe degraded state the design already prescribes for an owner with no
-// resolvable Linear account (`needs-assignee` label, owner named in the description footer —
-// see manifest.mjs) — nothing is ever mis-assigned, this is just less complete than a fully
-// wired flow. Recommend adding a member/email query to plan.mjs's Stage 2 read (exposing an
-// email -> id map on the plan artifact) so apply can consume it without introducing a brand new
-// unverified query inside this module.
+// time — see planner.mjs). plan.mjs's Stage 2 read now fetches active team members alongside
+// issues/projects/labels/cycles and exposes `plan.userIdsByEmail`, a `{ lowercased email: user
+// id }` map (Team.members returns `{ id name email active }`, confirmed by live introspection —
+// only `active` users are included). On CREATE, `issue.assignee_email` is looked up in that map
+// case-insensitively; a hit sets `assigneeId`, a miss (no email, or an email with no active
+// workspace member) creates the issue unassigned rather than failing the run. That is the same
+// safe degraded state the design already prescribes for an owner with no resolvable Linear
+// account (`needs-assignee` label, owner named in the description footer — see manifest.mjs) —
+// nothing is ever mis-assigned, just left unassigned for a human (or a later re-run once the
+// person joins Linear) to pick up.
+//
+// On UPDATE, `assigneeId` is never sent, full stop — see the "update issues" step below. Linear
+// owns the assignee once an issue is seeded (spec §2.1), and planner.mjs already strips
+// `assignee_email` before an issue reaches `update`. Even if it hadn't been stripped, this
+// executor must not turn it into `assigneeId` on an update input — that would let a routine
+// resync silently revert a hand-done reassignment. This is the ownership split the whole design
+// rests on.
 //
 // --- estimate: null is sent explicitly, never omitted ---
 // A parent record's `estimate` is deliberately `null` (spec §4.1: "Linear rolls the estimate up
@@ -81,19 +85,45 @@
 // on that update would leave the old number in place, silently wrong. Every mutation input built
 // here therefore includes `estimate` explicitly, `null` and all, never conditionally dropped.
 //
+// --- initiative linkage: NOT a ProjectCreateInput field ---
+// Live introspection (2026-08-08) confirmed `ProjectCreateInput` has no `initiativeIds` field
+// (no field on it mentions "initiative" at all) — the earlier guess in this module was wrong.
+// The actual linkage is a second, separate mutation: `initiativeToProjectCreate`, whose input
+// type `InitiativeToProjectCreateInput` has exactly `{ id, projectId, initiativeId, sortOrder }`.
+// So project creation here is two mutations, not one: `projectCreate` (team-only, no initiative),
+// immediately followed by `initiativeToProjectCreate` linking the new project id to
+// `plan.initiative.id`. Each is logged as its own `appendApply` operation (`project.create` then
+// `project.link-initiative`) so the run log shows them as the two distinct writes they are.
+//
+// A failed link throws, aborting the run, same as every other create failure in this module —
+// deliberately, not by default. Two reasons: (1) this module's existing convention is that every
+// `success: false` response throws immediately (projectCreate, issueLabelCreate, issueCreate,
+// issueUpdate all do), matching the design's "any create failure exits non-zero; there is no
+// partial success that reads as success" rule — silently swallowing just this one write would be
+// an inconsistent carve-out. (2) it is not safely retryable later the way the others are: the
+// next `npm run linear:plan` matches this project by name and finds it already exists in Linear,
+// so it is planned as `adopt`, not `create` — and the link mutation only runs from the `create`
+// branch. A silently-continued failure here would leave the project permanently unlinked from
+// the initiative with no future run ever noticing or retrying it. Throwing surfaces it while the
+// project id is still on screen/in the log, so a human can link it by hand in Linear or fix and
+// re-run immediately.
+//
 // GraphQL field-name confidence: `teamId`, `title`, `description`, `estimate`, `projectId`,
-// `labelIds`, `parentId`, `cycleId` on IssueCreateInput/IssueUpdateInput, `name`+`teamIds` on
-// ProjectCreateInput, and `name`+`teamId` on IssueLabelCreateInput are the shapes I've seen
-// consistently in Linear's public API examples. NOT independently verified against a live
-// schema, and flagged for the same introspection pass plan.mjs already calls for: whether
-// `ProjectCreateInput` accepts `initiativeIds` directly (used below to attach a created project
-// to the toolkit initiative) versus needing a separate mutation to link project <-> initiative.
+// `labelIds`, `parentId`, `cycleId`, `assigneeId` on IssueCreateInput, `title`, `description`,
+// `estimate`, `projectId`, `labelIds` on IssueUpdateInput, `name`+`teamIds` on
+// ProjectCreateInput, `name`+`teamId` on IssueLabelCreateInput, and `projectId`+`initiativeId` on
+// InitiativeToProjectCreateInput are all confirmed against live introspection (2026-08-08).
 import { recordIssue } from "./idmap.mjs";
 import { appendApply, RUNS_DIR } from "./runlog.mjs";
 
 const PROJECT_CREATE = `
   mutation($input: ProjectCreateInput!) {
     projectCreate(input: $input) { success project { id name } }
+  }`;
+
+const INITIATIVE_TO_PROJECT_CREATE = `
+  mutation($input: InitiativeToProjectCreateInput!) {
+    initiativeToProjectCreate(input: $input) { success }
   }`;
 
 const LABEL_CREATE = `
@@ -123,6 +153,15 @@ function resolveLabelIds(names, labelIdByName, taskId) {
     }
     return id;
   });
+}
+
+// Case-insensitive email -> Linear user id lookup, matching plan.mjs's `userIdsByEmail` (already
+// lowercased there) and the norm-then-lookup idiom members.mjs uses. Missing email, missing map
+// (an older/partial plan), or no matching active workspace member all resolve to `null` — never
+// throw — so a task always lands as an issue, assigned or not.
+function resolveAssigneeId(email, userIdsByEmail) {
+  if (!email) return null;
+  return userIdsByEmail?.[String(email).toLowerCase()] ?? null;
 }
 
 function resolveProjectId(slug, projectIdBySlug, taskId) {
@@ -199,21 +238,40 @@ export async function executePlan({ plan, client, mutationClient, idMapPath, idM
   let created = 0;
   let updated = 0;
 
-  // 1. create projects
+  // 1. create projects, then link each to the initiative — two mutations, see module comment
+  // ("initiative linkage") for why this is `projectCreate` + `initiativeToProjectCreate` rather
+  // than a single call, and why a failed link throws instead of being swallowed.
   for (const p of plan.projects.create ?? []) {
     const data = await mutate.query(PROJECT_CREATE, {
       input: {
         name: p.name,
         description: p.description,
         teamIds: [plan.team.id],
-        initiativeIds: [plan.initiative.id],
       },
     });
     if (!data.projectCreate.success) {
       throw new Error(`executePlan: projectCreate failed for project "${p.slug}" (${p.name}).`);
     }
-    projectIdBySlug.set(p.slug, data.projectCreate.project.id);
-    appendApply(stamp, { op: "project.create", slug: p.slug, name: p.name, id: data.projectCreate.project.id }, runsDir);
+    const projectId = data.projectCreate.project.id;
+    projectIdBySlug.set(p.slug, projectId);
+    appendApply(stamp, { op: "project.create", slug: p.slug, name: p.name, id: projectId }, runsDir);
+
+    const linkData = await mutate.query(INITIATIVE_TO_PROJECT_CREATE, {
+      input: { projectId, initiativeId: plan.initiative.id },
+    });
+    if (!linkData.initiativeToProjectCreate.success) {
+      throw new Error(
+        `executePlan: initiativeToProjectCreate failed linking project "${p.slug}" (${projectId}) to ` +
+          `initiative "${plan.initiative.name}" (${plan.initiative.id}). The project now exists in ` +
+          `Linear but is not attached to the initiative — a re-plan will adopt it by name rather than ` +
+          `retry this link, so fix it by hand in Linear (or re-run this apply once the cause is clear).`
+      );
+    }
+    appendApply(
+      stamp,
+      { op: "project.link-initiative", slug: p.slug, project_id: projectId, initiative_id: plan.initiative.id },
+      runsDir
+    );
   }
 
   // 2. adopt projects — nothing to mutate, id already known from the plan; logged anyway so the
@@ -261,6 +319,8 @@ export async function executePlan({ plan, client, mutationClient, idMapPath, idM
       labelIds: resolveLabelIds(issue.labels, labelIdByName, issue.task_id),
     };
     if (parentId) input.parentId = parentId;
+    const assigneeId = resolveAssigneeId(issue.assignee_email, plan.userIdsByEmail);
+    if (assigneeId) input.assigneeId = assigneeId;
     if (issue.cycle != null) {
       const cycleId = plan.cycleIds?.[issue.cycle];
       if (!cycleId) {

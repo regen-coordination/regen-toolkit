@@ -267,15 +267,54 @@ test("a newly created project's id is available to issues in the same run", asyn
   const mutationClient = makeClient({
     projectCreate: (vars) => {
       assert.deepEqual(vars.input.teamIds, ["team-1"]);
-      assert.deepEqual(vars.input.initiativeIds, ["init-1"]);
+      assert.ok(!("initiativeIds" in vars.input), "ProjectCreateInput has no initiativeIds field");
       return { projectCreate: { success: true, project: { id: "new-p1", name: "Stabilise" } } };
     },
+    initiativeToProjectCreate: () => ({ initiativeToProjectCreate: { success: true } }),
     issueCreate: (vars) => {
       assert.equal(vars.input.projectId, "new-p1");
       return { issueCreate: { success: true, issue: { id: "u1", identifier: "TOOL-1" } } };
     },
   });
   await executePlan({ plan, client: makeClient({}), mutationClient, idMapPath, idMap, stamp: "STAMP", runsDir: tmpDir() });
+});
+
+// --- initiative linkage: a separate mutation, not a ProjectCreateInput field ---
+
+test("a created project triggers initiativeToProjectCreate with the new project id and the plan's initiative id", async () => {
+  const idMapPath = tmpFile();
+  const idMap = loadIdMap(idMapPath);
+  const plan = basePlan({
+    projects: { create: [{ slug: "repo-contribution", name: "Stabilise", description: "d" }], adopt: [] },
+  });
+  const mutationClient = makeClient({
+    projectCreate: () => ({ projectCreate: { success: true, project: { id: "new-p1", name: "Stabilise" } } }),
+    initiativeToProjectCreate: (vars) => {
+      assert.equal(vars.input.projectId, "new-p1");
+      assert.equal(vars.input.initiativeId, "init-1");
+      return { initiativeToProjectCreate: { success: true } };
+    },
+  });
+  await executePlan({ plan, client: makeClient({}), mutationClient, idMapPath, idMap, stamp: "STAMP", runsDir: tmpDir() });
+  const linkCalls = mutationClient.calls.filter((c) => c.document.includes("initiativeToProjectCreate"));
+  assert.equal(linkCalls.length, 1);
+});
+
+test("a failed initiativeToProjectCreate throws, aborting the run, and names the project", async () => {
+  const idMapPath = tmpFile();
+  const idMap = loadIdMap(idMapPath);
+  const plan = basePlan({
+    projects: { create: [{ slug: "repo-contribution", name: "Stabilise", description: "d" }], adopt: [] },
+  });
+  const mutationClient = makeClient({
+    projectCreate: () => ({ projectCreate: { success: true, project: { id: "new-p1", name: "Stabilise" } } }),
+    initiativeToProjectCreate: () => ({ initiativeToProjectCreate: { success: false } }),
+  });
+  await assert.rejects(
+    () =>
+      executePlan({ plan, client: makeClient({}), mutationClient, idMapPath, idMap, stamp: "STAMP", runsDir: tmpDir() }),
+    /repo-contribution/
+  );
 });
 
 // --- success: false throws, naming the task id ---
@@ -377,6 +416,132 @@ test("an issue with an explicit cycle number gets that cycle's Linear id on crea
   await executePlan({ plan, client: makeClient({}), mutationClient, idMapPath, idMap, stamp: "STAMP", runsDir: tmpDir() });
 });
 
+// --- assignee resolution on create; never touched on update ---
+
+test("assigneeId is sent on create when the email resolves against plan.userIdsByEmail", async () => {
+  const idMapPath = tmpFile();
+  const idMap = loadIdMap(idMapPath);
+  const plan = basePlan({
+    userIdsByEmail: { "luiz@example.com": "user-1" },
+    issues: { create: [issueFixture("task-a", { assignee_email: "luiz@example.com" })], update: [] },
+  });
+  const mutationClient = makeClient({
+    issueCreate: (vars) => {
+      assert.equal(vars.input.assigneeId, "user-1");
+      return { issueCreate: { success: true, issue: { id: "u1", identifier: "TOOL-1" } } };
+    },
+  });
+  await executePlan({ plan, client: makeClient({}), mutationClient, idMapPath, idMap, stamp: "STAMP", runsDir: tmpDir() });
+});
+
+test("userIdsByEmail matching is case-insensitive", async () => {
+  const idMapPath = tmpFile();
+  const idMap = loadIdMap(idMapPath);
+  const plan = basePlan({
+    userIdsByEmail: { "luiz@example.com": "user-1" },
+    issues: { create: [issueFixture("task-a", { assignee_email: "Luiz@Example.COM" })], update: [] },
+  });
+  const mutationClient = makeClient({
+    issueCreate: (vars) => {
+      assert.equal(vars.input.assigneeId, "user-1");
+      return { issueCreate: { success: true, issue: { id: "u1", identifier: "TOOL-1" } } };
+    },
+  });
+  await executePlan({ plan, client: makeClient({}), mutationClient, idMapPath, idMap, stamp: "STAMP", runsDir: tmpDir() });
+});
+
+test("create is unassigned (no assigneeId, no throw) when assignee_email is absent", async () => {
+  const idMapPath = tmpFile();
+  const idMap = loadIdMap(idMapPath);
+  const plan = basePlan({
+    userIdsByEmail: { "luiz@example.com": "user-1" },
+    issues: { create: [issueFixture("task-a", { assignee_email: null })], update: [] },
+  });
+  const mutationClient = makeClient({
+    issueCreate: (vars) => {
+      assert.ok(!("assigneeId" in vars.input), "assigneeId must be absent when assignee_email is null");
+      return { issueCreate: { success: true, issue: { id: "u1", identifier: "TOOL-1" } } };
+    },
+  });
+  const { created } = await executePlan({
+    plan,
+    client: makeClient({}),
+    mutationClient,
+    idMapPath,
+    idMap,
+    stamp: "STAMP",
+    runsDir: tmpDir(),
+  });
+  assert.equal(created, 1);
+});
+
+test("create is unassigned (no assigneeId, no throw) when the email does not resolve to any active member", async () => {
+  const idMapPath = tmpFile();
+  const idMap = loadIdMap(idMapPath);
+  const plan = basePlan({
+    userIdsByEmail: { "luiz@example.com": "user-1" },
+    issues: { create: [issueFixture("task-a", { assignee_email: "ghost@example.com" })], update: [] },
+  });
+  const mutationClient = makeClient({
+    issueCreate: (vars) => {
+      assert.ok(!("assigneeId" in vars.input), "assigneeId must be absent for an unresolvable email");
+      return { issueCreate: { success: true, issue: { id: "u1", identifier: "TOOL-1" } } };
+    },
+  });
+  const { created } = await executePlan({
+    plan,
+    client: makeClient({}),
+    mutationClient,
+    idMapPath,
+    idMap,
+    stamp: "STAMP",
+    runsDir: tmpDir(),
+  });
+  assert.equal(created, 1);
+});
+
+test("create is unassigned (no assigneeId, no throw) when plan.userIdsByEmail is entirely absent (older/partial plan)", async () => {
+  const idMapPath = tmpFile();
+  const idMap = loadIdMap(idMapPath);
+  const plan = basePlan({ issues: { create: [issueFixture("task-a", { assignee_email: "luiz@example.com" })], update: [] } });
+  delete plan.userIdsByEmail;
+  const mutationClient = makeClient({
+    issueCreate: (vars) => {
+      assert.ok(!("assigneeId" in vars.input));
+      return { issueCreate: { success: true, issue: { id: "u1", identifier: "TOOL-1" } } };
+    },
+  });
+  await executePlan({ plan, client: makeClient({}), mutationClient, idMapPath, idMap, stamp: "STAMP", runsDir: tmpDir() });
+});
+
+test("update never sends assigneeId, even when plan.userIdsByEmail could resolve the owner's email", async () => {
+  const idMapPath = tmpFile();
+  const idMap = loadIdMap(idMapPath);
+  const plan = basePlan({
+    userIdsByEmail: { "luiz@example.com": "user-1" },
+    issues: {
+      create: [],
+      update: [{ task_id: "task-a", issue_id: "u1", identifier: "TOOL-1", title: "A", description: "d", project: null, labels: [], estimate: 1 }],
+    },
+  });
+  const mutationClient = makeClient({
+    issueUpdate: (vars) => {
+      assert.ok(!("assigneeId" in vars.input), "assigneeId must never appear in an update input");
+      return { issueUpdate: { success: true, issue: { id: "u1", identifier: "TOOL-1" } } };
+    },
+  });
+  const { updated } = await executePlan({
+    plan,
+    client: makeClient({}),
+    mutationClient,
+    idMapPath,
+    idMap,
+    stamp: "STAMP",
+    runsDir: tmpDir(),
+  });
+  assert.equal(updated, 1);
+});
+
 // --- sub-issues: parent is always created before child, regardless of plan order ---
 
 test("orderCreatesForParents places a parent before its child even when the input lists the child first", () => {
@@ -475,6 +640,7 @@ test("logs every operation to the apply log, in the order they happened", async 
   });
   const mutationClient = makeClient({
     projectCreate: () => ({ projectCreate: { success: true, project: { id: "p-new", name: "New" } } }),
+    initiativeToProjectCreate: () => ({ initiativeToProjectCreate: { success: true } }),
     issueLabelCreate: () => ({ issueLabelCreate: { success: true, issueLabel: { id: "l-new", name: "fresh-label" } } }),
     issueCreate: () => ({ issueCreate: { success: true, issue: { id: "u1", identifier: "TOOL-1" } } }),
   });
@@ -486,6 +652,6 @@ test("logs every operation to the apply log, in the order they happened", async 
     .map((l) => JSON.parse(l));
   assert.deepEqual(
     lines.map((l) => l.op),
-    ["project.create", "project.adopt", "label.create", "issue.create"]
+    ["project.create", "project.link-initiative", "project.adopt", "label.create", "issue.create"]
   );
 });

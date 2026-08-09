@@ -6,18 +6,14 @@
 // Linear with a mutation.
 //
 // Schema-shape confidence, so this doesn't read as more certain than it is: `Team.issues`,
-// `Team.projects`, `Team.labels`, `Team.cycles`, and `Cycle.{id,number,startsAt,endsAt}` are
-// shapes I've seen consistently in Linear's public API examples and am confident in. Two things
-// are NOT independently verified against a live schema and should be checked against Linear's
-// introspection (or the first live run's error output) before Task 19:
-//   1. `initiatives` as a top-level Query field (rather than nested some other way) — plausible,
-//      since Initiative spans multiple teams via projects, but unverified here.
-//   2. `teams(filter: { key: { eq: $key } })` and the top-level `team(id: $teamId)` field used
-//      by the pagination follow-up queries below — the `{ eq: ... }` comparator shape matches
-//      Linear's general filter idiom, but the exact `TeamFilter` field name is assumed, not
-//      confirmed.
-// If either is wrong, Linear returns a GraphQL error naming the bad field — client.mjs surfaces
-// that verbatim rather than swallowing it, so a wrong guess here fails loud, not silent.
+// `Team.projects`, `Team.labels`, `Team.cycles`, `Cycle.{id,number,startsAt,endsAt}`,
+// `initiatives` as a top-level Query field, `teams(filter: { key: { eq: $key } })`, and the
+// top-level `team(id: $teamId)` field used by the pagination follow-up queries below are all
+// confirmed against live introspection (2026-08-08, Task 20) — no longer guesses. `Team.members`
+// returning `{ id name email active }` is confirmed the same way and is new as of Task 20 (used
+// to build `plan.userIdsByEmail` for assignee resolution — see below). If a field name were ever
+// wrong regardless, Linear returns a GraphQL error naming it — client.mjs surfaces that verbatim
+// rather than swallowing it, so a wrong guess here fails loud, not silent.
 import fs from "node:fs";
 import yaml from "js-yaml";
 import "dotenv/config";
@@ -40,9 +36,10 @@ const MANIFEST_PATH = "data/linear/seed-manifest.yaml";
 // mode, so it gets the same treatment for the same cost.
 //
 // `projects` (3, one per lane, growing only when a new lane is proposed), `cycles` (biweekly —
-// 50 covers roughly two years), and `initiatives` (workspace-wide; this pipeline only ever looks
-// for the single `toolkit` initiative by name) are left single-page. That is a latent limit, not
-// a fixed one — revisit if any of those connections is ever observed near its page size.
+// 50 covers roughly two years), `initiatives` (workspace-wide; this pipeline only ever looks
+// for the single `toolkit` initiative by name), and `members` (a small team, not a growing
+// registry) are left single-page. That is a latent limit, not a fixed one — revisit if any of
+// those connections is ever observed near its page size.
 const PAGE = 250;
 
 async function fetchAllPages(client, { query, variables, connectionPath }) {
@@ -88,10 +85,18 @@ async function main() {
   const idMap = loadIdMap(ID_MAP_PATH);
   const client = new LinearClient({ apiKey: process.env.LINEAR_API_KEY });
 
+  // `teams(..., first: 1)` — discovered live (2026-08-08, Task 20), not in the original task
+  // brief: without an explicit `first` on `teams`, Linear's query-complexity budget treats the
+  // connection as unbounded and multiplies it against every nested connection beneath it
+  // (issues, projects, labels, cycles, members), which blows the budget and the whole query
+  // fails with "Query too complex" — confirmed by testing the query with and without `first: 1`
+  // directly against the live API. This tool only ever wants the single team matching
+  // `filter: { key: { eq: $key } }`, so `first: 1` is also the semantically correct bound, not
+  // just a workaround.
   const data = await client.query(
     `query($key: String!) {
        initiatives(first: 100) { nodes { id name } }
-       teams(filter: { key: { eq: $key } }) {
+       teams(filter: { key: { eq: $key } }, first: 1) {
          nodes {
            id key name
            issues(first: ${PAGE}) {
@@ -104,6 +109,7 @@ async function main() {
              pageInfo { hasNextPage endCursor }
            }
            cycles(first: 50) { nodes { id number startsAt endsAt } }
+           members(first: ${PAGE}) { nodes { id name email active } }
          }
        }
      }`,
@@ -194,6 +200,16 @@ async function main() {
   // Only tasks carrying an explicit cycle number are scheduled; everything else lands in the
   // project backlog — nothing is auto-scheduled (spec §5).
   plan.cycleIds = Object.fromEntries(team.cycles.nodes.map((c) => [c.number, c.id]));
+  // Email -> Linear user id, active members only, keyed lowercased so lookups are
+  // case-insensitive (consistent with members.mjs's `norm`). Consumed by executor.mjs on CREATE
+  // only — spec §2.1/§4.2: an owner with no resolvable Linear account is created unassigned with
+  // a `needs-assignee` label rather than failing the run, and Linear owns the assignee (not this
+  // pipeline) once an issue exists, so this map is never consulted on UPDATE.
+  plan.userIdsByEmail = Object.fromEntries(
+    team.members.nodes
+      .filter((u) => u.active && u.email)
+      .map((u) => [u.email.toLowerCase(), u.id])
+  );
 
   // Cycle check applies only to issues that actually target a cycle — an empty `plan.cycleIds`
   // (no cycles created in Linear yet) is not itself a failure, so the tool stays usable before
@@ -215,6 +231,13 @@ async function main() {
   console.log(`projects      create ${plan.projects.create.length} · adopt ${plan.projects.adopt.length}`);
   console.log(`labels        create ${plan.labels.create.length}`);
   console.log(`issues        create ${plan.issues.create.length} · update ${plan.issues.update.length}`);
+  // Only `create` is assignable — `update` never carries assignee_email (Linear owns it once
+  // seeded, see planner.mjs), so counting there would misreport issues this run won't touch.
+  const assignable = plan.issues.create.filter(
+    (i) => i.assignee_email && plan.userIdsByEmail[i.assignee_email.toLowerCase()]
+  ).length;
+  const unassignable = plan.issues.create.length - assignable;
+  console.log(`assignees     ${assignable} resolved · ${unassignable} unassigned (needs-assignee)`);
   if (orphaned) console.log(`orphaned      ${orphaned} (will be recreated)`);
   console.log(`\nnothing was written to Linear. run apply with --confirm to execute.`);
 }
