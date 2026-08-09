@@ -142,22 +142,38 @@ test("maxRetries = 0 makes exactly one attempt, no retries", async () => {
 // --- backoff shape: exponential, and fast in tests (no dangling timers) ---
 
 test("backoff delay grows exponentially between retries", async () => {
-  const timestamps = [];
+  // Asserts the delays REQUESTED, not elapsed wall-clock. A real-clock version of this test
+  // was flaky: under CPU contention the first measured gap could exceed the second even though
+  // the backoff was perfectly exponential. Injecting the sleep also keeps the suite fast and
+  // leaves no dangling timers.
+  const slept = [];
   const responses = [jsonResponse(503, {}), jsonResponse(503, {}), jsonResponse(200, { data: { ok: true } })];
   let i = 0;
-  const fetchImpl = async () => {
-    timestamps.push(Date.now());
-    return responses[i++];
-  };
-  const client = new LinearClient({ apiKey: "key", fetchImpl, retryDelayMs: 30, maxRetries: 3 });
-  await client.query("query { ok }");
+  const fetchImpl = async () => responses[i++];
+  const client = new LinearClient({
+    apiKey: "key",
+    fetchImpl,
+    retryDelayMs: 30,
+    maxRetries: 3,
+    sleepImpl: async (ms) => slept.push(ms),
+  });
 
-  const gap1 = timestamps[1] - timestamps[0]; // expected ~30ms (retryDelayMs * 2**0)
-  const gap2 = timestamps[2] - timestamps[1]; // expected ~60ms (retryDelayMs * 2**1)
-  assert.ok(gap1 >= 25, `expected first backoff gap >= 25ms, got ${gap1}ms`);
-  assert.ok(gap2 >= gap1 * 1.5, `expected second backoff gap notably larger than first: ${gap1}ms vs ${gap2}ms`);
+  assert.deepEqual(await client.query("query { ok }"), { ok: true });
+  assert.deepEqual(slept, [30, 60], "delays must double: retryDelayMs * 2**attempt");
 });
 
+test("backoff uses the default 1000ms base when retryDelayMs is not overridden", async () => {
+  const slept = [];
+  const responses = [jsonResponse(429, {}), jsonResponse(429, {}), jsonResponse(200, { data: { ok: true } })];
+  let i = 0;
+  const client = new LinearClient({
+    apiKey: "key",
+    fetchImpl: async () => responses[i++],
+    sleepImpl: async (ms) => slept.push(ms),
+  });
+  await client.query("query { ok }");
+  assert.deepEqual(slept, [1000, 2000]);
+});
 // --- non-retryable HTTP failures: never retried, always thrown with the status named ---
 
 test("a 4xx other than 429 does not retry", async () => {

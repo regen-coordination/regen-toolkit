@@ -19,6 +19,10 @@ function isRetryableStatus(status) {
   return status === 429 || status >= 500;
 }
 
+// Injectable so tests can observe the delays that were REQUESTED rather than measuring elapsed
+// wall-clock. Timing assertions against a real clock are flaky under CPU contention — a loaded
+// machine can stretch the first gap past the second and break an "is it growing?" check on a
+// backoff that is in fact perfectly exponential.
 function wait(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -47,9 +51,9 @@ export class LinearClient {
   // A Linear personal API key is sent raw in Authorization (OAuth tokens use "Bearer <token>";
   // personal API keys do not — sending "Bearer <key>" is a real, silent-until-you-read-the-docs
   // mistake this constructor comment exists to head off).
-  constructor({ apiKey, fetchImpl = globalThis.fetch, endpoint = ENDPOINT, maxRetries = 3, retryDelayMs = 1000 }) {
+  constructor({ apiKey, fetchImpl = globalThis.fetch, endpoint = ENDPOINT, maxRetries = 3, retryDelayMs = 1000, sleepImpl = wait }) {
     if (!apiKey) throw new Error("LINEAR_API_KEY is not set");
-    Object.assign(this, { apiKey, fetchImpl, endpoint, maxRetries, retryDelayMs });
+    Object.assign(this, { apiKey, fetchImpl, endpoint, maxRetries, retryDelayMs, sleepImpl });
   }
 
   // maxRetries counts RETRIES, not total attempts: total attempts made is maxRetries + 1
@@ -76,7 +80,7 @@ export class LinearClient {
           `Linear API request failed after ${attempt + 1} attempt(s): last response was HTTP ${res.status}`
         );
       }
-      await wait(this.retryDelayMs * 2 ** attempt);
+      await this.sleepImpl(this.retryDelayMs * 2 ** attempt);
     }
 
     const payload = await readJson(res);
