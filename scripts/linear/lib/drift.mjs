@@ -25,6 +25,50 @@ function sameLabelSet(a, b) {
   return true;
 }
 
+// Descriptions are compared on CONTENT, not bytes, because Linear rewrites markdown on ingest.
+// Two rewrites were observed live on 2026-08-09 across the 172-issue seed:
+//
+//   1. Emphasis delimiters move outside an inline-code boundary (22 issues). We send
+//        **Luiz — seed Linear from the `regen-toolkit-os` branch**
+//      and Linear stores
+//        **Luiz — seed Linear from the** `regen-toolkit-os` **branch**
+//
+//   2. Bare URLs are auto-linked (8 issues). We send
+//        bioregioning.org
+//      and Linear stores
+//        [bioregioning.org](<http://bioregioning.org>)
+//
+//   3. Markdown punctuation is backslash-escaped (3 issues). We send
+//        ~69 source systems
+//      and Linear stores
+//        \~69 source systems
+//
+// All three render identically and differ only in bytes. A byte comparison would report all 33
+// as drift forever, and every `apply` would push our form back for Linear to rewrite again on
+// arrival: an endless ping-pong that also buries any real hand-edit in permanent noise.
+//
+// So we compare prose: unescape backslash escapes, collapse `[label](url)` to `label`, drop
+// emphasis and code delimiters, collapse whitespace. Unescaping runs FIRST, or stripping `~`
+// out of `\~69` would leave a stray backslash behind and the comparison would still fail.
+//
+// The deliberate trade: a change that ONLY alters formatting — bolding a word, or linking a
+// word that was already there — is invisible to this check. That is the right call. We care
+// whether someone rewrote the words, not how they are decorated.
+const MD_ESCAPE = /\\([\\`*_{}[\]()#+\-.!~>])/g;
+const MD_LINK = /\[([^\]]*)\]\([^)]*\)/g;
+const MARKUP = /[*_`~]/g;
+
+function sameProse(a, b) {
+  const norm = (s) =>
+    String(s ?? "")
+      .replace(MD_ESCAPE, "$1")
+      .replace(MD_LINK, "$1")
+      .replace(MARKUP, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  return norm(a) === norm(b);
+}
+
 export function computeDrift({ manifest, idMap, remoteById }) {
   const unseeded = [];
   const orphaned = [];
@@ -45,7 +89,7 @@ export function computeDrift({ manifest, idMap, remoteById }) {
       continue;
     }
     if (remote.title !== issue.title) titleMismatch.push(issue.task_id);
-    if (remote.description !== issue.description) descriptionMismatch.push(issue.task_id);
+    if (!sameProse(remote.description, issue.description)) descriptionMismatch.push(issue.task_id);
     if (remote.estimate !== issue.estimate) estimateMismatch.push(issue.task_id);
     if (!sameLabelSet(remote.labels, issue.labels)) labelsMismatch.push(issue.task_id);
   }

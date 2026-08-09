@@ -152,3 +152,59 @@ test("the six drift kinds are all reported separately when they co-occur", () =>
   assert.deepEqual(d.labelsMismatch, ["a"]);
   assert.equal(d.clean, false);
 });
+
+// --- descriptions compare on content, not bytes: Linear rewrites markdown on ingest ---
+
+test("ignores Linear's emphasis-around-inline-code rewrite (observed live on 22 of 172 issues)", () => {
+  const m = {
+    issues: [{ task_id: "a", title: "A", description: "**Luiz — seed Linear from the `regen-toolkit-os` branch** — go" }],
+  };
+  const idMap = { entries: { a: { issue_id: "u1", state: "active" } } };
+  const remoteById = new Map([
+    ["u1", { id: "u1", title: "A", description: "**Luiz — seed Linear from the** `regen-toolkit-os` **branch** — go" }],
+  ]);
+  const d = computeDrift({ manifest: m, idMap, remoteById });
+  assert.deepEqual(d.descriptionMismatch, [], "formatting churn must not read as drift");
+  assert.equal(d.clean, true);
+});
+
+test("still reports a description mismatch when the WORDS actually change", () => {
+  const m = { issues: [{ task_id: "a", title: "A", description: "**seed** Linear from the branch" }] };
+  const idMap = { entries: { a: { issue_id: "u1", state: "active" } } };
+  const remoteById = new Map([["u1", { id: "u1", title: "A", description: "**seed** Linear from the OTHER branch" }]]);
+  assert.deepEqual(computeDrift({ manifest: m, idMap, remoteById }).descriptionMismatch, ["a"]);
+});
+
+test("treats a null and a missing description as equal, not as drift", () => {
+  const m = { issues: [{ task_id: "a", title: "A" }] };
+  const idMap = { entries: { a: { issue_id: "u1", state: "active" } } };
+  const remoteById = new Map([["u1", { id: "u1", title: "A", description: null }]]);
+  assert.deepEqual(computeDrift({ manifest: m, idMap, remoteById }).descriptionMismatch, []);
+});
+
+test("ignores Linear's bare-URL auto-linking (observed live on 8 of 172 issues)", () => {
+  const m = { issues: [{ task_id: "a", title: "A", description: "share bioregioning.org with the group" }] };
+  const idMap = { entries: { a: { issue_id: "u1", state: "active" } } };
+  const remoteById = new Map([
+    ["u1", { id: "u1", title: "A", description: "share [bioregioning.org](<http://bioregioning.org>) with the group" }],
+  ]);
+  const d = computeDrift({ manifest: m, idMap, remoteById });
+  assert.deepEqual(d.descriptionMismatch, [], "auto-linking must not read as drift");
+  assert.equal(d.clean, true);
+});
+
+test("still reports drift when a link's LABEL text changes, not just its url", () => {
+  const m = { issues: [{ task_id: "a", title: "A", description: "see [the design doc](http://x)" }] };
+  const idMap = { entries: { a: { issue_id: "u1", state: "active" } } };
+  const remoteById = new Map([["u1", { id: "u1", title: "A", description: "see [the OTHER doc](http://x)" }]]);
+  assert.deepEqual(computeDrift({ manifest: m, idMap, remoteById }).descriptionMismatch, ["a"]);
+});
+
+test("ignores Linear's backslash-escaping of markdown punctuation (observed live on 3 issues)", () => {
+  const m = { issues: [{ task_id: "a", title: "A", description: "confirm the ~69 source systems" }] };
+  const idMap = { entries: { a: { issue_id: "u1", state: "active" } } };
+  const remoteById = new Map([["u1", { id: "u1", title: "A", description: "confirm the \\~69 source systems" }]]);
+  const d = computeDrift({ manifest: m, idMap, remoteById });
+  assert.deepEqual(d.descriptionMismatch, [], "escaping must not read as drift");
+  assert.equal(d.clean, true);
+});
