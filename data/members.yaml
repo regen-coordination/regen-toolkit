@@ -28,19 +28,19 @@ members:
     name: Matty Compost
     role: master-doc-author
     aliases: [Matt, Matty, Mattycompost]
-    linear_email: null
+    linear_email: matt@greenpill.builders
 
   - id: afo
     name: Afolabi Aiyeloja
     role: project-management
     aliases: [Afo]
-    linear_email: null
+    linear_email: afo@greenpill.builders
 
   - id: rather
     name: rather mercurial
     role: engineering
     aliases: [Rather, Rathermercurial]
-    linear_email: null
+    linear_email: rathermercurial@protonmail.com
 
   # RESOLVED + team-ratified. Regis Chapman and Durgadas are one person; the 2026-07-16 notes
   # listed them as two separate participants and the 2026-08-06 engineering sync corrected it
@@ -50,7 +50,7 @@ members:
     name: Regis Chapman
     role: standards
     aliases: [Durgadas, Regis, "Regis (Durgadas)", Das, Dodos]
-    linear_email: null
+    linear_email: durgadas@mac.com
 
   # RESOLVED. "Hina" and "Heenal" are one person — confirmed by the operator 2026-08-09.
   # The evidence that prompted the question: "Hina" appears only in repo-transfer prose and

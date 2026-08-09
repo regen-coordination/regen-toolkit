@@ -287,17 +287,14 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: repo-contribution
     labels:
       - layer/10
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: 1
     parent: null
     blocked_by:
@@ -322,17 +319,14 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/10
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -356,17 +350,14 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -388,17 +379,14 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: null
     labels:
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
       - strategic
     estimate: 1
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -421,16 +409,13 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -453,17 +438,14 @@ issues:
 
       refs: none
 
-      owner of record: Afolabi Aiyeloja (no Linear account yet)
-
       ```
     project: null
     labels:
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
       - strategic
     estimate: 2
-    assignee_email: null
+    assignee_email: afo@greenpill.builders
     cycle: 1
     parent: null
     blocked_by: []
@@ -486,17 +468,14 @@ issues:
 
       refs: none
 
-      owner of record: Afolabi Aiyeloja (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/10
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: 4
-    assignee_email: null
+    assignee_email: afo@greenpill.builders
     cycle: 1
     parent: null
     blocked_by: []
@@ -519,17 +498,14 @@ issues:
 
       refs: none
 
-      owner of record: Afolabi Aiyeloja (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/10
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: afo@greenpill.builders
     cycle: 1
     parent: null
     blocked_by: []
@@ -552,17 +528,14 @@ issues:
 
       refs: none
 
-      owner of record: Afolabi Aiyeloja (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: afo@greenpill.builders
     cycle: null
     parent: null
     blocked_by: []
@@ -585,17 +558,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -619,17 +589,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: repo-contribution
     labels:
       - layer/10
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: 1
     parent: null
     blocked_by: []
@@ -653,17 +620,14 @@ issues:
 
       refs: none
 
-      owner of record: Matty Compost (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/10
-      - needs-assignee
       - origin/meeting-260806
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: matt@greenpill.builders
     cycle: 1
     parent: null
     blocked_by: []
@@ -1031,17 +995,14 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: repo-contribution
     labels:
       - layer/10
-      - needs-assignee
       - origin/meeting-260716
       - seed/repo
     estimate: 4
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -1066,17 +1027,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: knowledge-curation
     labels:
       - layer/01
-      - needs-assignee
       - origin/meeting-260716
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -1750,18 +1708,15 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - needs-triage
       - origin/meeting-260702
       - seed/repo
     estimate: 1
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -1785,18 +1740,15 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/09
-      - needs-assignee
       - needs-triage
       - origin/meeting-260702
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -1821,17 +1773,14 @@ issues:
 
       refs: none
 
-      owner of record: Matty Compost (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
-      - needs-assignee
       - needs-triage
       - origin/meeting-260702
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: matt@greenpill.builders
     cycle: null
     parent: null
     blocked_by: []
@@ -1855,18 +1804,15 @@ issues:
 
       refs: none
 
-      owner of record: Afolabi Aiyeloja (no Linear account yet)
-
       ```
     project: repo-contribution
     labels:
       - layer/10
-      - needs-assignee
       - needs-triage
       - origin/meeting-260702
       - seed/repo
     estimate: 1
-    assignee_email: null
+    assignee_email: afo@greenpill.builders
     cycle: null
     parent: null
     blocked_by: []
@@ -1890,18 +1836,15 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/10
-      - needs-assignee
       - needs-triage
       - origin/meeting-260702
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -1925,18 +1868,15 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/10
-      - needs-assignee
       - needs-triage
       - origin/meeting-260702
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -1960,17 +1900,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: knowledge-curation
     labels:
-      - needs-assignee
       - needs-triage
       - origin/meeting-260702
       - seed/repo
     estimate: 4
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -2214,17 +2151,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260615
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -2372,17 +2306,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/09
-      - needs-assignee
       - origin/meeting-260521
       - seed/repo
     estimate: 1
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -2495,17 +2426,14 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: knowledge-curation
     labels:
       - layer/07
-      - needs-assignee
       - origin/meeting-260604
       - seed/repo
     estimate: 4
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -2527,17 +2455,14 @@ issues:
 
       refs: none
 
-      owner of record: Matty Compost (no Linear account yet)
-
       ```
     project: null
     labels:
-      - needs-assignee
       - origin/meeting-260604
       - seed/repo
       - strategic
     estimate: 2
-    assignee_email: null
+    assignee_email: matt@greenpill.builders
     cycle: null
     parent: null
     blocked_by: []
@@ -2695,17 +2620,14 @@ issues:
 
       refs: none
 
-      owner of record: Afolabi Aiyeloja (no Linear account yet)
-
       ```
     project: null
     labels:
-      - needs-assignee
       - origin/meeting-260604
       - seed/repo
       - strategic
     estimate: 2
-    assignee_email: null
+    assignee_email: afo@greenpill.builders
     cycle: null
     parent: null
     blocked_by: []
@@ -3596,17 +3518,14 @@ issues:
 
       refs: none
 
-      owner of record: Matty Compost (no Linear account yet)
-
       ```
     project: null
     labels:
-      - needs-assignee
       - origin/meeting-260615
       - seed/repo
       - strategic
     estimate: null
-    assignee_email: null
+    assignee_email: matt@greenpill.builders
     cycle: null
     parent: null
     blocked_by: []
@@ -3658,16 +3577,13 @@ issues:
 
       refs: none
 
-      owner of record: Matty Compost (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
-      - needs-assignee
       - origin/meeting-260507
       - seed/repo
     estimate: null
-    assignee_email: null
+    assignee_email: matt@greenpill.builders
     cycle: null
     parent: null
     blocked_by: []
@@ -3710,15 +3626,13 @@ issues:
       source: HEARTBEAT.md § Master Doc & Handoff · `task-260507-durgadas-frame-language-critique`
       repo: regen-coordination/regen-toolkit @ regen-toolkit-os
       refs: none
-      owner of record: Regis Chapman (no Linear account yet)
       ```
     project: knowledge-curation
     labels:
-      - needs-assignee
       - origin/meeting-260507
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -4218,17 +4132,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260423
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -4250,17 +4161,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260423
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -4282,17 +4190,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260423
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -4315,17 +4220,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260423
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -4349,17 +4251,14 @@ issues:
 
       refs: none
 
-      owner of record: Regis Chapman (no Linear account yet)
-
       ```
     project: org-os-framework
     labels:
       - layer/06
-      - needs-assignee
       - origin/meeting-260423
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: durgadas@mac.com
     cycle: null
     parent: null
     blocked_by: []
@@ -4382,17 +4281,14 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: knowledge-curation
     labels:
       - layer/01
-      - needs-assignee
       - origin/meeting-260423
       - seed/repo
     estimate: 4
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -4414,17 +4310,14 @@ issues:
 
       refs: none
 
-      owner of record: rather mercurial (no Linear account yet)
-
       ```
     project: knowledge-curation
     labels:
       - layer/01
-      - needs-assignee
       - origin/meeting-260423
       - seed/repo
     estimate: 2
-    assignee_email: null
+    assignee_email: rathermercurial@protonmail.com
     cycle: null
     parent: null
     blocked_by: []
@@ -5330,4 +5223,4 @@ issues:
     cycle: null
     parent: task-260615-luiz-build-regenos-website
     blocked_by: []
-generated_at: '2026-08-08T23:00:33.168Z'
+generated_at: '2026-08-09T00:35:15.732Z'
