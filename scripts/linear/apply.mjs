@@ -6,6 +6,7 @@
 import fs from "node:fs";
 import "dotenv/config";
 import { LinearClient } from "./lib/client.mjs";
+import { requireApiKey } from "./lib/env.mjs";
 import { loadIdMap } from "./lib/idmap.mjs";
 import { executePlan } from "./lib/executor.mjs";
 import { runStamp } from "./lib/runlog.mjs";
@@ -54,13 +55,7 @@ async function main() {
     process.exit(1);
   }
 
-  if (!process.env.LINEAR_API_KEY) {
-    console.error(
-      "LINEAR_API_KEY is not set. Copy .env.example to .env and add your Linear personal API key, " +
-        "or export it in your shell before running this command."
-    );
-    process.exit(1);
-  }
+  requireApiKey();
 
   const idMap = loadIdMap(ID_MAP_PATH);
   idMap.team_key = plan.team?.key ?? idMap.team_key;

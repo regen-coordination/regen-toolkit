@@ -1,26 +1,9 @@
-import { loadTasks, validateTask } from "./lib/tasks.mjs";
+import { loadTasks, validateTaskRegistry } from "./lib/tasks.mjs";
 import { loadMembers, resolveOwner } from "./lib/members.mjs";
 
 const tasks = loadTasks("data/tasks.yaml");
 const members = loadMembers("data/members.yaml");
-const ids = new Set();
-const errors = [];
-
-for (const task of tasks) {
-  errors.push(...validateTask(task));
-  if (ids.has(task.id)) errors.push(`${task.id}: duplicate id`);
-  ids.add(task.id);
-  if (!resolveOwner(members, task.owner)) {
-    errors.push(`${task.id}: owner "${task.owner}" not in data/members.yaml`);
-  }
-}
-
-for (const task of tasks) {
-  if (task.parent && !ids.has(task.parent)) errors.push(`${task.id}: parent "${task.parent}" not found`);
-  for (const dep of task.blocked_by ?? []) {
-    if (!ids.has(dep)) errors.push(`${task.id}: blocked_by "${dep}" not found`);
-  }
-}
+const errors = validateTaskRegistry(tasks, members, resolveOwner);
 
 const unsizedInCycle = tasks.filter((t) => t.cycle != null && t.estimate == null);
 if (unsizedInCycle.length) {

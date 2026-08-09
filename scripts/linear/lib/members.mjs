@@ -20,13 +20,21 @@ const ZERO_WIDTH_RE = /[\u200B-\u200D\uFEFF]/g;
 // NOT match U+200B, so a name pasted from Docs/Notion with an invisible zero-width space
 // would otherwise silently fail to resolve — exactly the kind of silent identity-fork this
 // module exists to prevent.
-const norm = (s) =>
+//
+// Exported (as `normKey`, a scope-neutral name — this module is about members, but the
+// normalization itself isn't member-specific) for planner.mjs's `normName`, which matches
+// project and label names: exactly the same kind of hand-typed, possibly-pasted-from-Docs
+// string a person's name is, and so exactly as exposed to the same invisible-zero-width-space
+// failure this recipe was hardened against (see members.test.mjs's regression test). Kept as
+// `norm` internally too, purely to minimize churn in this file's existing call sites below.
+export const normKey = (s) =>
   String(s)
     .normalize("NFC")
     .replace(ZERO_WIDTH_RE, "")
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
+const norm = normKey;
 
 // Single source of truth for "what counts as a lookup key for this member". Used by both
 // validateMembers (duplicate detection) and resolveOwner (matching), so they can't drift

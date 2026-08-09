@@ -22,10 +22,6 @@
 // threaded through anyway so the separation is structural from day one, not something bolted on
 // the first time a read becomes necessary here.
 //
-// If `mutationClient` is omitted this falls back to `client`, so a caller that forgets it doesn't
-// hard-crash — but that fallback reintroduces the double-create risk this module exists to
-// prevent. It is not the intended production path; `apply.mjs` always constructs and passes both.
-//
 // --- Sub-issues (18 of 172 manifest records carry a non-null `parent`) ---
 // The manifest's `parent` is a task id; Linear's `parentId` on IssueCreateInput needs an ISSUE
 // id, which does not exist until the parent issue is created. In the committed
@@ -226,11 +222,19 @@ export async function executePlan({ plan, client, mutationClient, idMapPath, idM
     );
   }
 
-  // Not the intended production path — see the module comment above. apply.mjs always passes
-  // both clients; this fallback only exists so a caller that forgets `mutationClient` fails by
-  // reusing the retrying client (works, but reintroduces the double-create risk) rather than by
-  // crashing on `undefined.query`.
-  const mutate = mutationClient ?? client;
+  // `mutationClient` is required, not defaulted to `client` — see the "two-client rule" module
+  // comment above. A caller that forgets it must fail loudly here, naming exactly what's
+  // missing, rather than silently mutating through the retrying client and reintroducing the
+  // double-create risk this module exists to prevent. apply.mjs always constructs and passes
+  // both.
+  if (!mutationClient) {
+    throw new Error(
+      "executePlan: mutationClient is required — mutations must never go through the retrying " +
+        "`client` (see the two-client rule at the top of this file). Pass a LinearClient " +
+        "constructed with maxRetries: 0."
+    );
+  }
+  const mutate = mutationClient;
 
   const projectIdBySlug = new Map((plan.projects.adopt ?? []).map((p) => [p.slug, p.id]));
   const labelIdByName = new Map(Object.entries(plan.labelIds ?? {}));

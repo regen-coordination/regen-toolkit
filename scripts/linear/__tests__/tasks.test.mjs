@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { loadTasks, validateTask } from "../lib/tasks.mjs";
+import { loadTasks, validateTask, validateTaskRegistry } from "../lib/tasks.mjs";
 
 // loadTasks fixtures are written to a scratch temp dir rather than committed files — this
 // registry has no fixtures directory of its own yet, and Task 9 stages a fixed, minimal file
@@ -130,4 +130,66 @@ test("loadTasks returns an empty array for a doc with no tasks key", () => {
   // both "empty doc" and "doc missing the tasks key" to [], matching loadMembers' `?? []`.
   const file = writeTemp("tasks-empty.yaml", 'schema_version: "1.0"\n');
   assert.deepEqual(loadTasks(file), []);
+});
+
+// --- validateTaskRegistry: full-registry checks beyond per-task shape (duplicate ids,
+// parent/blocked_by referential integrity) — lifted here from validate-tasks.mjs so extract.mjs
+// can run the same, full check instead of a weaker subset. Pure, never throws, mirrors
+// validateTask's idiom. A minimal stub resolveOwner stands in for members.mjs's real one, since
+// this module takes it as an injected dependency rather than importing members.mjs directly. ---
+
+const resolveOwner = (members, owner) => members.find((m) => m.id === owner) ?? null;
+const members = [{ id: "luiz" }, { id: "brandon" }];
+
+function task(overrides = {}) {
+  return {
+    id: "task-260806-luiz-a",
+    title: "A",
+    owner: "luiz",
+    parent: null,
+    blocked_by: [],
+    ...overrides,
+  };
+}
+
+test("validateTaskRegistry accepts a well-formed registry", () => {
+  assert.deepEqual(validateTaskRegistry([task()], members, resolveOwner), []);
+});
+
+test("validateTaskRegistry flags a duplicate id", () => {
+  const tasks = [task({ id: "task-260806-luiz-a" }), task({ id: "task-260806-luiz-a", title: "B" })];
+  const errors = validateTaskRegistry(tasks, members, resolveOwner);
+  assert.ok(errors.some((e) => /task-260806-luiz-a: duplicate id/.test(e)));
+});
+
+test("validateTaskRegistry flags a dangling parent reference", () => {
+  const tasks = [task({ id: "task-260806-luiz-a", parent: "task-260806-luiz-ghost" })];
+  const errors = validateTaskRegistry(tasks, members, resolveOwner);
+  assert.ok(errors.some((e) => /task-260806-luiz-a: parent "task-260806-luiz-ghost" not found/.test(e)));
+});
+
+test("validateTaskRegistry flags a dangling blocked_by reference", () => {
+  const tasks = [task({ id: "task-260806-luiz-a", blocked_by: ["task-260806-luiz-ghost"] })];
+  const errors = validateTaskRegistry(tasks, members, resolveOwner);
+  assert.ok(errors.some((e) => /task-260806-luiz-a: blocked_by "task-260806-luiz-ghost" not found/.test(e)));
+});
+
+test("validateTaskRegistry does not flag a parent/blocked_by that resolves within the registry", () => {
+  const tasks = [
+    task({ id: "task-260806-luiz-a" }),
+    task({ id: "task-260806-luiz-b", parent: "task-260806-luiz-a", blocked_by: ["task-260806-luiz-a"] }),
+  ];
+  assert.deepEqual(validateTaskRegistry(tasks, members, resolveOwner), []);
+});
+
+test("validateTaskRegistry flags an unresolvable owner, same message as the old inline check", () => {
+  const tasks = [task({ owner: "nobody" })];
+  const errors = validateTaskRegistry(tasks, members, resolveOwner);
+  assert.ok(errors.some((e) => /owner "nobody" not in data\/members\.yaml/.test(e)));
+});
+
+test("validateTaskRegistry still runs per-task validateTask checks (e.g. malformed id)", () => {
+  const tasks = [task({ id: "not-a-valid-id" })];
+  const errors = validateTaskRegistry(tasks, members, resolveOwner);
+  assert.ok(errors.some((e) => /id must match task-YYMMDD-owner-slug/.test(e)));
 });

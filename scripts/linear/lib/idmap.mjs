@@ -25,6 +25,13 @@ export function loadIdMap(filePath) {
   };
 }
 
+// Rewrites the WHOLE map to disk on every call — O(n) per write, O(n²) across a run that
+// records n issues. Deliberate, not an oversight: at this scale (172 issues today, growing by
+// tens per registry update, not thousands) that is still sub-second, and a full rewrite is what
+// makes the incremental-write guarantee above actually hold — every write leaves the file in a
+// complete, directly-loadable state, so a crash between any two calls loses nothing and needs no
+// replay/reconciliation step on the next run. An append-only log would be faster per-write but
+// would trade away that simplicity for a problem this pipeline doesn't have yet. Leave it.
 function persist(filePath, map) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, yaml.dump(map, { lineWidth: 100, noRefs: true, sortKeys: true }), "utf8");

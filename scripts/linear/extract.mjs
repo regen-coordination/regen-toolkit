@@ -12,7 +12,7 @@ import path from "node:path";
 import yaml from "js-yaml";
 import { parseHeartbeat } from "./lib/heartbeat.mjs";
 import { loadMembers, resolveOwner } from "./lib/members.mjs";
-import { loadTasks, validateTask } from "./lib/tasks.mjs";
+import { loadTasks, validateTaskRegistry } from "./lib/tasks.mjs";
 import { buildManifest } from "./lib/manifest.mjs";
 
 const OUT = "data/linear/seed-manifest.yaml";
@@ -21,12 +21,11 @@ const heartbeat = parseHeartbeat(fs.readFileSync("HEARTBEAT.md", "utf8"));
 const members = loadMembers("data/members.yaml");
 const tasks = loadTasks("data/tasks.yaml");
 
-const errors = tasks.flatMap((task) => validateTask(task));
-for (const task of tasks) {
-  if (!resolveOwner(members, task.owner)) {
-    errors.push(`${task.id}: owner "${task.owner}" not in data/members.yaml`);
-  }
-}
+// Full-registry validation (id format, duplicate ids, owner resolution, parent/blocked_by
+// referential integrity) — the same check `npm run linear:validate` runs, so a registry that
+// would fail validation can never still produce a manifest here. See lib/tasks.mjs's
+// validateTaskRegistry comment for why this used to be a weaker, separately-maintained check.
+const errors = validateTaskRegistry(tasks, members, resolveOwner);
 
 if (errors.length) {
   console.error(`extract aborted — ${errors.length} invalid task record(s):`);

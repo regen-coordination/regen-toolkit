@@ -178,3 +178,32 @@ test("matches an existing label by name case-insensitively, so it isn't recreate
   const plan = buildPlan({ manifest: m, idMap: { entries: {} }, remote });
   assert.deepEqual(plan.labels.create, ["layer/10"]);
 });
+
+// --- normName reuses members.mjs's zero-width-stripping normKey (Task: share the normalizer) ---
+
+test("matches an existing project whose remote name carries an invisible zero-width space", () => {
+  // Regression test for normName's replacement — mirrors members.test.mjs's "resolveOwner
+  // strips an invisible zero-width space". Before normName was switched to reuse members.mjs's
+  // normKey, a project/label name pasted from Docs/Notion with a zero-width space would make
+  // buildPlan think an existing project is absent and propose creating a duplicate.
+  const ZWSP = String.fromCharCode(0x200b);
+  const m = {
+    projects: [{ slug: "repo-contribution", name: `Stabilise${ZWSP} the repo for contribution`, description: "d" }],
+    labels: [],
+    issues: [],
+  };
+  const remote = { projects: [{ id: "p1", name: "Stabilise the repo for contribution" }], labels: [] };
+  const plan = buildPlan({ manifest: m, idMap: { entries: {} }, remote });
+  assert.equal(plan.projects.create.length, 0);
+  assert.equal(plan.projects.adopt.length, 1);
+  assert.equal(plan.projects.adopt[0].id, "p1");
+});
+
+test("matches an existing label whose remote name carries an invisible zero-width space", () => {
+  const ZWSP = String.fromCharCode(0x200b);
+  const m = { projects: [], labels: [`seed/${ZWSP}repo`], issues: [] };
+  const remote = { projects: [], labels: [{ id: "l1", name: "seed/repo" }] };
+  const plan = buildPlan({ manifest: m, idMap: { entries: {} }, remote });
+  assert.deepEqual(plan.labels.create, []);
+  assert.deepEqual(plan.labelIds, { "seed/repo": "l1" });
+});

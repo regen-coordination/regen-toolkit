@@ -18,7 +18,15 @@
 // members.mjs's `resolveOwner` (a person's name typed with different capitalisation is still
 // that person; a project renamed with different capitalisation is still that project). It is
 // still not fuzzy — no substring or edit-distance matching is done anywhere here.
-const normName = (s) => String(s).replace(/\s+/g, " ").trim().toLowerCase();
+//
+// Reuses members.mjs's `normKey` rather than a second hand-rolled recipe: project/label names
+// are hand-typed strings just like a person's name, so they are exposed to the same failure
+// members.mjs's normalization was hardened against — a name or label pasted from Docs/Notion
+// carrying an invisible zero-width space would otherwise make buildPlan think an existing
+// label/project is absent and propose creating a duplicate (see planner.test.mjs's regression
+// test).
+import { normKey } from "./members.mjs";
+const normName = normKey;
 
 // Builds a normalized-name -> item map and separately reports which normalized keys were
 // claimed more than once, so callers can decide whether a collision is fatal. Sharing this

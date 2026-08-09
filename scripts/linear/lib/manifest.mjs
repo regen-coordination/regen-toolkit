@@ -4,19 +4,22 @@
 // module only shapes data it is handed — it does not load files and does not decide who is
 // valid. That is the split of concerns the rest of the pipeline already committed to:
 //
-//   validate-tasks.mjs   — id format, duplicate ids, owner-resolves-to-a-member,
-//                          parent/blocked_by referential integrity against the FULL registry
+//   validateTaskRegistry — id format, duplicate ids, owner-resolves-to-a-member,
+//   (lib/tasks.mjs)        parent/blocked_by referential integrity against the FULL registry;
+//                          called by both validate-tasks.mjs (`npm run linear:validate`) and
+//                          extract.mjs, so a registry that would fail validation can never still
+//                          produce a manifest
 //   buildManifest (here) — projection only: registry + heartbeat + members -> the manifest
 //                          that gets committed and read by a human before anything talks to
 //                          the Linear API
 //
 // buildManifest deliberately does NOT re-check duplicate ids or dangling parent/blocked_by
 // references. `data/tasks.yaml` already has exactly one validator for that
-// (validate-tasks.mjs, run via `npm run linear:validate`), and every module in this directory
-// draws its I/O/validation line in the same place: tasks.mjs's own comment says as much
-// ("validateTask itself stays pure ... callers run it over whatever loadTasks returns").
-// Duplicating that check here would give the registry two sources of truth for the same
-// question, which is exactly the kind of fork this whole seeding design exists to avoid.
+// (validateTaskRegistry in lib/tasks.mjs), and every module in this directory draws its
+// I/O/validation line in the same place: tasks.mjs's own comment says as much ("validateTask
+// itself stays pure ... callers run it over whatever loadTasks returns"). Duplicating that
+// check here would give the registry two sources of truth for the same question, which is
+// exactly the kind of fork this whole seeding design exists to avoid.
 // The contract this module relies on: `tasks` is the complete registry (whatever loadTasks
 // returned), not a filtered slice — because parent/blocked_by ids are only guaranteed to
 // resolve within the full set. If a future caller ever passes a subset, parent/blocked_by

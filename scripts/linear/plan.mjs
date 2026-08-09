@@ -18,8 +18,10 @@ import fs from "node:fs";
 import yaml from "js-yaml";
 import "dotenv/config";
 import { LinearClient } from "./lib/client.mjs";
+import { requireApiKey } from "./lib/env.mjs";
 import { loadIdMap, markOrphaned } from "./lib/idmap.mjs";
 import { buildPlan, preflight } from "./lib/planner.mjs";
+import { resolveConnection } from "./lib/pagination.mjs";
 import { runStamp, writePlan } from "./lib/runlog.mjs";
 
 const ID_MAP_PATH = "data/linear/id-map.yaml";
@@ -42,35 +44,11 @@ const MANIFEST_PATH = "data/linear/seed-manifest.yaml";
 // those connections is ever observed near its page size.
 const PAGE = 250;
 
-async function fetchAllPages(client, { query, variables, connectionPath }) {
-  const readConnection = (data) => connectionPath.reduce((node, key) => node[key], data);
-
-  const data = await client.query(query, variables);
-  const first = readConnection(data);
-  let nodes = first.nodes;
-  let pageInfo = first.pageInfo;
-
-  while (pageInfo?.hasNextPage) {
-    const page = await client.query(query, { ...variables, after: pageInfo.endCursor });
-    const next = readConnection(page);
-    nodes = nodes.concat(next.nodes);
-    pageInfo = next.pageInfo;
-  }
-
-  return nodes;
-}
-
 async function main() {
   // Checked before anything else, and before the LinearClient is ever constructed, so a missing
   // key fails with one plain-English line — not the constructor's thrown Error surfacing as an
   // unhandled-rejection stack trace.
-  if (!process.env.LINEAR_API_KEY) {
-    console.error(
-      "LINEAR_API_KEY is not set. Copy .env.example to .env and add your Linear personal API key, " +
-        "or export it in your shell before running this command."
-    );
-    process.exit(1);
-  }
+  requireApiKey();
   const TEAM_KEY = process.env.LINEAR_TEAM_KEY;
   if (!TEAM_KEY) {
     console.error(
@@ -141,21 +119,17 @@ async function main() {
       }
     }`;
 
-  const existing = team.issues.pageInfo.hasNextPage
-    ? await fetchAllPages(client, {
-        query: issuePageQuery,
-        variables: { teamId: team.id },
-        connectionPath: ["team", "issues"],
-      })
-    : team.issues.nodes;
+  const existing = await resolveConnection(client, team.issues, {
+    query: issuePageQuery,
+    variables: { teamId: team.id },
+    connectionPath: ["team", "issues"],
+  });
 
-  const remoteLabels = team.labels.pageInfo.hasNextPage
-    ? await fetchAllPages(client, {
-        query: labelPageQuery,
-        variables: { teamId: team.id },
-        connectionPath: ["team", "labels"],
-      })
-    : team.labels.nodes;
+  const remoteLabels = await resolveConnection(client, team.labels, {
+    query: labelPageQuery,
+    variables: { teamId: team.id },
+    connectionPath: ["team", "labels"],
+  });
 
   // Initiative check. Afo owns initiative creation — this tool only ever looks one up by name.
   const initiative = data.initiatives.nodes.find(
