@@ -120,21 +120,21 @@ Two meetings the same day: the morning **Matty 1-on-1** (framework build done + 
 
 > Master plan: [`docs/plans/handoff-integration.md`](docs/plans/handoff-integration.md) · Changes map: [`docs/HANDOFF-CHANGES-2026-07.md`](docs/HANDOFF-CHANGES-2026-07.md). **Core finding:** Matty's Database_Spec = the framework machine. Source: `docs/RKC_Handoff_July_2026_FINAL_VERIFIED/`.
 
-- [x] **T1 — intake & orient** — changes map written; iteration registered. — `task-260715-handoff-t1-intake` ✅
-- [x] **T2 — crosswalk + Definition-of-Done conformance** — §40 crosswalk + 15-item DoD (7✅/8🟡). [`crosswalk`](docs/reports/2026-07-15-framework-masterdoc-crosswalk.md) · [`DoD`](docs/reports/2026-07-15-definition-of-done-conformance.md). — `task-260715-handoff-t2-crosswalk-dod` ✅
-- [x] **T3a — real ingestion slice** — 127 Canonical_DB rows → 146 objects (kb-handoff/) + [`/handoff`](https://luizfernandosg.github.io/regen-toolkit/handoff/); B5 caught Matty's 4 dup pairs. — `task-260715-handoff-t3a-ingestion-slice` ✅
-- [x] **T5 — agent-setup for Matty + call brief** — [`onboarding`](docs/onboarding/operate-the-toolkit-agents.md) + [`brief`](docs/briefings/2026-07-16-toolkit-call-brief.md). — `task-260715-handoff-t5-agent-setup` ✅
-- [x] **T4 core — framework evolution** — `relationship-record` · `person`/`organization` · currentness/confidence/maintenance axes · enum gaps. **125 tests green.** — `task-260715-handoff-t4-framework-evolution` ✅ (remainder logged in master plan)
-- [x] **T3b — full Canonical_DB ingestion** — 2,689 rows → 2,957 objects (+101 Discovery promotion) = **3,058 in kb-handoff/**, all raw. Deterministic ETL (accept-gate validated), B5-vs-flags + DoD #15 reconciled. [`manifest`](docs/reports/2026-07-21-canonical-migration-manifest.md). Committed `6ff1406a`. — `task-260715-handoff-t3b-full-ingestion` ✅ (2026-07-22)
-- [ ] **Master 6-Part refactor** — awaits Matty's final handoff. — `task-260715-handoff-master-refactor`
-- [ ] **Share pack** ([`draft`](docs/comms/drafts/2026-07-15-share-pack.md)) — drafted, awaiting operator send. — `task-260715-handoff-share-pack`
+- [x] **Luiz — T1: intake & orient** — changes map written; iteration registered. — `task-260715-handoff-t1-intake` ✅
+- [x] **Luiz — T2: crosswalk + Definition-of-Done conformance** — §40 crosswalk + 15-item DoD (7✅/8🟡). [`crosswalk`](docs/reports/2026-07-15-framework-masterdoc-crosswalk.md) · [`DoD`](docs/reports/2026-07-15-definition-of-done-conformance.md). — `task-260715-handoff-t2-crosswalk-dod` ✅
+- [x] **Luiz — T3a: real ingestion slice** — 127 Canonical_DB rows → 146 objects (kb-handoff/) + [`/handoff`](https://luizfernandosg.github.io/regen-toolkit/handoff/); B5 caught Matty's 4 dup pairs. — `task-260715-handoff-t3a-ingestion-slice` ✅
+- [x] **Luiz — T5: agent-setup for Matty + call brief** — [`onboarding`](docs/onboarding/operate-the-toolkit-agents.md) + [`brief`](docs/briefings/2026-07-16-toolkit-call-brief.md). — `task-260715-handoff-t5-agent-setup` ✅
+- [x] **Luiz — T4 core: framework evolution** — `relationship-record` · `person`/`organization` · currentness/confidence/maintenance axes · enum gaps. **125 tests green.** — `task-260715-handoff-t4-framework-evolution` ✅ (remainder logged in master plan)
+- [x] **Luiz — T3b: full Canonical_DB ingestion** — 2,689 rows → 2,957 objects (+101 Discovery promotion) = **3,058 in kb-handoff/**, all raw. Deterministic ETL (accept-gate validated), B5-vs-flags + DoD #15 reconciled. [`manifest`](docs/reports/2026-07-21-canonical-migration-manifest.md). Committed `6ff1406a`. — `task-260715-handoff-t3b-full-ingestion` ✅ (2026-07-22)
+- [ ] **Luiz — Master 6-Part refactor** — awaits Matty's final handoff. — `task-260715-handoff-master-refactor`
+- [ ] **Luiz — Share pack** ([`draft`](docs/comms/drafts/2026-07-15-share-pack.md)) — drafted, awaiting operator send. — `task-260715-handoff-share-pack`
 
 ### Dev instance build — the live review surface _(★ ACTIVE #1, 2026-07-19)_
 
 > Plan: [`docs/plans/dev-instance-build.md`](docs/plans/dev-instance-build.md) (spec: [`SESSION-HANDOFF-2026-07-19.md`](docs/plans/SESSION-HANDOFF-2026-07-19.md) Prompt 1). The 07-19 decision: render the framework-reprocessed KB (722 + 146 objects) as **browsable content pages** deployed live from the personal fork — so the ~2–4-week review gate starts **now**, independent of the Heenal migration. Fulfills `task-260716-luiz-staging-dev-site`.
 
-- [ ] **Build the KB content routes** — by type + by layer, provenance + raw badges, related-object links, old-article ↔ reprocessed cross-links. — `task-260719-luiz-dev-instance-build`
-- [ ] **Deploy from `fork`** (`git push fork regen-toolkit-os` → Pages) + report the URL + rendered-vs-stubbed map. — `task-260719-luiz-dev-instance-deploy`
+- [ ] **Luiz — Build the KB content routes** — by type + by layer, provenance + raw badges, related-object links, old-article ↔ reprocessed cross-links. — `task-260719-luiz-dev-instance-build`
+- [ ] **Luiz — Deploy from `fork`** (`git push fork regen-toolkit-os` → Pages) + report the URL + rendered-vs-stubbed map. — `task-260719-luiz-dev-instance-deploy`
 
 ### Framework Validation Pass — DONE _(2026-07-19; plan complete)_
 
@@ -150,9 +150,8 @@ Two meetings the same day: the morning **Matty 1-on-1** (framework build done + 
 - [x] **Installed** — activated in regen-toolkit (`init` → `data/kb/` + self card); promoted both packages to **canonical org-os** (`v0.5`, pushed; framework 100/100 + kms 44/44 in place); registered in `packages-matrix.yaml`.
 - [x] **ReFi DAO pilot** — KMS `init` + Quartz-config-reconciled in refi-dao-os (left uncommitted — their repo). Runbook: [`docs/plans/2026-07-05-org-os-kms-per-instance-adoption.md`](docs/plans/2026-07-05-org-os-kms-per-instance-adoption.md).
 - [x] **Ontology comparison** (Heenal ↔ framework) — snapshot + crosswalk + comparison + report ([`docs/reports/2026-07-05-ontology-comparison.md`](docs/reports/2026-07-05-ontology-comparison.md)). **HYBRID adopted:** adopt framework backbone, contribute the **8 Forms of Capital** back to the kernel. 119 articles reprocess **1:1**.
-- [ ] **Process ReFi DAO's knowledge** through the framework (kickoff prompt ready) — blog first (207 articles): register-source → ingest → review → bridge → render → federate.
-- [ ] **Send the share-pack** (group + Matty) — [`docs/reports/2026-07-05-share-pack.md`](docs/reports/2026-07-05-share-pack.md); **carries the current arc** (updates the older "Send the 3 messages" item below).
-- [ ] **Capital → `update-proposal`** to `docs/MASTER.md` (with Matty); framework schema fixes (`track.outcome`→array, first-class `public_use_boundary`, held/review-queue state); curation calls (function collision, maturity/stage normalization, salvaged merge); run the 6 `b_candidates`.
+
+> **2026-08-09 triage note:** this section's heading says DONE, but three follow-up items were still open. They've been rehomed to the "Framework Build — `packages/toolkit-framework`" section below so this heading stops lying.
 
 ### Convergence — IN PROGRESS _(2026-06-16)_
 
@@ -160,9 +159,9 @@ Branch consolidation + site merge **done**. Now driven by the [**convergence pip
 
 - [x] **Branch consolidation** — `feature/org-os-overlay` renamed → **`regen-toolkit-os`** (consolidated working branch). 7 stale/converged branches pruned (local + remote), all preserved as `archive/*` tags (pushed). Remote now: `main` + `regen-toolkit-os` only.
 - [x] **Site convergence** — merged `main`'s live **3-journey v1** into `regen-toolkit-os` (119 curated articles + journeys + knowledge map) with all org-os work intact. `npm run build` passes (124 pages). Resolved a `docs/BACKLOG.md` case-collision → org-os backlog kept canonical; site content backlog → `docs/CONTENT-BACKLOG.md`. **Decision (2026-06-17): `regen-toolkit-os` stays a *parallel* branch — NOT promoted to `main`.** The live site keeps deploying from `main` (site team's lane); `regen-toolkit-os` is the consolidated org-os + framework lane. Pull from `main` periodically to keep the site current here.
-- [ ] **Framework / instance split (P1)** — `framework/` scaffolded (`README.md` + `SEPARATION.md`). Active. **Gated on D1** (lifecycle vs 10-layers). → present prototype (P3) to the group.
-- [ ] **Resource-DB V3 lift (P2)** — crosswalk-driven into the data model (`data/resources/csv/toolkit-layer-crosswalk.csv`). Ready.
-- [ ] **Multi-instance deploy (P9/P10)** — framework → `../refi-dao-os` (podcasts/blog) → `../refi-bcn-os` → network.
+- [ ] **Luiz — Framework / instance split (P1)** — `framework/` scaffolded (`README.md` + `SEPARATION.md`). Active. **Gated on D1** (lifecycle vs 10-layers). → present prototype (P3) to the group. — `task-260616-luiz-framework-instance-split-p1`
+- [ ] **Luiz — Resource-DB V3 lift (P2)** — crosswalk-driven into the data model (`data/resources/csv/toolkit-layer-crosswalk.csv`). Ready. — `task-260616-luiz-resource-db-v3-lift-p2`
+- [ ] **Luiz — Multi-instance deploy (P9/P10)** — framework → `../refi-dao-os` (podcasts/blog) → `../refi-bcn-os` → network. — `task-260616-luiz-multi-instance-deploy`
 
 > Full roadmap (waves, dependencies, skills-to-load per plan): [`docs/plans/CONVERGENCE-PIPELINE.md`](docs/plans/CONVERGENCE-PIPELINE.md).
 
@@ -171,30 +170,30 @@ Branch consolidation + site merge **done**. Now driven by the [**convergence pip
 Framework built + content processed + site forked (2 pages) + GAPS + master-doc proposals all done (2026-06-23 sessions). Share pack ready: [`docs/reports/2026-07-02-toolkit-framework-share-pack.md`](docs/reports/2026-07-02-toolkit-framework-share-pack.md) — tailored to Matty's/Rather's 29 Jun asks (tooling, Resource-Graph-as-portable-DB, artifact interconnection, opinionated decisions).
 
 - [x] **Preview site LIVE** at `https://luizfernandosg.github.io/regen-toolkit/` (`/framework/` + `/regen-toolkit-os/`) — GitHub Pages via Actions on the `luizfernandosg/regen-toolkit` fork (explorience repo isn't admin-accessible to enable Pages). Site made base-aware; live production stays on `main`/Vercel. **Redeploy: `git push fork regen-toolkit-os`.** All 4 pages verified 200 + live schema/counts rendering.
-- [ ] **Send the 3 messages** (Matty DM · group · Rather) from the share pack — draft-and-present done; review + send
-- [ ] **Sync with Rather** — hand him the schema/JSON-LD substrate for knowledge-graphing/retrieval (piece 1) so he builds on it, not parallel; his website-UI/pluggable-content (piece 2) slots into `data/`
-- [ ] **Group — ratify the top-5 decisions** (R1, R7, R8, R3, D1) — async or on the call
-- [ ] **Full iteration next week** — sync the framework's `problems-and-theory-of-change.md` to Matty's **v3 ToC update (26 Jun)**; deepen the 3 skills; run the **V3 resource review pass** (human review before publishing lifted resources); then the hub post
-- [ ] **Schedule the call** end of next week (ratify structure + opinionated decisions)
+- [ ] **Luiz — Send the 3 messages** (Matty DM · group · Rather) from the share pack — draft-and-present done; review + send [needs-triage] — `task-260702-luiz-send-3-messages`
+- [ ] **Luiz — Sync with Rather** — hand him the schema/JSON-LD substrate for knowledge-graphing/retrieval (piece 1) so he builds on it, not parallel; his website-UI/pluggable-content (piece 2) slots into `data/` [needs-triage] — `task-260702-luiz-sync-with-rather`
+- [ ] **Group — ratify the top-5 decisions** (R1, R7, R8, R3, D1) — async or on the call [needs-triage] — `task-260702-team-ratify-top5-decisions`
+- [ ] **Luiz — Full iteration next week** — sync the framework's `problems-and-theory-of-change.md` to Matty's **v3 ToC update (26 Jun)**; deepen the 3 skills; run the **V3 resource review pass** (human review before publishing lifted resources); then the hub post [needs-triage] — `task-260702-luiz-full-iteration-next-week`
+- [ ] **Luiz — Schedule the call** end of next week (ratify structure + opinionated decisions) [needs-triage] — `task-260702-luiz-schedule-the-call`
 
 ### Biweekly 2026-07-02 — fresh commitments _(NEW 2026-07-02)_
 
 The share pack above was effectively presented at this biweekly. Direction ratified: **framework-as-package** (portable module → agents ingest resources → ontology-structured KB). Two **first ingestion test cases** are now real. Full note: [`packages/operations/meetings/260702 Regen Web3 Toolkit Planning Call.md`](packages/operations/meetings/260702%20Regen%20Web3%20Toolkit%20Planning%20Call.md). **Next checkpoint ~2 weeks (~2026-07-16).**
 
 - [x] **Luiz — initial testable framework-package version** ✅ _(2026-07-04)_ — **DONE + shipped early.** The 0.2.0 "machine": work-order ingestion pipeline → validated ontology-structured KB; **ingestion≠storage IS the architecture** (adapter seam: kb-folder/repo-data/geo-stub) per Durgadas. 100/100 tests; extracted to public repo [`luizfernandosg/toolkit-framework`](https://github.com/luizfernandosg/toolkit-framework); first real ingestion = the 07-02 call → 10 typed objects. Spec+plan: [`docs/plans/framework-build/2026-07-04-machine-*.md`](docs/plans/framework-build/).
-- [ ] **Luiz — verify the 2 site pages** against the **master doc** — pages **updated to reflect 0.2 the machine** _(2026-07-04, live)_ + frame-language-clean, but the master-doc verification pass is still owed.
-- [ ] **Luiz — request website publish permissions + a dev environment** from Afo (publish prototypes into detail pages; process resources → preview graph → publish)
-- [ ] **Luiz — test the framework on Koi's Gen Brasil Commons artifacts** (first real external case)
-- [ ] **Koi — send Luiz the Gen Brasil Commons artifacts** — 2 books + a 6-call **conflict-mediation protocol** (open-source publication); the first ingestion test
-- [ ] **Durgadas — send Luiz the CSIS / Craft / Valcre links** — rigor sandwich, prompt library, implementation guide, conflict standard (already AI/ML-ready). *(Resolves the standing "find the CSIS repo" ask.)*
-- [ ] **Durgadas — AI Precision Toolkit release (~1–2 wks)**; build an ingestion layer for the **Proof of Coordination protocol**; make the **Idea Processor** functional on Vercel
-- [ ] **Matty — one more master-doc iteration** (handoff docs + new theory of change; **incorporate Frame Language Analyzer + Idea Processor**); seed resources DB (tools/links/orgs); **focus on Options** (governance/tooling — the core of a deployment). *(Threads with Master Doc + Resource DB V3 sections.)*
-- [ ] **Afo — dev environment + Luiz publish permissions by next meeting**; back on website next week; content-creation workflows to fill gaps + interconnect once structure calcifies
-- [ ] **Rather — share Geo Protocol integration details** (SDK / abstracted Aragon interface / read API; IPFS + The Graph) with Koi for app interop; build a **job board** (collect resumes)
-- [ ] **Infra — get more opinionated:** evaluate **Geo Protocol** + **AT Protocol** as connective tissue across everyone's work (Matty; Durgadas to dig in). *(Extends Infra Stack & Federation below — pairs with the Geo Browser review.)*
-- [ ] **Frame-language audit** — Durgadas's Frame 1 warning ("governance/accountability" terms → structurally non-regenerative; *structure beats intention 100%*); audit the master doc **and** the framework, which is being built with those very terms
-- [ ] **Luiz — invite Andrea** (ReFi Barcelona) to reprocess the ReFi BCN knowledge commons + her bioregional work (she's been away). *(Advances the Andrea/RegenOS thread below.)*
-- [ ] **Grants subgroup** — Durgadas + Afo both looking for work; **Super Benefit** methodology as reference (Durgadas to raise over the next couple weeks)
+- [ ] **Luiz — verify the 2 site pages** against the **master doc** — pages **updated to reflect 0.2 the machine** _(2026-07-04, live)_ + frame-language-clean, but the master-doc verification pass is still owed. [needs-triage] — `task-260702-luiz-verify-site-pages`
+- [ ] **Luiz — request website publish permissions + a dev environment** from Afo (publish prototypes into detail pages; process resources → preview graph → publish) [needs-triage] — `task-260702-luiz-publish-permissions-dev-env`
+- [ ] **Luiz — test the framework on Koi's Gen Brasil Commons artifacts** (first real external case) [needs-triage] — `task-260702-luiz-test-framework-genbrasil`
+- [ ] **Koi — send Luiz the Gen Brasil Commons artifacts** — 2 books + a 6-call **conflict-mediation protocol** (open-source publication); the first ingestion test [needs-triage] — `task-260702-koi-send-genbrasil-artifacts`
+- [ ] **Durgadas — send Luiz the CSIS / Craft / Valcre links** — rigor sandwich, prompt library, implementation guide, conflict standard (already AI/ML-ready). *(Resolves the standing "find the CSIS repo" ask.)* [needs-triage] — `task-260702-durgadas-send-csis-links`
+- [ ] **Durgadas — AI Precision Toolkit release (~1–2 wks)**; build an ingestion layer for the **Proof of Coordination protocol**; make the **Idea Processor** functional on Vercel [needs-triage] — `task-260702-durgadas-ai-precision-toolkit`
+- [ ] **Matty — one more master-doc iteration** (handoff docs + new theory of change; **incorporate Frame Language Analyzer + Idea Processor**); seed resources DB (tools/links/orgs); **focus on Options** (governance/tooling — the core of a deployment). *(Threads with Master Doc + Resource DB V3 sections.)* [needs-triage] — `task-260702-matty-master-doc-iteration`
+- [ ] **Afo — dev environment + Luiz publish permissions by next meeting**; back on website next week; content-creation workflows to fill gaps + interconnect once structure calcifies [needs-triage] — `task-260702-afo-dev-environment-permissions`
+- [ ] **Rather — share Geo Protocol integration details** (SDK / abstracted Aragon interface / read API; IPFS + The Graph) with Koi for app interop; build a **job board** (collect resumes) [needs-triage] — `task-260702-rather-geo-protocol-details`
+- [ ] **Durgadas — Infra, get more opinionated:** evaluate **Geo Protocol** + **AT Protocol** as connective tissue across everyone's work (Matty; Durgadas to dig in). *(Extends Infra Stack & Federation below — pairs with the Geo Browser review.)* [needs-triage] — `task-260702-durgadas-infra-opinionated`
+- [ ] **Durgadas — Frame-language audit** — Frame 1 warning ("governance/accountability" terms → structurally non-regenerative; *structure beats intention 100%*); audit the master doc **and** the framework, which is being built with those very terms [needs-triage] — `task-260702-durgadas-frame-language-audit`
+- [ ] **Luiz — invite Andrea** (ReFi Barcelona) to reprocess the ReFi BCN knowledge commons + her bioregional work (she's been away). *(Advances the Andrea/RegenOS thread below.)* [needs-triage] — `task-260702-luiz-invite-andrea`
+- [ ] **Team — Grants subgroup** — Durgadas + Afo both looking for work; **Super Benefit** methodology as reference (Durgadas to raise over the next couple weeks) [needs-triage] — `task-260702-team-grants-subgroup`
 
 ### Framework Build — `packages/toolkit-framework` _(0.2.0 — THE MACHINE, shipped 2026-07-04)_
 
@@ -213,138 +212,141 @@ Executing the [framework build plan](docs/plans/framework-build/README.md) (SP0�
 - [x] **SP10** — `packages/org-os-kms` (module + org-os profile, framework pre-loaded; replaceable)
 - [x] **✅ FRAMEWORK FULLY BUILT (SP0–SP10):** toolkit-framework **34/34 tests**, 21 schemas, 3 skills; org-os-kms 2/2. All R1–R10 resolved.
 - [~] **★ Process toolkit content through the framework + public site** — site half DONE (framework + regen-toolkit-os pages live, now reflecting 0.2 the machine). **Week 1 next:** run Heenal's live content through the **0.2 ingestion pipeline** (`init --existing` → `ingest` → review) → populate the instance KB — the real self-ingestion, now that the machine exists. → now driven by [`framework-validation-pass`](docs/plans/framework-validation-pass.md) (V2 slice first, full 119 post-demo).
-- [ ] **SP11 — first ReFi DAO adoption** (the dialectic / pipeline P9): `init` the framework into `../refi-dao-os` **from the public repo** (proves portability), process podcasts/blog through the pipeline, contribute back → framework v0.2.x. **org-os-kms → real module** developed against this adoption. *Week 1, after the reference-instance self-ingestion above.*
-- [ ] **Batch the R1–R10 master-doc proposals** for Matty (Loop 2 — draft-and-present) + confirm with Durgadas/Rather at the biweekly
+- [ ] **Luiz — SP11: first ReFi DAO adoption** (the dialectic / pipeline P9): `init` the framework into `../refi-dao-os` **from the public repo** (proves portability), process podcasts/blog through the pipeline, contribute back → framework v0.2.x. **org-os-kms → real module** developed against this adoption. *Week 1, after the reference-instance self-ingestion above.* — `task-260704-luiz-sp11-refi-dao-adoption`
+- [ ] **Luiz — Batch the R1–R10 master-doc proposals** for Matty (Loop 2 — draft-and-present) + confirm with Durgadas/Rather at the biweekly — `task-260704-luiz-batch-r1-r10-proposals`
+
+_(Rehomed from the "org-os KMS shipped + ontology comparison — DONE" section, 2026-08-09 triage — that heading said DONE but these three were still open.)_
+
+- [ ] **Luiz — Process ReFi DAO's knowledge** through the framework (kickoff prompt ready) — blog first (207 articles): register-source → ingest → review → bridge → render → federate. — `task-260705-luiz-refi-dao-process`
+- [ ] **Luiz — Send the share-pack** (group + Matty) — [`docs/reports/2026-07-05-share-pack.md`](docs/reports/2026-07-05-share-pack.md); **carries the current arc** (updates the older "Send the 3 messages" item below). — `task-260705-luiz-send-share-pack`
+- [ ] **Luiz — Capital → `update-proposal`** to `docs/MASTER.md` (with Matty); framework schema fixes (`track.outcome`→array, first-class `public_use_boundary`, held/review-queue state); curation calls (function collision, maturity/stage normalization, salvaged merge); run the 6 `b_candidates`. — `task-260705-luiz-capital-update-proposal`
 
 ### Master Doc 2026-06-15 Iteration _(NEW 2026-06-16)_
 
-- [ ] **Revise CSIS posture** (`docs/CSIS.md`) → "CSIS-Informed, Not CSIS-Conformant" + the 3-level model (Principles / Review prompts / Enforceable standards) + minimum enforceable safeguards. The new master doc formalizes this — resolves the long-standing "posture revision pending" flag.
-- [ ] **Track the Knowledge-Lifecycle-vs-10-layers decision** — the new doc offers a Capture→…→Interoperate lifecycle spine as a *candidate* (Structure Options recommends "Small Core, Large Appendices + Lifecycle spine"). Don't pre-empt; surface at biweekly. **Do not rebuild the 10 per-layer docs/canvases until decided.**
-- [ ] **Derive a Theory-of-Change artifact** from the new master doc's Problem/ToC section (now first-class) — 10-problem + updated 14-problem versions.
-- [ ] **Layer-by-layer review** of the new iteration (Matty's recommended method — review by layer, not whole-system rewrite).
+- [ ] **Durgadas — Revise CSIS posture** (`docs/CSIS.md`) → "CSIS-Informed, Not CSIS-Conformant" + the 3-level model (Principles / Review prompts / Enforceable standards) + minimum enforceable safeguards. The new master doc formalizes this — resolves the long-standing "posture revision pending" flag. — `task-260615-durgadas-revise-csis-posture`
+- [ ] **Luiz — Track the Knowledge-Lifecycle-vs-10-layers decision** — the new doc offers a Capture→…→Interoperate lifecycle spine as a *candidate* (Structure Options recommends "Small Core, Large Appendices + Lifecycle spine"). Don't pre-empt; surface at biweekly. **Do not rebuild the 10 per-layer docs/canvases until decided.** — `task-260615-luiz-track-lifecycle-decision`
+- [ ] **Luiz — Derive a Theory-of-Change artifact** from the new master doc's Problem/ToC section (now first-class) — 10-problem + updated 14-problem versions. — `task-260615-luiz-derive-toc-artifact`
+- [ ] **Team — Layer-by-layer review** of the new iteration (Matty's recommended method — review by layer, not whole-system rewrite). — `task-260615-team-layer-by-layer-review`
 
 ### Theory of Change / Revised Problem Statement _(NEW 2026-05-21 — still open)_
 
 From Durgadas's "theory of build vs theory of change" challenge (260521). The new master doc answers much of it; the team-authored piece remains.
 
-- [ ] **Author a revised problem + mission statement** (group; Heenal proposed) — derive ToC from Green Pill + ReFi DAO rather than invent fresh (Afo)
-- [ ] Durgadas — circulate the **Idea Processor** (MELT-strategy) + the theory-of-build article
-- [ ] Consider a tradeoff-triangle prioritization exercise to find the highest-leverage thing
+- [ ] **Team — Author a revised problem + mission statement** (group; Heenal proposed) — derive ToC from Green Pill + ReFi DAO rather than invent fresh (Afo) — `task-260521-team-revised-problem-mission-statement`
+- [ ] **Durgadas —** circulate the **Idea Processor** (MELT-strategy) + the theory-of-build article — `task-260521-durgadas-circulate-idea-processor`
+- [ ] **Team —** Consider a tradeoff-triangle prioritization exercise to find the highest-leverage thing — `task-260521-team-tradeoff-triangle-exercise`
 
 ### V1 Public Site (Heenal) _(NEW 2026-06-04)_
 
 Heenal's simplified 3-journey site — **landed + live** at regen-web3-toolkit.vercel.app (merged main / PR #311). The usable "front door" of the three-artifact model.
 
-- [ ] **Heenal — design the feedback / contribution pathway** for V1 (currently "not easy") — operationalizes "public ≠ commons"
-- [ ] Heenal — continue page-by-page human review; keep it usable/practical
-- [ ] Consider an **operational-contributor journey** (Rather — teams forming, picking up tools, acting; beyond "newcomer")
-- [ ] **Matty — draft the hub/forum post** (pairs with V1; invites use + co-stewardship, not just announces)
-- [ ] Reconcile V1 with the master-doc layers (Heenal flagged layers ~2 + 7; vertical mapping later)
+- [ ] **Heenal — design the feedback / contribution pathway** for V1 (currently "not easy") — operationalizes "public ≠ commons" — `task-260604-heenal-feedback-contribution-pathway`
+- [ ] **Heenal —** continue page-by-page human review; keep it usable/practical — `task-260604-heenal-page-by-page-review`
+- [ ] **Rather —** Consider an **operational-contributor journey** (teams forming, picking up tools, acting; beyond "newcomer") — `task-260604-rather-operational-contributor-journey`
+- [ ] **Matty — draft the hub/forum post** (pairs with V1; invites use + co-stewardship, not just announces) — `task-260604-matty-hub-forum-post`
+- [ ] **Heenal —** Reconcile V1 with the master-doc layers (flagged layers ~2 + 7; vertical mapping later) — `task-260604-heenal-reconcile-v1-layers`
 
 ### Resource Database V3 _(NEW 2026-06-16)_
 
 Matty's V3 resource DB (June 13) staged at [`data/resources/`](data/resources/) — 28 sheets / 12,456 rows. Supersedes the April `data/resources.yaml` lift.
 
-- [ ] **Full structured lift** (in Convergence above) — crosswalk-driven routing into the data model
-- [ ] Clean tweet-text noise in `toolkit-layer-crosswalk` `toolkit_route` cells
-- [ ] Wire the DB's **review queues** → master-doc safeguards (Public-Use Boundary, Source System Cards, Builder/Media safeguards) — these match open `docs/BACKLOG.md` items
-- [ ] **Brandon — curation pass** now operates on the lifted V3 result (not the old April lift)
+- [ ] **Luiz — Full structured lift** (in Convergence above) — crosswalk-driven routing into the data model — `task-260616-luiz-resource-db-v3-full-lift`
+- [ ] **Luiz —** Clean tweet-text noise in `toolkit-layer-crosswalk` `toolkit_route` cells — `task-260616-luiz-clean-tweet-text-noise`
+- [ ] **Luiz —** Wire the DB's **review queues** → master-doc safeguards (Public-Use Boundary, Source System Cards, Builder/Media safeguards) — these match open `docs/BACKLOG.md` items — `task-260616-luiz-wire-review-queues-safeguards`
+- [ ] **Brandon — curation pass** now operates on the lifted V3 result (not the old April lift) — `task-260616-brandon-curation-pass-v3`
 
 ### Greenpill Network + Andrea / RegenOS _(NEW 2026-06-04)_
 
-- [ ] **Afo — translate toolkit into the Greenpill Network site** ("garden → house" flow); link Greenpill → Toolkit; consider agent-skills for AI to reference the toolkit
-- [ ] **Schedule the Andrea + RegenOS conversation** (Luiz) — bioregional knowledge (bioregioning.org / Recover) → contribution-governance + compensation protocols
-- [ ] Luiz — share bioregioning.org + the maturity-index/stewardship excerpt to Telegram
+- [ ] **Afo — translate toolkit into the Greenpill Network site** ("garden → house" flow); link Greenpill → Toolkit; consider agent-skills for AI to reference the toolkit — `task-260604-afo-greenpill-translate`
+- [ ] **Luiz — Schedule the Andrea + RegenOS conversation** — bioregional knowledge (bioregioning.org / Recover) → contribution-governance + compensation protocols — `task-260604-luiz-schedule-andrea-conversation`
+- [ ] **Luiz —** share bioregioning.org + the maturity-index/stewardship excerpt to Telegram — `task-260604-luiz-share-bioregioning-telegram`
 
 ### Master Doc 2026-05-15 Iteration _(NEW)_
 
-- [ ] **Surface master overview canvas + per-layer canvases to team** via Telegram (Luiz — pre-2026-05-21 biweekly)
-- [ ] **Layer ownership resolution** at ~2026-05-21 biweekly's persona/skill-card session:
+- [ ] **Luiz — Surface master overview canvas + per-layer canvases to team** via Telegram (pre-2026-05-21 biweekly) [needs-triage] — `task-260515-luiz-surface-canvases-telegram`
+- [ ] **Team — Layer ownership resolution** at ~2026-05-21 biweekly's persona/skill-card session: [needs-triage] — `task-260515-team-layer-ownership-resolution`
   - L4 Concept & Idea Ecology — Matt (likely)
   - L7 Tracks & Composition — Heenal (returning; was Heenal pre-2026-05-06 drop)
   - L8 Implementation & Learning Memory — Koi (candidate; Bonfires substrate)
   - L9 Evolution Layer — Koi (candidate)
   - L10 Infrastructure & Substrate — Luiz (operator default)
-- [ ] **Phase E.1 (`data/ontology/*.yaml` refactor)** — coordinate with Matt + Rather (post-2026-05-21)
-- [ ] **Phase E.2 (`data/option-library.yaml` cross-walk)** — verify 9 categories align with new §9
-- [ ] **Phase E.3 (`data/feedback-process.yaml` split)** — co-author with Koi for Bonfires substrate reference
-- [ ] **Phase E.4 (`data/resources.yaml` re-lift)** — refactor `scripts/lift-resources.mjs` to use section anchors (iteration-stable); then re-lift against new §7
-- [ ] **Phase E.6 (IDENTITY.md ownership refresh)** — post-2026-05-21 biweekly
-- [ ] **Phase E.7 (ORG-OS.md one-pager rewrite)** — against 10-layer model + new core movement
-- [ ] **Phase E.8 (Root-MD rename pass, ~30 files)** — single coherent commit, post-team-review
-- [ ] **Phase F.1–F.4 (New lift scripts)** — `lift-options.mjs`, `lift-tracks.mjs`, `lift-concepts.mjs` + refactor `lift-resources.mjs`
-- [ ] **Phase F.5 (`data/tracks.yaml` registry)** — new file (Tracks layer restored)
-- [ ] **Pulse 1 retro** — write to `memory/2026-05-10.md` (still owed)
+- [ ] **Luiz — Phase E.1 (`data/ontology/*.yaml` refactor)** — coordinate with Matt + Rather (post-2026-05-21) [needs-triage] — `task-260515-luiz-phase-e1-ontology-refactor`
+- [ ] **Luiz — Phase E.2 (`data/option-library.yaml` cross-walk)** — verify 9 categories align with new §9 [needs-triage] — `task-260515-luiz-phase-e2-option-library-crosswalk`
+- [ ] **Luiz — Phase E.3 (`data/feedback-process.yaml` split)** — co-author with Koi for Bonfires substrate reference [needs-triage] — `task-260515-luiz-phase-e3-feedback-process-split`
+- [ ] **Luiz — Phase E.4 (`data/resources.yaml` re-lift)** — refactor `scripts/lift-resources.mjs` to use section anchors (iteration-stable); then re-lift against new §7 [needs-triage] — `task-260515-luiz-phase-e4-resources-relift`
+- [ ] **Luiz — Phase E.6 (IDENTITY.md ownership refresh)** — post-2026-05-21 biweekly [needs-triage] — `task-260515-luiz-phase-e6-identity-refresh`
+- [ ] **Luiz — Phase E.7 (ORG-OS.md one-pager rewrite)** — against 10-layer model + new core movement [needs-triage] — `task-260515-luiz-phase-e7-orgos-rewrite`
+- [ ] **Luiz — Phase E.8 (Root-MD rename pass, ~30 files)** — single coherent commit, post-team-review [needs-triage] — `task-260515-luiz-phase-e8-root-md-rename`
+- [ ] **Luiz — Phase F.1–F.4 (New lift scripts)** — `lift-options.mjs`, `lift-tracks.mjs`, `lift-concepts.mjs` + refactor `lift-resources.mjs` [needs-triage] — `task-260515-luiz-phase-f1-f4-lift-scripts`
+- [ ] **Luiz — Phase F.5 (`data/tracks.yaml` registry)** — new file (Tracks layer restored) [needs-triage] — `task-260515-luiz-phase-f5-tracks-registry`
+- [ ] **Luiz — Pulse 1 retro** — write to `memory/2026-05-10.md` (still owed) [needs-triage] — `task-260515-luiz-pulse1-retro`
 
 ### RegenOS Documentation + Public Website _(NEW 2026-06-15)_
 
 From the Matty + Luiz work session: RegenOS (the coordination layer above OrgOS instances — essentially what `regen-coordination-os` is) is only vaguely referenced in the master doc and needs a concrete written description + an approachable public surface. Target: **July**. See plan [`docs/plans/regen-os-documentation.md`](docs/plans/regen-os-documentation.md).
 
-- [ ] **Luiz — draft RegenOS documentation** (what it is; coordination layer above OrgOS instances; upstream/downstream repo mapping; knowledge-source vs organizational federation as two distinct mechanisms; self-qualifying adoption as the federation filter). Target July.
-- [ ] **Luiz — build a simple public website for RegenOS/OrgOS** (clean, non-manipulative, human-readable; could share the Astro repo). Target July.
-- [ ] **Luiz — draft RegenOS description for the master-doc meeting-notes tab** (handful of sentences) — *external edit to Matty's Google Doc; draft-and-present before sending.*
-- [ ] **Luiz — add the OrgOS overlay GitHub link** next to the RegenOS reference in the master doc — *external edit; editor access requested on the call.*
-- [ ] **Luiz — write up RegenOS ↔ COOP / Geo Browser / COI / infra stack** for the new "More Opinionated Infrastructure" sub-tab — *external edit; draft-and-present.*
+- [ ] **Luiz — draft RegenOS documentation** (what it is; coordination layer above OrgOS instances; upstream/downstream repo mapping; knowledge-source vs organizational federation as two distinct mechanisms; self-qualifying adoption as the federation filter). Target July. — `task-260615-luiz-draft-regenos-documentation`
+- [ ] **Luiz — build a simple public website for RegenOS/OrgOS** (clean, non-manipulative, human-readable; could share the Astro repo). Target July. — `task-260615-luiz-build-regenos-website`
+- [ ] **Luiz — draft RegenOS description for the master-doc meeting-notes tab** (handful of sentences) — *external edit to Matty's Google Doc; draft-and-present before sending.* — `task-260615-luiz-regenos-master-doc-description`
+- [ ] **Luiz — add the OrgOS overlay GitHub link** next to the RegenOS reference in the master doc — *external edit; editor access requested on the call.* — `task-260615-luiz-add-orgos-github-link`
+- [ ] **Luiz — write up RegenOS ↔ COOP / Geo Browser / COI / infra stack** for the new "More Opinionated Infrastructure" sub-tab — *external edit; draft-and-present.* — `task-260615-luiz-regenos-infra-writeup`
 
 ### Framework / Instance Split _(NEW 2026-06-15 — strategic)_
 
 Decision (in principle) to formally split the work into a domain-agnostic **framework** (layers system, flows, processes, IA) + the **ReFi Web3 Toolkit as the first concrete instance**. Reshapes how the master doc + repos are organized. **Surface with the wider team — not executed unilaterally.**
 
-- [ ] **Surface the framework/instance split to the team** at the next biweekly (reshapes master-doc + repo organization; ties to the eventual ~3 structural variants)
-- [ ] Scope what "framework" vs "instance" means concretely for `docs/MASTER.md` + this repo (conceptual separation first; own-repo question deferred)
-- [ ] **ReFi DAO as immediate use case** — use the framework to process ReFi DAO podcast episodes + blog posts (pending for months); output feeds back into the toolkit (Luiz)
+- [ ] **Luiz — Surface the framework/instance split to the team** at the next biweekly (reshapes master-doc + repo organization; ties to the eventual ~3 structural variants) — `task-260615-luiz-surface-framework-instance-split`
+- [ ] **Luiz —** Scope what "framework" vs "instance" means concretely for `docs/MASTER.md` + this repo (conceptual separation first; own-repo question deferred) — `task-260615-luiz-scope-framework-instance-meaning`
+- [ ] **Luiz — ReFi DAO as immediate use case** — use the framework to process ReFi DAO podcast episodes + blog posts (pending for months); output feeds back into the toolkit — `task-260615-luiz-refi-dao-immediate-use-case`
 
 ### Infra Stack & Federation _(NEW 2026-06-15)_
 
 Stack as discussed: OrgOS (foundational file system + agent instructions) → Radicle (P2P Git; planned) → COOP (intake/tagging, needs review pipeline) → COI (heavier; OrgOS covers many use cases foundationally) → visualization (Obsidian canvases for operators; Kumu from GitHub; static public website). Agreed: **simplify first, layer complexity later — don't settle on-chain now.**
 
-- [ ] **Luiz — review Geo Browser** (geobrowser.io) — flagged as not-yet-reviewed; assess fit + slot into the infra write-up
-- [ ] Radicle integration (P2P decentralized Git) — planned, not yet done (exploratory; Luiz keen)
-- [ ] Fix the **maturity/confidence rating system** for tasks — addresses the known bug where agents pick up passing meeting mentions as high-priority follow-ups (raised again 2026-06-15)
-- [ ] Repair the regen-coordination **Notion sync** — broke on the Notion CLI release (API change); affects `/initialize` DB sync
+- [ ] **Luiz — review Geo Browser** (geobrowser.io) — flagged as not-yet-reviewed; assess fit + slot into the infra write-up — `task-260615-luiz-review-geo-browser`
+- [ ] **Luiz —** Radicle integration (P2P decentralized Git) — planned, not yet done (exploratory; keen) — `task-260615-luiz-radicle-integration`
+- [ ] **Luiz —** Fix the **maturity/confidence rating system** for tasks — addresses the known bug where agents pick up passing meeting mentions as high-priority follow-ups (raised again 2026-06-15) — `task-260615-luiz-fix-maturity-confidence-rating`
+- [ ] **Luiz —** Repair the regen-coordination **Notion sync** — broke on the Notion CLI release (API change); affects `/initialize` DB sync — `task-260615-luiz-repair-notion-sync`
 
 ### ReFi Commons + Standards + Funding _(NEW 2026-06-15 — strategic)_
 
 Coordination model: small bites (fundable working groups), not a big merger. Standards stack drives funding flows. Scale to high-trust orgs, not open calls.
 
-- [ ] **Open the ReFi Commons home conversation** (Luiz + Matty) — coordinate with Green Pill IP roll-in
-- [ ] **Identify the first working group both orgs agree is worth funding** (the "small bite" entry point)
-- [ ] **Advance the standards stack** — CIDS + DAO IP5 (needs more figuring-out) + impact accounting/measurement tied to funding flows (specific, academically rigorous)
-- [ ] **Map a path to seed an Impact Vault** ("Oct and Vault") from funding the master-doc work earns — Matty's compensation preference; reciprocity/acknowledgement thread (details in Matty's handoff doc)
-- [ ] Scale outreach — ~5–7 existing high-trust orgs / known people (not open chapter calls) — *slow-burn; pairs with Matty*
+- [ ] **Luiz — Open the ReFi Commons home conversation** (Luiz + Matty) — coordinate with Green Pill IP roll-in — `task-260615-luiz-open-refi-commons-conversation`
+- [ ] **Team — Identify the first working group both orgs agree is worth funding** (the "small bite" entry point) — `task-260615-team-identify-first-working-group`
+- [ ] **Luiz — Advance the standards stack** — CIDS + DAO IP5 (needs more figuring-out) + impact accounting/measurement tied to funding flows (specific, academically rigorous) — `task-260615-luiz-advance-standards-stack`
+- [ ] **Matty — Map a path to seed an Impact Vault** ("Oct and Vault") from funding the master-doc work earns — Matty's compensation preference; reciprocity/acknowledgement thread (details in Matty's handoff doc) — `task-260615-matty-impact-vault-path`
+- [ ] **Luiz —** Scale outreach — ~5–7 existing high-trust orgs / known people (not open chapter calls) — *slow-burn; pairs with Matty* — `task-260615-luiz-scale-outreach-high-trust-orgs`
 
 ### Master Doc & Handoff
-- [ ] Matty — final master-doc push before Swarm participation (Friday noon hard deadline; Philadelphia wedding travel) — *carryover from 2026-04-23, reaffirmed 2026-05-07*
-- [ ] Coordinate handoff — announce to team when the download/reupload is happening (avoid concurrent edits)
-- [ ] Apply frame-language critique to master doc sections (Durgadas — next iteration)
-- [ ] Resources tab (weakest layer) — dedicated collaborative organization session, timing TBD
-- [ ] Team — individual layer ownership declarations (open invitation; see `IDENTITY.md` for current state — Tracks layer dropped in 2026-05-06 iteration; Heenal's ownership needs reassignment, Concept & Idea Ecology needs an owner)
+- [ ] **Matty —** final master-doc push before Swarm participation (Friday noon hard deadline; Philadelphia wedding travel) — *carryover from 2026-04-23, reaffirmed 2026-05-07* — `task-260507-matty-final-master-doc-push`
+- [ ] **Luiz —** Coordinate handoff — announce to team when the download/reupload is happening (avoid concurrent edits) — `task-260507-luiz-coordinate-handoff-announce`
+- [ ] **Durgadas —** Apply frame-language critique to master doc sections (next iteration) — `task-260507-durgadas-frame-language-critique`
+- [ ] **Team —** Resources tab (weakest layer) — dedicated collaborative organization session, timing TBD — `task-260507-team-resources-tab-session`
+- [ ] **Team —** individual layer ownership declarations (open invitation; see `IDENTITY.md` for current state — Tracks layer dropped in 2026-05-06 iteration; Heenal's ownership needs reassignment, Concept & Idea Ecology needs an owner) — `task-260507-team-layer-ownership-declarations`
 
 ### OrgOS Rollout — shared task management _(NEW 2026-05-07)_
 
 Team adopted OrgOS (the existing org-os overlay on `feature/org-os-overlay`) as the team's shared task / contribution-tracking layer. Process: compile to-dos → allocate among team → execute through Kanban pipeline.
 
-- [ ] **Luiz — stand up the shared task management surface.** Write a short onboarding note pointing team to `HEARTBEAT.md` + `packages/webapps/task-manager/` (Task Manager visual board); send to Telegram group.
-- [ ] Add per-task owner field to `HEARTBEAT.md` items where missing (so Task Manager surfaces ownership cleanly)
-- [ ] Decide: Task Manager web app vs upgrading to KOI-bridge once refi-dao Wave 2 ships
+- [ ] **Luiz — stand up the shared task management surface.** Write a short onboarding note pointing team to `HEARTBEAT.md` + `packages/webapps/task-manager/` (Task Manager visual board); send to Telegram group. [needs-triage] — `task-260507-luiz-stand-up-task-management`
+- [ ] **Luiz —** Add per-task owner field to `HEARTBEAT.md` items where missing (so Task Manager surfaces ownership cleanly) [needs-triage] — `task-260507-luiz-add-owner-field-heartbeat`
+- [ ] **Luiz —** Decide: Task Manager web app vs upgrading to KOI-bridge once refi-dao Wave 2 ships [needs-triage] — `task-260507-luiz-decide-task-manager-vs-koi-bridge`
 
 ### Visual Architecture — Obsidian Canvas _(NEW 2026-05-07)_
 
 Team adopted Obsidian Canvas as visual architecture mapping tool (Barcelona bioregional garden as worked example). Sharing limitation acknowledged (requires local Obsidian); web-based canvas remains exploratory carryover from 260212.
 
-- [ ] **Luiz — sketch the toolkit architecture canvas** (new 8-layer Knowledge Commons Toolkit model: Ontology → Encyclopedia → Resource Graph & Atlas → Concept & Idea Ecology → Option Library → Deployment & Structural Integrity → Implementation Memory → Evolution + Cross-Cutting Systems). Land at `docs/canvases/toolkit-architecture.canvas`. Sketch-level pre-Pulse-1; polished version post-Pulse-1 once iteration stabilizes.
-- [ ] Update outdated canvases (architecture / content structure / development workflow / master overview) — historic carryover from 260212; align with new master doc structure as part of Phase 3
-- [ ] Web-based canvas visualization (no Obsidian required) — exploratory (raised 260212; still open)
+- [ ] **Luiz — sketch the toolkit architecture canvas** (new 8-layer Knowledge Commons Toolkit model: Ontology → Encyclopedia → Resource Graph & Atlas → Concept & Idea Ecology → Option Library → Deployment & Structural Integrity → Implementation Memory → Evolution + Cross-Cutting Systems). Land at `docs/canvases/toolkit-architecture.canvas`. Sketch-level pre-Pulse-1; polished version post-Pulse-1 once iteration stabilizes. [needs-triage] — `task-260507-luiz-sketch-architecture-canvas`
+- [ ] **Luiz —** Update outdated canvases (architecture / content structure / development workflow / master overview) — historic carryover from 260212; align with new master doc structure as part of Phase 3 [needs-triage] — `task-260507-luiz-update-outdated-canvases`
+- [ ] **Luiz —** Web-based canvas visualization (no Obsidian required) — exploratory (raised 260212; still open) [needs-triage] — `task-260507-luiz-web-based-canvas-viz`
 
 ### Knowledge Commoning Swarm _(NEW 2026-05-07)_
 
 Pulse 1: 2026-05-09–10. Two-month hackathon follows. Toolkit reframed as a *contribution artifact* in the new master doc.
 
-- [ ] **Luiz — join OpenCivics planning call** (today, post-biweekly — 2026-05-07) for Pulse 1 logistics
-- [ ] Team — attend Pulse 1 (partial attendance acceptable; Matty out for Philadelphia wedding)
-- [ ] Pre-Pulse-1: draft `00-README.md` + `05-tool-option-pattern-protocol-deployment-case.md` + `07-six-affordances-translation.md` for the Swarm Contribution Pack v0.1 (pure synthesis from new master doc)
-- [ ] Pulse 1: observe what Swarm participants gravitate toward; adjust Swarm Contribution Pack v0.1 scope
-- [x] **Toolkit vs "Transformational Journeys" framing tension — largely resolved toward journeys** (Koi raised 2026-05-07; reinforced 2026-05-21). Heenal's v1 site IS journey-based (3 onboarding journeys live). The "Knowledge Commons Toolkit" name persists for the master doc; the *public* surface is journey-framed. See V1 Public Site section.
+- [ ] **Luiz —** Pulse 1: observe what Swarm participants gravitate toward; adjust Swarm Contribution Pack v0.1 scope — `task-260507-luiz-adjust-swarm-contribution-pack`
+- [x] **Koi — Toolkit vs "Transformational Journeys" framing tension — largely resolved toward journeys** (raised 2026-05-07; reinforced 2026-05-21). Heenal's v1 site IS journey-based (3 onboarding journeys live). The "Knowledge Commons Toolkit" name persists for the master doc; the *public* surface is journey-framed. See V1 Public Site section.
 
 ### Persona / Game-Based Format _(SUPERSEDED 2026-05-21)_
 
@@ -352,71 +354,56 @@ Pulse 1: 2026-05-09–10. Two-month hackathon follows. Toolkit reframed as a *co
 
 ### Research Framework — Evolution Layer _(NEW 2026-05-07)_
 
-- [ ] **Koi — develop research framework document** (umbrella hypothesis + secondary questions + methodology + AI-audit data collection — modeled on Brazil Bonfires AI audit project)
-- [ ] Cross-reference Bonfires (KOI stack) federation hook with `swarm-contribution-pack.md` Layer 7+8 deliverables — entity mapping (user/project/general) + cross-platform knowledge graph (Discord/Telegram) suggests a tight integration opportunity
+- [ ] **Koi — develop research framework document** (umbrella hypothesis + secondary questions + methodology + AI-audit data collection — modeled on Brazil Bonfires AI audit project) — `task-260507-koi-develop-research-framework`
+- [ ] **Koi —** Cross-reference Bonfires (KOI stack) federation hook with `swarm-contribution-pack.md` Layer 7+8 deliverables — entity mapping (user/project/general) + cross-platform knowledge graph (Discord/Telegram) suggests a tight integration opportunity — `task-260507-koi-cross-reference-bonfires-hook`
 
 ### Knowledge Site (Layer 2 — Encyclopedia)
-- [ ] Apply Matt's feedback on 4 articles: scams, seed phrases, wallet comparison, key terms (Heenal)
-- [ ] Phase 2 — expand 43 medium articles through the 5-stage editorial pipeline
-- [ ] Human review of all 67 published drafts
-- [ ] Add real-world examples from approved source maps (Restor, Hylo, P2P Foundation, ReFi Ecosystem, Weavers, Second Renaissance)
+- [ ] **Heenal —** Apply Matt's feedback on 4 articles: scams, seed phrases, wallet comparison, key terms — `task-260423-heenal-apply-matt-feedback-4-articles`
+- [ ] **Heenal —** Phase 2 — expand 43 medium articles through the 5-stage editorial pipeline — `task-260423-heenal-phase2-expand-medium-articles`
+- [ ] **Heenal —** Human review of all 67 published drafts — `task-260423-heenal-human-review-67-drafts`
+- [ ] **Heenal —** Add real-world examples from approved source maps (Restor, Hylo, P2P Foundation, ReFi Ecosystem, Weavers, Second Renaissance) — `task-260423-heenal-add-real-world-examples`
 
 ### CSIS Integration (Layer 5/6 — Deployment & Structural Integrity)
-- [ ] Encode Dunbar-number scaling research into next CSIS standards review (Durgadas)
-- [ ] Encode six-directional responsibility model into next CSIS standards review (Durgadas)
-- [ ] Make compressive vs generative standards explicit in Deployment Layer
-- [ ] Define conformance posture (partial adoption vs full conformance) assessment framework
-- [ ] Confirm whether existing CSIS × org-os Alignment Report covers new master doc's structural-integrity questions ("Who is represented? Who is absent? Who maintains it? Who may be exposed by visibility?") or needs supplementing (Durgadas — Phase 2)
-
-### Hackathon — May (cross-layer)
-- [ ] Invite Ethereum Localism folks via Telegram (Rather)
-- [ ] Join Open Civics Consortium chat via website; coordinate hackathon invite (Luiz)
-- [ ] Confirm Geo Protocol participation and format
-- [ ] Set the hackathon date and format (knowledge-swarming hack)
+- [ ] **Durgadas —** Encode Dunbar-number scaling research into next CSIS standards review — `task-260423-durgadas-dunbar-scaling-csis`
+- [ ] **Durgadas —** Encode six-directional responsibility model into next CSIS standards review — `task-260423-durgadas-six-directional-model-csis`
+- [ ] **Durgadas —** Make compressive vs generative standards explicit in Deployment Layer — `task-260423-durgadas-compressive-generative-standards`
+- [ ] **Durgadas —** Define conformance posture (partial adoption vs full conformance) assessment framework — `task-260423-durgadas-define-conformance-posture`
+- [ ] **Durgadas —** Confirm whether existing CSIS × org-os Alignment Report covers new master doc's structural-integrity questions ("Who is represented? Who is absent? Who maintains it? Who may be exposed by visibility?") or needs supplementing (Phase 2) — `task-260423-durgadas-confirm-csis-alignment-report`
 
 ### Ontology (now Layer 1 in new master doc — promoted from Layer 3)
-- [ ] Formalize Rather's ontology as toolkit standard (adopt and propagate through metadata)
-- [ ] Resolve V1 vs V2a vs V2b — implement doc recommendation (V1 base + V2b overlay)
-- [ ] Reconcile new master doc's 25 working ontology object types with existing `data/ontology/*.yaml` (Phase 2 reconciliation)
-- [ ] Adopt or map new master doc's 9 maturity states (`raw`, `to-place`, `draft`, `candidate`, `reviewed`, `field-informed`, `pattern-generating`, `deprecated`, `open question`) against existing `status` fields (Phase 2)
+- [ ] **Rather —** Formalize Rather's ontology as toolkit standard (adopt and propagate through metadata) — `task-260423-rather-formalize-ontology-standard`
+- [ ] **Rather —** Resolve V1 vs V2a vs V2b — implement doc recommendation (V1 base + V2b overlay) — `task-260423-rather-resolve-v1-v2a-v2b`
+- [ ] **Luiz —** Reconcile new master doc's 25 working ontology object types with existing `data/ontology/*.yaml` (Phase 2 reconciliation) — `task-260423-luiz-reconcile-ontology-object-types`
+- [ ] **Luiz —** Adopt or map new master doc's 9 maturity states (`raw`, `to-place`, `draft`, `candidate`, `reviewed`, `field-informed`, `pattern-generating`, `deprecated`, `open question`) against existing `status` fields (Phase 2) — `task-260423-luiz-adopt-maturity-states-mapping`
 
 ### Resource Graph (now Layer 3 — Resource Graph & Ecosystem Atlas)
 - [x] Lift the 11+ domain URL lists from master doc into structured `data/resources.yaml` (mechanical pass — 2026-04-26; 738 entries, 285 URL-bearing, 50 domains)
-- [ ] **Brandon — curation pass on `data/resources.yaml`** (dedupe, drop tag-as-resource bullets, fill URLs, classify)
-- [ ] Re-run `scripts/lift-resources.mjs` against new `docs/MASTER.md` (Phase 3 — post-Pulse-1; idempotent — verify line ranges first)
-- [ ] Clarify taxonomy vs ontology distinction (master doc line 181 flag)
+- [ ] **Brandon — curation pass on `data/resources.yaml`** (dedupe, drop tag-as-resource bullets, fill URLs, classify) — `task-260423-brandon-curation-pass-resources-yaml`
+- [ ] **Luiz —** Re-run `scripts/lift-resources.mjs` against new `docs/MASTER.md` (Phase 3 — post-Pulse-1; idempotent — verify line ranges first) — `task-260423-luiz-relift-resources-script`
+- [ ] **Luiz —** Clarify taxonomy vs ontology distinction (master doc line 181 flag) — `task-260423-luiz-clarify-taxonomy-ontology-distinction`
 
 ### Tool / Option / Pattern / Protocol / Deployment / Case _(NEW 2026-05-07 master-doc-derived)_
-- [ ] Cross-walk new master doc's 6-tier vocabulary against existing `data/option-library.yaml` 9-category scaffold (Phase 2 reconciliation)
-
-### Historic carryovers (from backfilled meetings — needs team triage)
-
-These surfaced from the meeting bootstrap (2026-04-26). Status of each is unclear; team should triage on next planning call:
-
-- [ ] Drew Simon — share knowledge commons starter links + details in group chat (raised 260212; status unclear)
-- [ ] Hub post about knowledge commons / federation collaboration (Afo — raised 260225; never confirmed sent)
-- [ ] Bright community collaboration — concrete ideas + connection to toolkit (Luiz to discuss with Rather; raised 260212)
-- [ ] Onboarding guides refresh: Local Node Onboarding + Network Initiative Onboarding (raised 260312; unclear status)
-- [ ] Integrate Safe (smart wallet) content into the toolkit (raised 260312; unclear status)
-- [ ] Style guide derived from ReFi DAO 200+ blog posts (raised 260212; partial existence — see `docs/writing-system.md`; cross-reference w/ `content-updates/heen-ai/add-planning-docs` branch's `content-style-guide.md` per Phase 4 reconciliation)
+- [ ] **Luiz —** Cross-walk new master doc's 6-tier vocabulary against existing `data/option-library.yaml` 9-category scaffold (Phase 2 reconciliation) — `task-260507-luiz-crosswalk-6tier-vocabulary`
 
 ---
 
 ## System Health
 
+> **2026-08-09 note:** `Site`, `Data Integrity` and `Federation` below are recurring health checks, not one-off project work — they're candidates for Linear **recurring issues** rather than one-off issues (the 2026-08-06 engineering sync explicitly listed recurring-issue maintenance as a Linear feature to use). IDs/owners below exist to satisfy the audit; expect these to be re-modeled as recurring issues during the actual Linear seed rather than seeded as ordinary one-off tasks.
+
 ### Site
-- [ ] `npm run build` passes
-- [ ] Live site reachable at regen-toolkit-site.vercel.app
+- [ ] **Luiz —** `npm run build` passes — `task-260809-luiz-site-build-passes`
+- [ ] **Luiz —** Live site reachable at regen-toolkit-site.vercel.app — `task-260809-luiz-site-reachable`
 
 ### Data Integrity
-- [ ] `data/ontology/` YAMLs align with master doc (now flagged for Phase 3 refactor)
-- [ ] `data/option-library.yaml` reflects current 9 categories (cross-walk against new 6-tier vocabulary in Phase 2)
-- [ ] `.well-known/` schemas match current data (run `npm run generate:schemas` after changes)
+- [ ] **Luiz —** `data/ontology/` YAMLs align with master doc (now flagged for Phase 3 refactor) — `task-260809-luiz-data-integrity-ontology-align`
+- [ ] **Luiz —** `data/option-library.yaml` reflects current 9 categories (cross-walk against new 6-tier vocabulary in Phase 2) — `task-260809-luiz-data-integrity-option-library`
+- [ ] **Luiz —** `.well-known/` schemas match current data (run `npm run generate:schemas` after changes) — `task-260809-luiz-data-integrity-wellknown-schemas`
 
 ### Federation
-- [ ] Last sync with upstream (see `federation.yaml`)
-- [ ] Peer sync with regen-coordination-os
-- [ ] Bonfires / KOI federation hook (Caue's stack) — explore tight integration via `mcp__regen-koi__*` for Evolution layer (raised 2026-05-07)
+- [ ] **Luiz —** Last sync with upstream (see `federation.yaml`) — `task-260809-luiz-federation-last-sync-upstream`
+- [ ] **Luiz —** Peer sync with regen-coordination-os — `task-260809-luiz-federation-peer-sync-coordination-os`
+- [ ] **Koi —** Bonfires / KOI federation hook (Caue's stack) — explore tight integration via `mcp__regen-koi__*` for Evolution layer (raised 2026-05-07) — `task-260507-koi-bonfires-federation-hook`
 
 ---
 
@@ -441,4 +428,8 @@ These surfaced from the meeting bootstrap (2026-04-26). Status of each is unclea
 
 ---
 
-_Last updated: 2026-08-28 (catch-up: Rather org access done; knowledge-commons shell repo surfaced; Matty reply drafted — repo-role alignment + clean-slate `main` spec are next)_
+_Last updated: 2026-08-31 (merged `feature/linear-seeding` into `regen-toolkit-os` — the Linear pipeline, `data/tasks.yaml` and the task-id scheme are now on the working branch)_
+
+_Prior: 2026-08-28 (catch-up: Rather org access done; knowledge-commons shell repo surfaced; Matty reply drafted — repo-role alignment + clean-slate `main` spec are next)_
+
+_Prior: 2026-08-09 (pre-Linear triage pass — every open item now carries a `task-YYMMDD-owner-slug` id + resolvable owner; 13 items composted to `docs/BACKLOG.md`, 3 rehomed out of a section mislabelled DONE; `npm run linear:audit` is green)_

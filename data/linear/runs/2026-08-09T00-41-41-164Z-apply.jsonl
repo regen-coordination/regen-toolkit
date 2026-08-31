@@ -1,0 +1,33 @@
+{"at":"2026-08-09T00:41:41.630Z","op":"project.create","slug":"repo-contribution","name":"Stabilise the repo for contribution","id":"104cddc4-c90b-4399-af8d-3e18566fbae3"}
+{"at":"2026-08-09T00:41:41.905Z","op":"project.link-initiative","slug":"repo-contribution","project_id":"104cddc4-c90b-4399-af8d-3e18566fbae3","initiative_id":"a23709fd-7d67-4f35-8cd4-cb773ecd6c05"}
+{"at":"2026-08-09T00:41:42.076Z","op":"project.create","slug":"knowledge-curation","name":"Gather and curate knowledge","id":"261853d9-f0f9-46fc-b1de-7ed1f6f39ed1"}
+{"at":"2026-08-09T00:41:42.186Z","op":"project.link-initiative","slug":"knowledge-curation","project_id":"261853d9-f0f9-46fc-b1de-7ed1f6f39ed1","initiative_id":"a23709fd-7d67-4f35-8cd4-cb773ecd6c05"}
+{"at":"2026-08-09T00:41:42.361Z","op":"project.create","slug":"org-os-framework","name":"org-os and framework","id":"effb1625-98f7-4d67-8216-2be88d62f6f1"}
+{"at":"2026-08-09T00:41:42.499Z","op":"project.link-initiative","slug":"org-os-framework","project_id":"effb1625-98f7-4d67-8216-2be88d62f6f1","initiative_id":"a23709fd-7d67-4f35-8cd4-cb773ecd6c05"}
+{"at":"2026-08-09T00:41:42.606Z","op":"label.create","name":"gate/promotion","id":"c24ffab7-1d85-41bd-b31f-2a8892d3d52d"}
+{"at":"2026-08-09T00:41:42.702Z","op":"label.create","name":"layer/10","id":"d0168993-dec8-4abc-914a-d1f6b820491a"}
+{"at":"2026-08-09T00:41:42.810Z","op":"label.create","name":"needs-assignee","id":"6fcf7e03-823e-4e04-8bc8-4de82faa896c"}
+{"at":"2026-08-09T00:41:42.912Z","op":"label.create","name":"origin/meeting-260719","id":"b1b6166b-ab4a-4c3c-bbc6-245c8f63f1ee"}
+{"at":"2026-08-09T00:41:43.034Z","op":"label.create","name":"origin/meeting-260806","id":"43037e00-84d7-429f-b1ab-b573f7a05cae"}
+{"at":"2026-08-09T00:41:43.154Z","op":"label.create","name":"seed/repo","id":"debc7276-f207-4b22-baac-f59596d1e5c0"}
+{"at":"2026-08-09T00:41:43.264Z","op":"label.create","name":"strategic","id":"e84af977-3aa0-4528-a5f1-68b329319a8b"}
+{"at":"2026-08-09T00:41:43.473Z","op":"issue.create","task_id":"task-260806-luiz-rather-org-access","issue_id":"917d982d-103b-4167-b96f-bac41ad24504","identifier":"KCM-1"}
+{"at":"2026-08-09T00:41:43.784Z","op":"issue.create","task_id":"task-260806-luiz-linear-seed-repo","issue_id":"6ae4a591-4c75-4275-9dba-d193f601a5f9","identifier":"KCM-2"}
+{"at":"2026-08-09T00:41:43.948Z","op":"issue.create","task_id":"task-260806-luiz-four-slice-merge","issue_id":"ca758826-9449-4268-9e68-572074cd783b","identifier":"KCM-3"}
+{"at":"2026-08-09T00:41:44.101Z","op":"issue.create","task_id":"task-260806-luiz-linear-email","issue_id":"57259d2b-fc93-4f10-9933-df46f737ce30","identifier":"KCM-4"}
+{"at":"2026-08-09T00:41:44.401Z","op":"issue.create","task_id":"task-260806-rather-cloudflare-setup","issue_id":"63400991-742c-42a9-8521-d8d8f3b9cda7","identifier":"KCM-5"}
+{"at":"2026-08-09T00:41:44.570Z","op":"issue.create","task_id":"task-260806-afo-coordination-group","issue_id":"c35a86dd-8433-4a5e-aac4-1a476ebeb706","identifier":"KCM-6"}
+{"at":"2026-08-09T00:41:44.881Z","op":"issue.create","task_id":"task-260806-afo-linear-seed","issue_id":"aac34f9f-cd5f-4a9c-b507-eb72afed235d","identifier":"KCM-7"}
+{"at":"2026-08-09T00:41:45.043Z","op":"issue.create","task_id":"task-260806-afo-linear-github-training","issue_id":"fe1730ed-3451-4a12-914f-52bc004a7c7c","identifier":"KCM-8"}
+{"at":"2026-08-09T00:41:45.197Z","op":"issue.create","task_id":"task-260806-regis-github-onboarding","issue_id":"e92f4307-e6cb-442e-a5e0-98553e14e6fd","identifier":"KCM-9"}
+{"at":"2026-08-09T00:41:45.442Z","op":"issue.create","task_id":"task-260806-matty-engineering-priorities-linear","issue_id":"f9c0a0a5-8b6a-431c-aeee-33cbca5a6891","identifier":"KCM-10"}
+{"at":"2026-08-09T00:41:45.576Z","op":"issue.create","task_id":"task-260806-team-join-linear","issue_id":"44ad3e39-4071-4cae-9ba1-0604f15baaac","identifier":"KCM-11"}
+{"at":"2026-08-09T00:41:45.723Z","op":"issue.create","task_id":"task-260719-luiz-dev-instance-build","issue_id":"85f79d87-72d5-45ff-a812-0bd9ac621c24","identifier":"KCM-12"}
+{"at":"2026-08-09T00:41:46.052Z","op":"issue.create","task_id":"task-260719-luiz-dev-instance-deploy","issue_id":"d969fbaa-1380-4293-a756-45055cc3a0b2","identifier":"KCM-13"}
+{"at":"2026-08-09T00:41:46.213Z","op":"issue.create","task_id":"task-260806-luiz-slice-1-framework-schemas","issue_id":"e04dc991-3cd7-4d54-a82b-4f2eef052404","identifier":"KCM-14"}
+{"at":"2026-08-09T00:41:46.581Z","op":"issue.create","task_id":"task-260806-luiz-slice-2-generators-validation","issue_id":"0a41f92d-12b6-4a9e-8f2e-ad069f6f1df5","identifier":"KCM-15"}
+{"at":"2026-08-09T00:41:46.749Z","op":"issue.create","task_id":"task-260806-luiz-slice-3-public-safe-aggregate","issue_id":"4a4c7a39-d566-48ee-bd62-a2f364e74eca","identifier":"KCM-16"}
+{"at":"2026-08-09T00:41:47.285Z","op":"issue.create","task_id":"task-260719-luiz-dev-routes-by-type","issue_id":"9ba0cdea-af99-4128-9d49-021dd67ad74b","identifier":"KCM-17"}
+{"at":"2026-08-09T00:41:47.506Z","op":"issue.create","task_id":"task-260719-luiz-dev-routes-by-layer","issue_id":"78cdcf0c-1986-479d-877f-1fdc17176b51","identifier":"KCM-18"}
+{"at":"2026-08-09T00:41:47.848Z","op":"issue.create","task_id":"task-260719-luiz-dev-provenance-badges","issue_id":"dd63334c-2a27-48b8-9cb3-829f6e9d5b91","identifier":"KCM-19"}
+{"at":"2026-08-09T00:41:48.136Z","op":"issue.create","task_id":"task-260719-luiz-dev-cross-links","issue_id":"737e4f30-d2bc-4205-b9af-fd836a351c9e","identifier":"KCM-20"}

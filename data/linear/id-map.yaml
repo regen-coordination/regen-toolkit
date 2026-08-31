@@ -1,0 +1,1035 @@
+entries:
+  task-260423-brandon-curation-pass-resources-yaml:
+    created_at: '2026-08-09T00:47:35.029Z'
+    identifier: KCM-150
+    issue_id: d0e9a692-91ae-48ce-951d-c9c719005656
+    last_synced: '2026-08-09T09:05:36.923Z'
+    state: orphaned
+  task-260423-durgadas-compressive-generative-standards:
+    created_at: '2026-08-09T00:47:33.047Z'
+    identifier: KCM-143
+    issue_id: b4031633-1c30-4744-a887-9d5496422562
+    last_synced: '2026-08-09T09:05:36.930Z'
+    state: orphaned
+  task-260423-durgadas-confirm-csis-alignment-report:
+    created_at: '2026-08-09T00:47:33.387Z'
+    identifier: KCM-145
+    issue_id: 1e3e8c1f-db9d-4d79-a4eb-79fec778620b
+    last_synced: '2026-08-09T09:05:36.933Z'
+    state: orphaned
+  task-260423-durgadas-define-conformance-posture:
+    created_at: '2026-08-09T00:47:33.230Z'
+    identifier: KCM-144
+    issue_id: b08b08f1-003a-4cbd-8025-4344205d404d
+    last_synced: '2026-08-09T09:05:36.936Z'
+    state: orphaned
+  task-260423-durgadas-dunbar-scaling-csis:
+    created_at: '2026-08-09T00:47:32.686Z'
+    identifier: KCM-141
+    issue_id: e8e0bc62-b39f-4d9c-b1ef-a0e00c0b6195
+    last_synced: '2026-08-09T09:05:36.938Z'
+    state: orphaned
+  task-260423-durgadas-six-directional-model-csis:
+    created_at: '2026-08-09T00:47:32.877Z'
+    identifier: KCM-142
+    issue_id: 27a9ce1e-1288-4362-a898-38d1e291d258
+    last_synced: '2026-08-09T09:05:36.940Z'
+    state: orphaned
+  task-260423-heenal-add-real-world-examples:
+    created_at: '2026-08-09T00:47:32.434Z'
+    identifier: KCM-140
+    issue_id: f14cfeaf-effb-44b1-bc8f-ecc6bd287f72
+    last_synced: '2026-08-09T09:05:36.942Z'
+    state: orphaned
+  task-260423-heenal-apply-matt-feedback-4-articles:
+    created_at: '2026-08-09T00:47:31.990Z'
+    identifier: KCM-137
+    issue_id: 94128515-ad4a-4b93-909a-da91f9dd163e
+    last_synced: '2026-08-09T09:05:36.944Z'
+    state: orphaned
+  task-260423-heenal-human-review-67-drafts:
+    created_at: '2026-08-09T00:47:32.276Z'
+    identifier: KCM-139
+    issue_id: 1e6a8315-393a-4438-8466-bf46aefae174
+    last_synced: '2026-08-09T09:05:36.946Z'
+    state: orphaned
+  task-260423-heenal-phase2-expand-medium-articles:
+    created_at: '2026-08-09T00:47:32.126Z'
+    identifier: KCM-138
+    issue_id: 4e4ba72d-c608-4af0-a251-4004110b2b12
+    last_synced: '2026-08-09T09:05:36.948Z'
+    state: orphaned
+  task-260423-luiz-adopt-maturity-states-mapping:
+    created_at: '2026-08-09T00:47:34.803Z'
+    identifier: KCM-149
+    issue_id: 53a16510-fbe8-41d1-ba16-098f6688921b
+    last_synced: '2026-08-09T09:05:36.950Z'
+    state: orphaned
+  task-260423-luiz-clarify-taxonomy-ontology-distinction:
+    created_at: '2026-08-09T00:47:35.457Z'
+    identifier: KCM-152
+    issue_id: 85c9b4de-d06e-46d8-ac5a-bc4f74155273
+    last_synced: '2026-08-09T09:05:36.951Z'
+    state: orphaned
+  task-260423-luiz-reconcile-ontology-object-types:
+    created_at: '2026-08-09T00:47:34.595Z'
+    identifier: KCM-148
+    issue_id: bf2b46a1-9502-4541-b583-da36b2b2f273
+    last_synced: '2026-08-09T09:05:36.953Z'
+    state: orphaned
+  task-260423-luiz-relift-resources-script:
+    created_at: '2026-08-09T00:47:35.211Z'
+    identifier: KCM-151
+    issue_id: e1c35dcf-b3c8-4b08-bf7f-dffda5bab3b0
+    last_synced: '2026-08-09T09:05:36.955Z'
+    state: orphaned
+  task-260423-rather-formalize-ontology-standard:
+    created_at: '2026-08-09T00:47:33.770Z'
+    identifier: KCM-146
+    issue_id: f9f09288-2065-4917-8794-5beafcd2ce4e
+    last_synced: '2026-08-09T09:05:36.956Z'
+    state: orphaned
+  task-260423-rather-resolve-v1-v2a-v2b:
+    created_at: '2026-08-09T00:47:34.356Z'
+    identifier: KCM-147
+    issue_id: 7dde6815-9beb-47bd-a491-b6298dec99b2
+    last_synced: '2026-08-09T09:05:36.957Z'
+    state: orphaned
+  task-260507-durgadas-frame-language-critique:
+    created_at: '2026-08-09T00:47:28.889Z'
+    identifier: KCM-125
+    issue_id: eeec72a7-11cd-4b1f-83e8-5ec26e0007a3
+    last_synced: '2026-08-09T09:05:36.959Z'
+    state: orphaned
+  task-260507-koi-bonfires-federation-hook:
+    created_at: '2026-08-09T00:47:39.092Z'
+    identifier: KCM-161
+    issue_id: 6f615272-644d-4b7f-bf3f-63567209f619
+    last_synced: '2026-08-09T09:05:36.960Z'
+    state: orphaned
+  task-260507-koi-cross-reference-bonfires-hook:
+    created_at: '2026-08-09T00:47:31.851Z'
+    identifier: KCM-136
+    issue_id: eff2ee4d-7eca-4109-82ea-4d0b8ce6784e
+    last_synced: '2026-08-09T09:05:36.961Z'
+    state: orphaned
+  task-260507-koi-develop-research-framework:
+    created_at: '2026-08-09T00:47:31.664Z'
+    identifier: KCM-135
+    issue_id: fee87f04-9363-43c3-918d-490d50d86908
+    last_synced: '2026-08-09T09:05:36.962Z'
+    state: orphaned
+  task-260507-luiz-add-owner-field-heartbeat:
+    created_at: '2026-08-09T00:47:29.976Z'
+    identifier: KCM-129
+    issue_id: 8b3d1ba9-1def-4e97-93c9-192a7b6822bd
+    last_synced: '2026-08-09T09:05:36.964Z'
+    state: orphaned
+  task-260507-luiz-adjust-swarm-contribution-pack:
+    created_at: '2026-08-09T00:47:31.416Z'
+    identifier: KCM-134
+    issue_id: 6a636351-4e55-435a-86b3-190af0dacfd3
+    last_synced: '2026-08-09T09:05:36.965Z'
+    state: orphaned
+  task-260507-luiz-coordinate-handoff-announce:
+    created_at: '2026-08-09T00:47:28.718Z'
+    identifier: KCM-124
+    issue_id: 473a48d8-8a70-4b63-b7b6-207ad2a8c6a5
+    last_synced: '2026-08-09T09:05:36.966Z'
+    state: orphaned
+  task-260507-luiz-crosswalk-6tier-vocabulary:
+    created_at: '2026-08-09T00:47:36.170Z'
+    identifier: KCM-153
+    issue_id: 39f4742d-bbc0-4dee-8f77-063c63a81a7f
+    last_synced: '2026-08-09T09:05:36.967Z'
+    state: orphaned
+  task-260507-luiz-decide-task-manager-vs-koi-bridge:
+    created_at: '2026-08-09T00:47:30.293Z'
+    identifier: KCM-130
+    issue_id: 2b95a59b-71af-4279-829f-deb5076d5121
+    last_synced: '2026-08-09T09:05:36.968Z'
+    state: orphaned
+  task-260507-luiz-sketch-architecture-canvas:
+    created_at: '2026-08-09T00:47:30.640Z'
+    identifier: KCM-131
+    issue_id: be013e16-951d-4648-84f5-5b32618cbce9
+    last_synced: '2026-08-09T09:05:36.970Z'
+    state: orphaned
+  task-260507-luiz-stand-up-task-management:
+    created_at: '2026-08-09T00:47:29.723Z'
+    identifier: KCM-128
+    issue_id: fce28001-662a-4ad3-bdc9-72209ea143b3
+    last_synced: '2026-08-09T09:05:36.971Z'
+    state: orphaned
+  task-260507-luiz-update-outdated-canvases:
+    created_at: '2026-08-09T00:47:31.007Z'
+    identifier: KCM-132
+    issue_id: 95f8f068-60e8-4fd3-82ca-0648ec656bf9
+    last_synced: '2026-08-09T09:05:36.972Z'
+    state: orphaned
+  task-260507-luiz-web-based-canvas-viz:
+    created_at: '2026-08-09T00:47:31.221Z'
+    identifier: KCM-133
+    issue_id: 1477b14e-5346-418a-b662-55a4dbf9532a
+    last_synced: '2026-08-09T09:05:36.973Z'
+    state: orphaned
+  task-260507-matty-final-master-doc-push:
+    created_at: '2026-08-09T00:47:28.546Z'
+    identifier: KCM-123
+    issue_id: fff24b83-7bdd-41a5-9857-21a339b0b62c
+    last_synced: '2026-08-09T09:05:36.974Z'
+    state: orphaned
+  task-260507-team-layer-ownership-declarations:
+    created_at: '2026-08-09T00:47:29.372Z'
+    identifier: KCM-127
+    issue_id: 30d1c768-c90e-4ea7-bfe0-e6141c4ba296
+    last_synced: '2026-08-09T09:05:36.975Z'
+    state: orphaned
+  task-260507-team-resources-tab-session:
+    created_at: '2026-08-09T00:47:29.076Z'
+    identifier: KCM-126
+    issue_id: c5e5dfe2-b161-4d75-a6c4-09a9de0cd109
+    last_synced: '2026-08-09T09:05:36.976Z'
+    state: orphaned
+  task-260515-luiz-phase-e1-ontology-refactor:
+    created_at: '2026-08-09T00:47:20.936Z'
+    identifier: KCM-96
+    issue_id: 7a775534-e790-4fc2-ae76-b52c05cdfb55
+    last_synced: '2026-08-09T09:05:36.978Z'
+    state: orphaned
+  task-260515-luiz-phase-e2-option-library-crosswalk:
+    created_at: '2026-08-09T00:47:21.460Z'
+    identifier: KCM-97
+    issue_id: 0647b75e-edd6-45c6-9577-cc812774f6ce
+    last_synced: '2026-08-09T09:05:36.979Z'
+    state: orphaned
+  task-260515-luiz-phase-e3-feedback-process-split:
+    created_at: '2026-08-09T00:47:21.651Z'
+    identifier: KCM-98
+    issue_id: fd2a78f9-5fb0-4c5a-bb22-94716114c9bb
+    last_synced: '2026-08-09T09:05:36.980Z'
+    state: orphaned
+  task-260515-luiz-phase-e4-resources-relift:
+    created_at: '2026-08-09T00:47:21.899Z'
+    identifier: KCM-99
+    issue_id: ee1a91d0-2b40-45bb-ba12-4d194695da08
+    last_synced: '2026-08-09T09:05:36.981Z'
+    state: orphaned
+  task-260515-luiz-phase-e6-identity-refresh:
+    created_at: '2026-08-09T00:47:22.244Z'
+    identifier: KCM-100
+    issue_id: d4580bff-fd17-4579-a188-861dd97253d5
+    last_synced: '2026-08-09T09:05:36.982Z'
+    state: orphaned
+  task-260515-luiz-phase-e7-orgos-rewrite:
+    created_at: '2026-08-09T00:47:22.497Z'
+    identifier: KCM-101
+    issue_id: 5a1beb8a-4a6d-46c6-b272-849e2000346e
+    last_synced: '2026-08-09T09:05:36.983Z'
+    state: orphaned
+  task-260515-luiz-phase-e8-root-md-rename:
+    created_at: '2026-08-09T00:47:22.858Z'
+    identifier: KCM-102
+    issue_id: 3093c590-81b8-4ba0-950f-7b378820f86b
+    last_synced: '2026-08-09T09:05:36.984Z'
+    state: orphaned
+  task-260515-luiz-phase-f1-f4-lift-scripts:
+    created_at: '2026-08-09T00:47:23.914Z'
+    identifier: KCM-103
+    issue_id: 32d57b14-80cd-412b-8932-7a1732899741
+    last_synced: '2026-08-09T09:05:36.985Z'
+    state: orphaned
+  task-260515-luiz-phase-f5-tracks-registry:
+    created_at: '2026-08-09T00:47:24.187Z'
+    identifier: KCM-104
+    issue_id: 49a01e78-f594-4cff-b94b-3b2d3dc209f0
+    last_synced: '2026-08-09T09:05:36.986Z'
+    state: orphaned
+  task-260515-luiz-pulse1-retro:
+    created_at: '2026-08-09T00:47:24.382Z'
+    identifier: KCM-105
+    issue_id: d763e675-e8e5-428b-9440-ed8c4a616480
+    last_synced: '2026-08-09T09:05:36.987Z'
+    state: orphaned
+  task-260515-luiz-surface-canvases-telegram:
+    created_at: '2026-08-09T00:47:20.526Z'
+    identifier: KCM-94
+    issue_id: 785a0547-e63b-4e00-be2d-f8f02bc0723a
+    last_synced: '2026-08-09T09:05:36.988Z'
+    state: orphaned
+  task-260515-team-layer-ownership-resolution:
+    created_at: '2026-08-09T00:47:20.715Z'
+    identifier: KCM-95
+    issue_id: bf0bf2e4-0c3f-4ec9-bd77-16f055470e76
+    last_synced: '2026-08-09T09:05:36.990Z'
+    state: orphaned
+  task-260521-durgadas-circulate-idea-processor:
+    created_at: '2026-08-09T00:47:17.984Z'
+    identifier: KCM-80
+    issue_id: a15443db-1133-48d7-94ac-ef88391a765c
+    last_synced: '2026-08-09T09:05:36.991Z'
+    state: orphaned
+  task-260521-team-revised-problem-mission-statement:
+    created_at: '2026-08-09T00:47:17.829Z'
+    identifier: KCM-79
+    issue_id: 46a68801-56a2-41d2-bffd-49d626b4825e
+    last_synced: '2026-08-09T09:05:36.992Z'
+    state: orphaned
+  task-260521-team-tradeoff-triangle-exercise:
+    created_at: '2026-08-09T00:47:18.194Z'
+    identifier: KCM-81
+    issue_id: 45922f89-aef6-4c47-aa34-422ac34d24bd
+    last_synced: '2026-08-09T09:05:36.993Z'
+    state: orphaned
+  task-260604-afo-greenpill-translate:
+    created_at: '2026-08-09T00:47:19.977Z'
+    identifier: KCM-91
+    issue_id: 612e9f1f-6ca6-4914-8427-3c8ac442c4c0
+    last_synced: '2026-08-09T09:05:36.994Z'
+    state: orphaned
+  task-260604-heenal-feedback-contribution-pathway:
+    created_at: '2026-08-09T00:47:18.347Z'
+    identifier: KCM-82
+    issue_id: 48d4e45e-171d-4e95-9252-2617d25d5442
+    last_synced: '2026-08-09T09:05:36.995Z'
+    state: orphaned
+  task-260604-heenal-page-by-page-review:
+    created_at: '2026-08-09T00:47:18.499Z'
+    identifier: KCM-83
+    issue_id: 7b36a5c9-71bc-481f-996d-bea3afdf5053
+    last_synced: '2026-08-09T09:05:36.996Z'
+    state: orphaned
+  task-260604-heenal-reconcile-v1-layers:
+    created_at: '2026-08-09T00:47:19.116Z'
+    identifier: KCM-86
+    issue_id: 67798be1-be0f-4416-a79f-fd71b8a13786
+    last_synced: '2026-08-09T09:05:36.998Z'
+    state: orphaned
+  task-260604-luiz-schedule-andrea-conversation:
+    created_at: '2026-08-09T00:47:20.200Z'
+    identifier: KCM-92
+    issue_id: 34f7b3a0-f586-439f-be01-c9b674ba4a40
+    last_synced: '2026-08-09T09:05:36.999Z'
+    state: orphaned
+  task-260604-luiz-share-bioregioning-telegram:
+    created_at: '2026-08-09T00:47:20.365Z'
+    identifier: KCM-93
+    issue_id: a4e26153-f163-482c-bdbd-ea7811179bb9
+    last_synced: '2026-08-09T09:05:37.000Z'
+    state: orphaned
+  task-260604-matty-hub-forum-post:
+    created_at: '2026-08-09T00:47:18.879Z'
+    identifier: KCM-85
+    issue_id: 602c8386-70c8-4500-a026-f998a86871b0
+    last_synced: '2026-08-09T09:05:37.001Z'
+    state: orphaned
+  task-260604-rather-operational-contributor-journey:
+    created_at: '2026-08-09T00:47:18.677Z'
+    identifier: KCM-84
+    issue_id: cf032b16-7b46-42f4-a854-12276890de38
+    last_synced: '2026-08-09T09:05:37.002Z'
+    state: orphaned
+  task-260615-durgadas-revise-csis-posture:
+    created_at: '2026-08-09T00:47:15.183Z'
+    identifier: KCM-75
+    issue_id: 6920ff5c-cb6e-49ea-9d1b-81c94f817250
+    last_synced: '2026-08-09T09:05:37.003Z'
+    state: orphaned
+  task-260615-luiz-add-orgos-github-link:
+    created_at: '2026-08-09T00:47:25.938Z'
+    identifier: KCM-109
+    issue_id: 056c2a9d-9e20-4568-af64-c00b547b99b5
+    last_synced: '2026-08-09T09:05:37.004Z'
+    state: orphaned
+  task-260615-luiz-advance-standards-stack:
+    created_at: '2026-08-09T00:47:28.009Z'
+    identifier: KCM-120
+    issue_id: 8b902a98-367d-4bed-9e9c-67cdacd8875e
+    last_synced: '2026-08-09T09:05:37.005Z'
+    state: orphaned
+  task-260615-luiz-build-regenos-website:
+    created_at: '2026-08-09T00:47:25.565Z'
+    identifier: KCM-107
+    issue_id: 059e57e0-dd74-4689-a5a8-bdfff1e90db8
+    last_synced: '2026-08-09T09:05:37.007Z'
+    state: orphaned
+  task-260615-luiz-derive-toc-artifact:
+    created_at: '2026-08-09T00:47:16.512Z'
+    identifier: KCM-77
+    issue_id: 549c8c74-9214-4d5e-8678-8647e93fea92
+    last_synced: '2026-08-09T09:05:37.008Z'
+    state: orphaned
+  task-260615-luiz-draft-regenos-documentation:
+    created_at: '2026-08-09T00:47:25.345Z'
+    identifier: KCM-106
+    issue_id: 6e307c9d-a30c-40ab-af89-f4c3b2629e98
+    last_synced: '2026-08-09T09:05:37.009Z'
+    state: orphaned
+  task-260615-luiz-fix-maturity-confidence-rating:
+    created_at: '2026-08-09T00:47:27.361Z'
+    identifier: KCM-116
+    issue_id: 7ff5029e-679f-46b1-a897-9b5fd7afc0b9
+    last_synced: '2026-08-09T09:05:37.010Z'
+    state: orphaned
+  task-260615-luiz-open-refi-commons-conversation:
+    created_at: '2026-08-09T00:47:27.682Z'
+    identifier: KCM-118
+    issue_id: efc768a2-fdbd-40d7-870a-1c864802c22a
+    last_synced: '2026-08-09T09:05:37.011Z'
+    state: orphaned
+  task-260615-luiz-radicle-integration:
+    created_at: '2026-08-09T00:47:27.192Z'
+    identifier: KCM-115
+    issue_id: 3eda916c-d07d-43eb-8b73-4102f47a6305
+    last_synced: '2026-08-09T09:05:37.012Z'
+    state: orphaned
+  task-260615-luiz-refi-dao-immediate-use-case:
+    created_at: '2026-08-09T00:47:26.884Z'
+    identifier: KCM-113
+    issue_id: a21b2257-d442-4e43-b54e-a99d91268692
+    last_synced: '2026-08-09T09:05:37.013Z'
+    state: orphaned
+  task-260615-luiz-regenos-docs-adoption-filter:
+    created_at: '2026-08-09T00:47:42.314Z'
+    identifier: KCM-170
+    issue_id: 1591c1ee-4a1b-46da-a130-e1eb40292777
+    last_synced: '2026-08-09T09:05:37.015Z'
+    state: orphaned
+  task-260615-luiz-regenos-docs-federation-mechanisms:
+    created_at: '2026-08-09T00:47:42.124Z'
+    identifier: KCM-169
+    issue_id: f94313a5-ff93-4f4e-9e76-cbd2bff75779
+    last_synced: '2026-08-09T09:05:37.016Z'
+    state: orphaned
+  task-260615-luiz-regenos-docs-repo-mapping:
+    created_at: '2026-08-09T00:47:41.942Z'
+    identifier: KCM-168
+    issue_id: 746ef075-6dd8-4b83-93f8-b6a77c2a5e95
+    last_synced: '2026-08-09T09:05:37.017Z'
+    state: orphaned
+  task-260615-luiz-regenos-docs-what-it-is:
+    created_at: '2026-08-09T00:47:41.721Z'
+    identifier: KCM-167
+    issue_id: 3759e8ad-9d8a-486b-be94-8e38efbb7a0d
+    last_synced: '2026-08-09T09:05:37.018Z'
+    state: orphaned
+  task-260615-luiz-regenos-infra-writeup:
+    created_at: '2026-08-09T00:47:26.108Z'
+    identifier: KCM-110
+    issue_id: 5a53233f-3799-4d73-85bb-9a6f88f45661
+    last_synced: '2026-08-09T09:05:37.019Z'
+    state: orphaned
+  task-260615-luiz-regenos-master-doc-description:
+    created_at: '2026-08-09T00:47:25.762Z'
+    identifier: KCM-108
+    issue_id: afeee053-2c29-4357-b8fe-c585e1711bbc
+    last_synced: '2026-08-09T09:05:37.020Z'
+    state: orphaned
+  task-260615-luiz-regenos-website-content-deploy:
+    created_at: '2026-08-09T00:47:42.649Z'
+    identifier: KCM-172
+    issue_id: 38af0c8c-b7c6-4818-923f-fb3d328e284e
+    last_synced: '2026-08-09T09:05:37.021Z'
+    state: orphaned
+  task-260615-luiz-regenos-website-scaffold:
+    created_at: '2026-08-09T00:47:42.477Z'
+    identifier: KCM-171
+    issue_id: 832bdb35-536b-47d4-9638-4e1d5c59bed6
+    last_synced: '2026-08-09T09:05:37.022Z'
+    state: orphaned
+  task-260615-luiz-repair-notion-sync:
+    created_at: '2026-08-09T00:47:27.535Z'
+    identifier: KCM-117
+    issue_id: c0881ddc-c6ab-4981-9958-ee639e59c4dd
+    last_synced: '2026-08-09T09:05:37.024Z'
+    state: orphaned
+  task-260615-luiz-review-geo-browser:
+    created_at: '2026-08-09T00:47:27.035Z'
+    identifier: KCM-114
+    issue_id: 33232f5f-455f-4716-9587-36d8643d1075
+    last_synced: '2026-08-09T09:05:37.025Z'
+    state: orphaned
+  task-260615-luiz-scale-outreach-high-trust-orgs:
+    created_at: '2026-08-09T00:47:28.364Z'
+    identifier: KCM-122
+    issue_id: 0176a9c0-f7d6-4e5b-9613-9e3fb388b8c1
+    last_synced: '2026-08-09T09:05:37.026Z'
+    state: orphaned
+  task-260615-luiz-scope-framework-instance-meaning:
+    created_at: '2026-08-09T00:47:26.739Z'
+    identifier: KCM-112
+    issue_id: 9e3be277-0a81-4640-9cfa-a3073fec9114
+    last_synced: '2026-08-09T09:05:37.027Z'
+    state: orphaned
+  task-260615-luiz-surface-framework-instance-split:
+    created_at: '2026-08-09T00:47:26.313Z'
+    identifier: KCM-111
+    issue_id: 056b6c97-94bf-4f6c-ad41-ad962a42d6c8
+    last_synced: '2026-08-09T09:05:37.028Z'
+    state: orphaned
+  task-260615-luiz-track-lifecycle-decision:
+    created_at: '2026-08-09T00:47:15.323Z'
+    identifier: KCM-76
+    issue_id: c1b767cb-a46d-4c2e-bf47-946648ed0648
+    last_synced: '2026-08-09T09:05:37.029Z'
+    state: orphaned
+  task-260615-matty-impact-vault-path:
+    created_at: '2026-08-09T00:47:28.174Z'
+    identifier: KCM-121
+    issue_id: 6e074681-7932-41e0-8eb9-78974a0f9123
+    last_synced: '2026-08-09T09:05:37.030Z'
+    state: orphaned
+  task-260615-team-identify-first-working-group:
+    created_at: '2026-08-09T00:47:27.838Z'
+    identifier: KCM-119
+    issue_id: cd8d1eca-3102-4b1d-aeb3-c362a9c2c9e8
+    last_synced: '2026-08-09T09:05:37.031Z'
+    state: orphaned
+  task-260615-team-layer-by-layer-review:
+    created_at: '2026-08-09T00:47:17.674Z'
+    identifier: KCM-78
+    issue_id: 5ce54268-3c5f-46a8-8a5d-70d5a5e5310a
+    last_synced: '2026-08-09T09:05:37.032Z'
+    state: orphaned
+  task-260616-brandon-curation-pass-v3:
+    created_at: '2026-08-09T00:47:19.822Z'
+    identifier: KCM-90
+    issue_id: 42bb0bfd-f212-4986-aabc-54d741787ce7
+    last_synced: '2026-08-09T09:05:37.033Z'
+    state: orphaned
+  task-260616-luiz-clean-tweet-text-noise:
+    created_at: '2026-08-09T00:47:19.481Z'
+    identifier: KCM-88
+    issue_id: fc06b6ec-3d96-4ba9-80e4-94afb46761b3
+    last_synced: '2026-08-09T09:05:37.034Z'
+    state: orphaned
+  task-260616-luiz-framework-instance-split-p1:
+    created_at: '2026-08-09T00:47:09.484Z'
+    identifier: KCM-49
+    issue_id: 3ede86df-f43f-479e-88b2-dfc6f6f7a979
+    last_synced: '2026-08-09T09:05:37.036Z'
+    state: orphaned
+  task-260616-luiz-multi-instance-deploy:
+    created_at: '2026-08-09T00:47:09.788Z'
+    identifier: KCM-51
+    issue_id: dd8ca8a2-445e-4524-be28-eafded5ba7a3
+    last_synced: '2026-08-09T09:05:37.037Z'
+    state: orphaned
+  task-260616-luiz-resource-db-v3-full-lift:
+    created_at: '2026-08-09T00:47:19.292Z'
+    identifier: KCM-87
+    issue_id: 0ba0773b-3290-4ebe-a8f6-82eab3d3bf2c
+    last_synced: '2026-08-09T09:05:37.038Z'
+    state: orphaned
+  task-260616-luiz-resource-db-v3-lift-p2:
+    created_at: '2026-08-09T00:47:09.636Z'
+    identifier: KCM-50
+    issue_id: df92c4f2-bc1c-4cf3-9a04-523f20a332ca
+    last_synced: '2026-08-09T09:05:37.039Z'
+    state: orphaned
+  task-260616-luiz-wire-review-queues-safeguards:
+    created_at: '2026-08-09T00:47:19.651Z'
+    identifier: KCM-89
+    issue_id: 2e37a60a-3d68-4dcd-979f-5b3a6780322b
+    last_synced: '2026-08-09T09:05:37.040Z'
+    state: orphaned
+  task-260702-afo-dev-environment-permissions:
+    created_at: '2026-08-09T00:47:13.142Z'
+    identifier: KCM-64
+    issue_id: c0658941-03bb-4014-af8f-c6456eacb806
+    last_synced: '2026-08-09T09:05:37.041Z'
+    state: orphaned
+  task-260702-durgadas-ai-precision-toolkit:
+    created_at: '2026-08-09T00:47:12.834Z'
+    identifier: KCM-62
+    issue_id: 0fa9994a-1c9e-4c01-8240-bd5f1510de59
+    last_synced: '2026-08-09T09:05:37.042Z'
+    state: orphaned
+  task-260702-durgadas-frame-language-audit:
+    created_at: '2026-08-09T00:47:13.873Z'
+    identifier: KCM-67
+    issue_id: d8ceee6c-8484-4370-9b15-2afa0d5b308e
+    last_synced: '2026-08-09T09:05:37.044Z'
+    state: orphaned
+  task-260702-durgadas-infra-opinionated:
+    created_at: '2026-08-09T00:47:13.716Z'
+    identifier: KCM-66
+    issue_id: d43d0eeb-eca9-475a-9f79-038b752783b4
+    last_synced: '2026-08-09T09:05:37.045Z'
+    state: orphaned
+  task-260702-durgadas-send-csis-links:
+    created_at: '2026-08-09T00:47:12.658Z'
+    identifier: KCM-61
+    issue_id: ea9123d1-e038-4fea-93ec-e6e481eb5964
+    last_synced: '2026-08-09T09:05:37.046Z'
+    state: orphaned
+  task-260702-koi-send-genbrasil-artifacts:
+    created_at: '2026-08-09T00:47:12.480Z'
+    identifier: KCM-60
+    issue_id: 68a1cfc2-e9ba-432f-8474-a3f2d417f488
+    last_synced: '2026-08-09T09:05:37.047Z'
+    state: orphaned
+  task-260702-luiz-full-iteration-next-week:
+    created_at: '2026-08-09T00:47:11.568Z'
+    identifier: KCM-55
+    issue_id: 1a55f6db-f92e-43cd-aa5a-77926bcbae70
+    last_synced: '2026-08-09T09:05:37.048Z'
+    state: orphaned
+  task-260702-luiz-invite-andrea:
+    created_at: '2026-08-09T00:47:14.033Z'
+    identifier: KCM-68
+    issue_id: 3f2a31b8-22bf-4b03-98c2-de579e0c5190
+    last_synced: '2026-08-09T09:05:37.049Z'
+    state: orphaned
+  task-260702-luiz-publish-permissions-dev-env:
+    created_at: '2026-08-09T00:47:12.101Z'
+    identifier: KCM-58
+    issue_id: 5826eef3-37a2-42e7-882d-9876dd02db98
+    last_synced: '2026-08-09T09:05:37.050Z'
+    state: orphaned
+  task-260702-luiz-schedule-the-call:
+    created_at: '2026-08-09T00:47:11.786Z'
+    identifier: KCM-56
+    issue_id: 598d63c6-f0c5-4907-b9ba-a77d2297379f
+    last_synced: '2026-08-09T09:05:37.051Z'
+    state: orphaned
+  task-260702-luiz-send-3-messages:
+    created_at: '2026-08-09T00:47:09.940Z'
+    identifier: KCM-52
+    issue_id: 6d48e3d9-024a-4a87-ba1e-c0ac2bfe58ff
+    last_synced: '2026-08-09T09:05:37.052Z'
+    state: orphaned
+  task-260702-luiz-sync-with-rather:
+    created_at: '2026-08-09T00:47:10.087Z'
+    identifier: KCM-53
+    issue_id: f84b2646-3a2d-4fa6-8084-f32796458cc1
+    last_synced: '2026-08-09T09:05:37.053Z'
+    state: orphaned
+  task-260702-luiz-test-framework-genbrasil:
+    created_at: '2026-08-09T00:47:12.324Z'
+    identifier: KCM-59
+    issue_id: 248e3940-7cc5-465b-8296-ef0834d055b4
+    last_synced: '2026-08-09T09:05:37.054Z'
+    state: orphaned
+  task-260702-luiz-verify-site-pages:
+    created_at: '2026-08-09T00:47:11.937Z'
+    identifier: KCM-57
+    issue_id: 3a3d424e-725f-4234-a37b-4a7c328d1372
+    last_synced: '2026-08-09T09:05:37.055Z'
+    state: orphaned
+  task-260702-matty-master-doc-iteration:
+    created_at: '2026-08-09T00:47:12.990Z'
+    identifier: KCM-63
+    issue_id: 387275fc-ed3c-46bc-8550-7aaf02054b7e
+    last_synced: '2026-08-09T09:05:37.057Z'
+    state: orphaned
+  task-260702-rather-geo-protocol-details:
+    created_at: '2026-08-09T00:47:13.333Z'
+    identifier: KCM-65
+    issue_id: 557cc1af-cf5c-43c6-9e48-e9ce06548f2f
+    last_synced: '2026-08-09T09:05:37.058Z'
+    state: orphaned
+  task-260702-team-grants-subgroup:
+    created_at: '2026-08-09T00:47:14.177Z'
+    identifier: KCM-69
+    issue_id: bbc85928-2b67-48a5-b931-9ee5a6503433
+    last_synced: '2026-08-09T09:05:37.059Z'
+    state: orphaned
+  task-260702-team-ratify-top5-decisions:
+    created_at: '2026-08-09T00:47:10.228Z'
+    identifier: KCM-54
+    issue_id: d03a4fd2-6f5e-4d9b-b878-706ba0247a7c
+    last_synced: '2026-08-09T09:05:37.060Z'
+    state: orphaned
+  task-260704-luiz-batch-r1-r10-proposals:
+    created_at: '2026-08-09T00:47:14.524Z'
+    identifier: KCM-71
+    issue_id: 88fed837-d2cd-45f0-a95b-cfea57c98deb
+    last_synced: '2026-08-09T09:05:37.061Z'
+    state: orphaned
+  task-260704-luiz-sp11-refi-dao-adoption:
+    created_at: '2026-08-09T00:47:14.333Z'
+    identifier: KCM-70
+    issue_id: fc7f7ae5-39f4-45d9-a84e-df964be9bec3
+    last_synced: '2026-08-09T09:05:37.062Z'
+    state: orphaned
+  task-260705-luiz-capital-update-proposal:
+    created_at: '2026-08-09T00:47:15.030Z'
+    identifier: KCM-74
+    issue_id: b015b225-7cad-417f-9ed9-774162f7c9be
+    last_synced: '2026-08-09T09:05:37.063Z'
+    state: orphaned
+  task-260705-luiz-refi-dao-process:
+    created_at: '2026-08-09T00:47:14.686Z'
+    identifier: KCM-72
+    issue_id: 2a61cb30-a41c-457e-9aeb-5bc91b9784bd
+    last_synced: '2026-08-09T09:05:37.064Z'
+    state: orphaned
+  task-260705-luiz-send-share-pack:
+    created_at: '2026-08-09T00:47:14.860Z'
+    identifier: KCM-73
+    issue_id: ba784e43-71e8-48fc-add3-d575b953c5f0
+    last_synced: '2026-08-09T09:05:37.065Z'
+    state: orphaned
+  task-260715-handoff-master-refactor:
+    created_at: '2026-08-09T00:47:09.155Z'
+    identifier: KCM-47
+    issue_id: 2b6deaf5-fa1b-445a-8c16-46938c9d687c
+    last_synced: '2026-08-09T09:05:37.066Z'
+    state: orphaned
+  task-260715-handoff-share-pack:
+    created_at: '2026-08-09T00:47:09.324Z'
+    identifier: KCM-48
+    issue_id: 01185734-0834-48ce-9714-67eb1d3898f8
+    last_synced: '2026-08-09T09:05:37.067Z'
+    state: orphaned
+  task-260716-durgadas-craft-temper:
+    created_at: '2026-08-09T00:47:07.552Z'
+    identifier: KCM-41
+    issue_id: e5c71c58-9708-4632-8383-14596d2a5f54
+    last_synced: '2026-08-09T09:05:37.068Z'
+    state: orphaned
+  task-260716-joint-shareable-version-dod:
+    created_at: '2026-08-09T00:47:08.989Z'
+    identifier: KCM-46
+    issue_id: 7fba92d4-633d-4b58-bb6c-4d9b000e4c1b
+    last_synced: '2026-08-09T09:05:37.069Z'
+    state: orphaned
+  task-260716-luiz-agent-onboarding-onepager:
+    created_at: '2026-08-09T00:47:06.088Z'
+    identifier: KCM-36
+    issue_id: e9d921a1-b64b-4a20-a054-bcc72870ec66
+    last_synced: '2026-08-09T09:05:37.070Z'
+    state: orphaned
+  task-260716-luiz-apply-metagov:
+    created_at: '2026-08-09T00:47:08.838Z'
+    identifier: KCM-45
+    issue_id: b4f52bda-dd33-4786-a746-6d4320484c89
+    last_synced: '2026-08-09T09:05:37.071Z'
+    state: orphaned
+  task-260716-luiz-canvas-viz-intro-doc:
+    created_at: '2026-08-09T00:47:05.851Z'
+    identifier: KCM-35
+    issue_id: ce1b8bf7-1806-4cb9-ad9f-6cc54962790d
+    last_synced: '2026-08-09T09:05:37.072Z'
+    state: orphaned
+  task-260716-luiz-confirm-source-systems:
+    created_at: '2026-08-09T00:47:06.737Z'
+    identifier: KCM-38
+    issue_id: 1e5212cd-93dc-4f8e-987b-108003fce203
+    last_synced: '2026-08-09T09:05:37.074Z'
+    state: orphaned
+  task-260716-luiz-geo-protocol-scoping:
+    created_at: '2026-08-09T00:47:06.414Z'
+    identifier: KCM-37
+    issue_id: 76c52ddc-ebc8-410b-b14c-c50cf20a803f
+    last_synced: '2026-08-09T09:05:37.075Z'
+    state: orphaned
+  task-260716-luiz-name-flagging-privacy-gate:
+    created_at: '2026-08-09T00:47:05.650Z'
+    identifier: KCM-34
+    issue_id: 4b2f74ed-74f8-4330-a786-47cb7571f589
+    last_synced: '2026-08-09T09:05:37.076Z'
+    state: orphaned
+  task-260716-luiz-repo-migration-hina:
+    created_at: '2026-08-09T00:47:04.925Z'
+    identifier: KCM-31
+    issue_id: 78062ac2-d64b-4844-badf-e68316548fde
+    last_synced: '2026-08-09T09:05:37.077Z'
+    state: orphaned
+  task-260716-luiz-review-checklist:
+    created_at: '2026-08-09T00:47:39.869Z'
+    identifier: KCM-164
+    issue_id: 726453be-84c8-47f7-a8d5-dbb550cd0dab
+    last_synced: '2026-08-09T09:05:37.078Z'
+    state: orphaned
+  task-260716-luiz-review-named-reviewer-pass:
+    created_at: '2026-08-09T00:47:40.090Z'
+    identifier: KCM-165
+    issue_id: 7145880d-bcf7-4d5e-8a72-a25aaaba60cc
+    last_synced: '2026-08-09T09:05:37.079Z'
+    state: orphaned
+  task-260716-luiz-review-pr-merge:
+    created_at: '2026-08-09T00:47:05.427Z'
+    identifier: KCM-33
+    issue_id: 9a0f55cc-edc9-4edf-a9da-348abf9217db
+    last_synced: '2026-08-09T09:05:37.080Z'
+    state: orphaned
+  task-260716-luiz-review-pr-to-main:
+    created_at: '2026-08-09T00:47:41.004Z'
+    identifier: KCM-166
+    issue_id: 16334c57-333c-4716-83ae-0ef7d2e77b36
+    last_synced: '2026-08-09T09:05:37.081Z'
+    state: orphaned
+  task-260716-luiz-review-share-dev-build:
+    created_at: '2026-08-09T00:47:39.649Z'
+    identifier: KCM-163
+    issue_id: a8979293-58ec-44ab-9459-4adcbba894df
+    last_synced: '2026-08-09T09:05:37.082Z'
+    state: orphaned
+  task-260716-luiz-ron-teretsky-bread-coop:
+    created_at: '2026-08-09T00:47:06.972Z'
+    identifier: KCM-39
+    issue_id: b5a0a073-acba-44ad-8b14-e1c9ef70e657
+    last_synced: '2026-08-09T09:05:37.084Z'
+    state: orphaned
+  task-260716-luiz-staging-dev-site:
+    created_at: '2026-08-09T00:47:05.160Z'
+    identifier: KCM-32
+    issue_id: 397cf489-9bee-4b2b-a567-9189bbfcd6dc
+    last_synced: '2026-08-09T09:05:37.085Z'
+    state: orphaned
+  task-260716-monty-toolkit-funding:
+    created_at: '2026-08-09T00:47:08.663Z'
+    identifier: KCM-44
+    issue_id: 4ca6c566-1cd1-446b-a2e7-f9f92df6dc6c
+    last_synced: '2026-08-09T09:05:37.086Z'
+    state: orphaned
+  task-260716-rather-astro-fix:
+    created_at: '2026-08-09T00:47:07.142Z'
+    identifier: KCM-40
+    issue_id: 434d7655-b6fb-4ad1-a8e7-7b50cf22c145
+    last_synced: '2026-08-09T09:05:37.087Z'
+    state: orphaned
+  task-260716-team-artizen-profiles:
+    created_at: '2026-08-09T00:47:07.928Z'
+    identifier: KCM-43
+    issue_id: 668c1c31-45f0-4893-ba58-9b47f1b2553c
+    last_synced: '2026-08-09T09:05:37.088Z'
+    state: orphaned
+  task-260716-trinity-learn-teach-content:
+    created_at: '2026-08-09T00:47:07.769Z'
+    identifier: KCM-42
+    issue_id: c5c5e7fc-35ef-491b-a5d2-b6f8433f06b8
+    last_synced: '2026-08-09T09:05:37.089Z'
+    state: orphaned
+  task-260719-luiz-dev-cross-links:
+    created_at: '2026-08-09T00:41:48.131Z'
+    identifier: KCM-20
+    issue_id: 737e4f30-d2bc-4205-b9af-fd836a351c9e
+    last_synced: '2026-08-09T09:05:37.090Z'
+    state: orphaned
+  task-260719-luiz-dev-instance-build:
+    created_at: '2026-08-09T00:41:45.723Z'
+    identifier: KCM-12
+    issue_id: 85f79d87-72d5-45ff-a812-0bd9ac621c24
+    last_synced: '2026-08-09T09:05:37.091Z'
+    state: orphaned
+  task-260719-luiz-dev-instance-deploy:
+    created_at: '2026-08-09T00:41:46.050Z'
+    identifier: KCM-13
+    issue_id: d969fbaa-1380-4293-a756-45055cc3a0b2
+    last_synced: '2026-08-09T09:05:37.092Z'
+    state: orphaned
+  task-260719-luiz-dev-provenance-badges:
+    created_at: '2026-08-09T00:41:47.846Z'
+    identifier: KCM-19
+    issue_id: dd63334c-2a27-48b8-9cb3-829f6e9d5b91
+    last_synced: '2026-08-09T09:05:37.093Z'
+    state: orphaned
+  task-260719-luiz-dev-routes-by-layer:
+    created_at: '2026-08-09T00:41:47.505Z'
+    identifier: KCM-18
+    issue_id: 78cdcf0c-1986-479d-877f-1fdc17176b51
+    last_synced: '2026-08-09T09:05:37.094Z'
+    state: orphaned
+  task-260719-luiz-dev-routes-by-type:
+    created_at: '2026-08-09T00:41:47.261Z'
+    identifier: KCM-17
+    issue_id: 9ba0cdea-af99-4128-9d49-021dd67ad74b
+    last_synced: '2026-08-09T09:05:37.095Z'
+    state: orphaned
+  task-260806-afo-coordination-group:
+    created_at: '2026-08-09T00:41:44.570Z'
+    identifier: KCM-6
+    issue_id: c35a86dd-8433-4a5e-aac4-1a476ebeb706
+    last_synced: '2026-08-09T09:05:37.096Z'
+    state: orphaned
+  task-260806-afo-linear-github-training:
+    created_at: '2026-08-09T00:41:45.042Z'
+    identifier: KCM-8
+    issue_id: fe1730ed-3451-4a12-914f-52bc004a7c7c
+    last_synced: '2026-08-09T09:05:37.098Z'
+    state: orphaned
+  task-260806-afo-linear-seed:
+    created_at: '2026-08-09T00:41:44.880Z'
+    identifier: KCM-7
+    issue_id: aac34f9f-cd5f-4a9c-b507-eb72afed235d
+    last_synced: '2026-08-09T09:05:37.099Z'
+    state: orphaned
+  task-260806-afo-review-integrity-suite:
+    created_at: '2026-08-09T00:47:03.695Z'
+    identifier: KCM-28
+    issue_id: 2f2f91d4-ccf1-4afd-88fa-57c54d8ab059
+    last_synced: '2026-08-09T09:05:37.100Z'
+    state: orphaned
+  task-260806-luiz-engine-validation-linear:
+    created_at: '2026-08-09T00:47:02.013Z'
+    identifier: KCM-22
+    issue_id: 85543a50-64ec-44d7-8775-7bbaa530b604
+    last_synced: '2026-08-09T09:05:37.101Z'
+    state: orphaned
+  task-260806-luiz-four-slice-merge:
+    created_at: '2026-08-09T00:41:43.947Z'
+    identifier: KCM-3
+    issue_id: ca758826-9449-4268-9e68-572074cd783b
+    last_synced: '2026-08-09T09:05:37.102Z'
+    state: orphaned
+  task-260806-luiz-knowledge-flow-visual:
+    created_at: '2026-08-09T00:47:01.183Z'
+    identifier: KCM-21
+    issue_id: e8b6d81a-ae43-40c6-834e-24aeac4510dc
+    last_synced: '2026-08-09T09:05:37.103Z'
+    state: orphaned
+  task-260806-luiz-linear-email:
+    created_at: '2026-08-09T00:41:44.101Z'
+    identifier: KCM-4
+    issue_id: 57259d2b-fc93-4f10-9933-df46f737ce30
+    last_synced: '2026-08-09T09:05:37.104Z'
+    state: orphaned
+  task-260806-luiz-linear-seed-repo:
+    created_at: '2026-08-09T00:41:43.782Z'
+    identifier: KCM-2
+    issue_id: 6ae4a591-4c75-4275-9dba-d193f601a5f9
+    last_synced: '2026-08-09T09:05:37.105Z'
+    state: orphaned
+  task-260806-luiz-orgos-session:
+    created_at: '2026-08-09T00:47:02.248Z'
+    identifier: KCM-23
+    issue_id: 1e8ad6b0-3b6b-4a4c-b7a2-a28603e65411
+    last_synced: '2026-08-09T09:05:37.106Z'
+    state: orphaned
+  task-260806-luiz-rather-org-access:
+    created_at: '2026-08-09T00:41:43.451Z'
+    identifier: KCM-1
+    issue_id: 917d982d-103b-4167-b96f-bac41ad24504
+    last_synced: '2026-08-09T09:05:37.108Z'
+    state: orphaned
+  task-260806-luiz-slice-1-framework-schemas:
+    created_at: '2026-08-09T00:41:46.212Z'
+    identifier: KCM-14
+    issue_id: e04dc991-3cd7-4d54-a82b-4f2eef052404
+    last_synced: '2026-08-09T09:05:37.109Z'
+    state: orphaned
+  task-260806-luiz-slice-2-generators-validation:
+    created_at: '2026-08-09T00:41:46.581Z'
+    identifier: KCM-15
+    issue_id: 0a41f92d-12b6-4a9e-8f2e-ad069f6f1df5
+    last_synced: '2026-08-09T09:05:37.110Z'
+    state: orphaned
+  task-260806-luiz-slice-3-public-safe-aggregate:
+    created_at: '2026-08-09T00:41:46.747Z'
+    identifier: KCM-16
+    issue_id: 4a4c7a39-d566-48ee-bd62-a2f364e74eca
+    last_synced: '2026-08-09T09:05:37.111Z'
+    state: orphaned
+  task-260806-luiz-slice-4-reviewed-knowledge-objects:
+    created_at: '2026-08-09T00:47:39.333Z'
+    identifier: KCM-162
+    issue_id: 1c1e30bc-c80e-4237-88e3-b76bc6d8543f
+    last_synced: '2026-08-09T09:05:37.112Z'
+    state: orphaned
+  task-260806-matty-engineering-priorities-linear:
+    created_at: '2026-08-09T00:41:45.441Z'
+    identifier: KCM-10
+    issue_id: f9c0a0a5-8b6a-431c-aeee-33cbca5a6891
+    last_synced: '2026-08-09T09:05:37.113Z'
+    state: orphaned
+  task-260806-rather-business-modeling-bot:
+    created_at: '2026-08-09T00:47:03.531Z'
+    identifier: KCM-27
+    issue_id: 59054400-011a-4bf6-ad1c-12754ff942cc
+    last_synced: '2026-08-09T09:05:37.114Z'
+    state: orphaned
+  task-260806-rather-cloudflare-setup:
+    created_at: '2026-08-09T00:41:44.401Z'
+    identifier: KCM-5
+    issue_id: 63400991-742c-42a9-8521-d8d8f3b9cda7
+    last_synced: '2026-08-09T09:05:37.115Z'
+    state: orphaned
+  task-260806-rather-harmonica-purchase:
+    created_at: '2026-08-09T00:47:03.352Z'
+    identifier: KCM-26
+    issue_id: 6fb07dd2-3872-4057-bb31-3b76460889a4
+    last_synced: '2026-08-09T09:05:37.116Z'
+    state: orphaned
+  task-260806-rather-orgos-app-collab:
+    created_at: '2026-08-09T00:47:02.525Z'
+    identifier: KCM-24
+    issue_id: 160816de-f9cb-41c1-b854-1198d3f164d9
+    last_synced: '2026-08-09T09:05:37.117Z'
+    state: orphaned
+  task-260806-rather-standards-reference-impl:
+    created_at: '2026-08-09T00:47:02.937Z'
+    identifier: KCM-25
+    issue_id: 14720051-3f73-43b3-ae95-942ab917417a
+    last_synced: '2026-08-09T09:05:37.118Z'
+    state: orphaned
+  task-260806-regis-github-onboarding:
+    created_at: '2026-08-09T00:41:45.195Z'
+    identifier: KCM-9
+    issue_id: e92f4307-e6cb-442e-a5e0-98553e14e6fd
+    last_synced: '2026-08-09T09:05:37.119Z'
+    state: orphaned
+  task-260806-regis-standards-process-doc:
+    created_at: '2026-08-09T00:47:04.524Z'
+    identifier: KCM-29
+    issue_id: d8ea685e-33bf-42ab-9166-81531dc91a1c
+    last_synced: '2026-08-09T09:05:37.120Z'
+    state: orphaned
+  task-260806-team-boost-bread-fund:
+    created_at: '2026-08-09T00:47:04.696Z'
+    identifier: KCM-30
+    issue_id: 733128e9-fc1b-464d-9e05-bd1327bdfaa8
+    last_synced: '2026-08-09T09:05:37.121Z'
+    state: orphaned
+  task-260806-team-join-linear:
+    created_at: '2026-08-09T00:41:45.576Z'
+    identifier: KCM-11
+    issue_id: 44ad3e39-4071-4cae-9ba1-0604f15baaac
+    last_synced: '2026-08-09T09:05:37.122Z'
+    state: orphaned
+  task-260809-luiz-data-integrity-ontology-align:
+    created_at: '2026-08-09T00:47:38.172Z'
+    identifier: KCM-156
+    issue_id: 77483bdb-4630-4b6d-8304-89774c451fd2
+    last_synced: '2026-08-09T09:05:37.123Z'
+    state: orphaned
+  task-260809-luiz-data-integrity-option-library:
+    created_at: '2026-08-09T00:47:38.328Z'
+    identifier: KCM-157
+    issue_id: a03f13fe-95df-4949-8451-cade163cdc92
+    last_synced: '2026-08-09T09:05:37.125Z'
+    state: orphaned
+  task-260809-luiz-data-integrity-wellknown-schemas:
+    created_at: '2026-08-09T00:47:38.517Z'
+    identifier: KCM-158
+    issue_id: 6b132fd6-ecc7-4c59-9e0b-bf9f587f3219
+    last_synced: '2026-08-09T09:05:37.126Z'
+    state: orphaned
+  task-260809-luiz-federation-last-sync-upstream:
+    created_at: '2026-08-09T00:47:38.682Z'
+    identifier: KCM-159
+    issue_id: 24190d7b-765f-41c6-bbc7-d65006dd3eb1
+    last_synced: '2026-08-09T09:05:37.127Z'
+    state: orphaned
+  task-260809-luiz-federation-peer-sync-coordination-os:
+    created_at: '2026-08-09T00:47:38.866Z'
+    identifier: KCM-160
+    issue_id: 13710b53-e24f-4124-9a6d-d949c771fbb5
+    last_synced: '2026-08-09T09:05:37.128Z'
+    state: orphaned
+  task-260809-luiz-site-build-passes:
+    created_at: '2026-08-09T00:47:37.088Z'
+    identifier: KCM-154
+    issue_id: 4511cd28-f8ba-42f7-94ac-9b50228c643d
+    last_synced: '2026-08-09T09:05:37.129Z'
+    state: orphaned
+  task-260809-luiz-site-reachable:
+    created_at: '2026-08-09T00:47:37.860Z'
+    identifier: KCM-155
+    issue_id: 80c096ec-7fd8-4c31-806b-b18d556e04a2
+    last_synced: '2026-08-09T09:05:37.130Z'
+    state: orphaned
+schema_version: '1.0'
+team_key: KCM

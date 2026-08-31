@@ -1,0 +1,14 @@
+schema_version: "2.0"
+members:
+  - id: luiz
+    name: Luiz Fernando
+    aliases: [Luiz]
+    linear_email: luizfernandolfsg@gmail.com
+  - id: durgadas
+    name: Regis Chapman
+    aliases: [Durgadas, Regis, "Regis (Durgadas)", Das]
+    linear_email: null
+  - id: afo
+    name: Afo
+    aliases: [Afo]
+    linear_email: null

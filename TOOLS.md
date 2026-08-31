@@ -85,6 +85,29 @@ When/if these are set up, record them here and in `IDENTITY.md`.
 
 ---
 
+## Linear
+
+Project management for the toolkit, adopted at the 2026-08-06 engineering sync. Afo leads the
+Linear structure; this repo owns the task registry that seeds it.
+
+| | |
+|---|---|
+| Workspace | https://linear.app/regen-coordination |
+| Team | `KC` — Knowledge Commons. Set as `LINEAR_TEAM_KEY` in `.env`; it is the prefix in identifiers like `KC-42`. **The earlier `KCM` was archived as "Knowledge Commons Old" on 2026-08-09 and its contents deleted — see `memory/2026-08-09.md`.** |
+| Initiative | `Toolkit` — matched case-insensitively. **Created by Afo, never by this tooling** |
+| Cycles | Two weeks. **Not yet enabled on `KC`** (`cyclesEnabled: false`); the tooling refuses to seed a scheduled task until the target cycle exists. Note `cycleStartDay` defaults to Monday, not the day after the Thursday biweekly. |
+| Credentials | `LINEAR_API_KEY` + `LINEAR_TEAM_KEY` in `.env` (see `.env.example`) — never committed |
+| Agent guidance | [`skills/linear-sync/SKILL.md`](skills/linear-sync/SKILL.md) |
+| MCP | `.mcp.json`, for conversational use only |
+
+Repo-side sync lives in `scripts/linear/`. Ownership is split by field so nothing is owned
+twice: `data/tasks.yaml` owns identity and routing, Linear owns status, assignee and cycle
+position. Run `npm run linear:verify` to check they still agree — it is read-only and always
+safe. `npm run linear:apply --confirm` is the only command that writes, and there is no delete
+path anywhere in the pipeline.
+
+---
+
 ## Agent Runtime
 
 - **Primary runtime:** Claude Code (CLI / desktop)

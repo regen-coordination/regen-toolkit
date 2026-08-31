@@ -1,11 +1,109 @@
 schema_version: "2.0"
 
 # Members Registry
-# Format: List of member objects with identifiers
+#
+# Consumed by:
+#   - scripts/linear/lib/members.mjs   → resolveOwner(), maps HEARTBEAT.md owner hints to a person
+#   - scripts/generate-all-schemas.mjs → .well-known/members.json (reads `id` only)
+#   - scripts/initialize.mjs           → dashboard
+#
+# `aliases` are every spelling that appears as an owner prefix in HEARTBEAT.md or as an
+# attendee name in packages/operations/meetings/. Matching is case- and whitespace-insensitive
+# and unicode-normalized, so only genuinely distinct spellings need listing. An alias claimed
+# by two members is a hard validation error — that is the identity fork this registry exists
+# to prevent.
+#
+# `linear_email` may be null. A task whose owner has no Linear account seeds unassigned with a
+# `needs-assignee` label and the owner named in the issue footer; re-running the sync after
+# they join fills it in. Owner of record is never lost.
 
-members: []
-  # Example:
-  # - id: "eip155:1:0x1234abcd"
-  #   name: "Member Name"
-  #   role: "member"
-  #   joined: "2026-01-01"
+members:
+  - id: luiz
+    name: Luiz Fernando
+    role: operator
+    aliases: [Luiz]
+    linear_email: luizfernandolfsg@gmail.com
+
+  - id: matty
+    name: Matty Compost
+    role: master-doc-author
+    aliases: [Matt, Matty, Mattycompost]
+    linear_email: matt@greenpill.builders
+
+  - id: afo
+    name: Afolabi Aiyeloja
+    role: project-management
+    aliases: [Afo]
+    linear_email: afo@greenpill.builders
+
+  - id: rather
+    name: rather mercurial
+    role: engineering
+    aliases: [Rather, Rathermercurial]
+    linear_email: rathermercurial@protonmail.com
+
+  # RESOLVED + team-ratified. Regis Chapman and Durgadas are one person; the 2026-07-16 notes
+  # listed them as two separate participants and the 2026-08-06 engineering sync corrected it
+  # explicitly "so the record and the Linear customer/member lists don't fork"
+  # (docs/reports/2026-08-06-engineering-sync-integration.md).
+  - id: durgadas
+    name: Regis Chapman
+    role: standards
+    aliases: [Durgadas, Regis, "Regis (Durgadas)", Das, Dodos]
+    linear_email: durgadas@mac.com
+
+  # RESOLVED. "Hina" and "Heenal" are one person — confirmed by the operator 2026-08-09.
+  # The evidence that prompted the question: "Hina" appears only in repo-transfer prose and
+  # never in any meeting attendee list, while Heenal does (once with the surname, 260521
+  # planning call); the repo's own note processor flagged the equivalence twice on the
+  # poor-transcription 07-16 notes; and the same task is labelled
+  # task-260716-luiz-repo-migration-hina in one line and "the Heenal migration" in another.
+  # This is the second identity fork closed before seeding, after Regis Chapman = Durgadas.
+  - id: heenal
+    name: Heenal Rajani
+    role: content
+    aliases: [Heenal, Hina]
+    linear_email: null
+
+  - id: koi
+    name: Caue "Koi" Mtomaz
+    role: research
+    aliases: [Koi, Caue]
+    linear_email: null
+
+  # Brandon and Drew own open HEARTBEAT items but have not appeared in a meeting since 2026-06.
+  - id: brandon
+    name: Brandon
+    role: curation
+    aliases: [Brandon]
+    linear_email: null
+
+  - id: drew
+    name: Drew Simon
+    role: contributor
+    aliases: [Drew, "Drew Simon"]
+    linear_email: null
+
+  - id: trinity
+    name: Trinity Morphy
+    role: content
+    aliases: [Trinity]
+    linear_email: null
+
+  # One person. "Monty Merlin" at the 2026-01-15 kickoff, "Monty Bryant" in every later
+  # meeting; data/resources.yaml carries the full "Monty Merlin Bryant".
+  - id: monty
+    name: Monty Merlin Bryant
+    role: funding
+    aliases: [Monty, "Monty Bryant", "Monty Merlin"]
+    linear_email: null
+
+  # Collective owner. HEARTBEAT uses "Team —" and "Joint —" prefixes for work owned by the
+  # group rather than a person (joining the Linear workspace, defining the shareable-version
+  # definition-of-done). "Group" appears in the same role. These resolve here deliberately —
+  # see the matching test in scripts/linear/__tests__/heartbeat.test.mjs.
+  - id: team
+    name: Team
+    role: collective
+    aliases: [Team, Joint, Group]
+    linear_email: null

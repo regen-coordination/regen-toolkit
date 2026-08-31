@@ -1,0 +1,14 @@
+schema_version: "2.0"
+# Regression fixture for loadMembers' duplicate-alias guard. Deliberately gives each
+# member an id distinct from the colliding alias text ("luiz-fernando" / "guest-luiz",
+# not "luiz"), so the collision is unambiguously alias-vs-alias rather than a self
+# id/alias collision within one record (which is allowed and not an error).
+members:
+  - id: luiz-fernando
+    name: Luiz Fernando
+    aliases: [Luiz]
+    linear_email: luizfernandolfsg@gmail.com
+  - id: guest-luiz
+    name: Someone Else
+    aliases: [Luiz]
+    linear_email: null

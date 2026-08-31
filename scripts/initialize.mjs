@@ -20,6 +20,7 @@ import matter from "gray-matter";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
 import { readGraphStatus, renderStatusMarkdown } from "./graph-status.mjs";
+import { parseHeartbeat } from "./linear/lib/heartbeat.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,48 +60,36 @@ function parseMarkdownFrontmatter(filePath) {
   }
 }
 
+// Adapts the shared HEARTBEAT grammar (scripts/linear/lib/heartbeat.mjs) to the shape this
+// dashboard has always consumed. Two deliberate departures from a literal field rename:
+//
+// 1. `[~]` (superseded) items are dropped entirely, matching current dashboard behavior:
+//    the old regex `/^-\s+\[([ xX])\]\s+(.+)/` never matched `[~]` at all, so those lines were
+//    silently invisible (not open, not done, not counted). Mapping `state !== "open"` to `done`
+//    would newly surface them as "completed" — which misrepresents abandoned work as finished.
+//    Excluding them preserves both the operator-facing invariant (a checkmark means "done", not
+//    "abandoned") and the byte-for-byte dashboard baseline.
+// 2. `text` is left as parseHeartbeat produced it (not re-stripped of `@\w+`). The old regex
+//    stripped that pattern to remove @-mentions, but it also mangled scoped package names like
+//    `` `@org-os/kms` `` into `` `-os/kms` `` — a latent bug, not a feature.
+// 3. The old `assignee` field is gone rather than being fed from `ownerHint`. A hint is not an
+//    owner: `T1`, `SP11`, `Infra`, `Group` and `Joint` all match the `**Name —**` shape, and
+//    `--format=json` is consumed by an agent (.opencode/skills/org-os-init) that is told only
+//    to "parse it and render the dashboard" — so a field literally named `assignee` holding
+//    "T1" invites rendering a phase code as a person. Only resolveOwner (members.mjs) can make
+//    that call, and this script has no member registry. The hint is exposed under its honest
+//    name instead, and `id` is surfaced structurally since `text` no longer carries it.
 function extractCheckboxes(markdownContent) {
-  const lines = markdownContent.split("\n");
-  const items = [];
-  let currentCategory = "";
-
-  for (const line of lines) {
-    const categoryMatch = line.match(/^#{2,3}\s+(.+)/);
-    if (categoryMatch) {
-      currentCategory = categoryMatch[1].trim();
-      continue;
-    }
-
-    const checkboxMatch = line.match(/^-\s+\[([ xX])\]\s+(.+)/);
-    if (checkboxMatch) {
-      const done = checkboxMatch[1] !== " ";
-      let text = checkboxMatch[2].trim();
-
-      const dueMatch = text.match(/\(due:\s*(\d{4}-\d{2}-\d{2})\)/i);
-      const due = dueMatch ? dueMatch[1] : null;
-
-      const assigneeMatch = text.match(/@(\w+)/);
-      const assignee = assigneeMatch ? assigneeMatch[1] : null;
-
-      text = text
-        .replace(/\(due:\s*\d{4}-\d{2}-\d{2}\)/i, "")
-        .replace(/@\w+/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
-
-      if (text.startsWith("_(") && text.endsWith(")_")) continue;
-
-      items.push({
-        text,
-        done,
-        category: currentCategory,
-        due,
-        assignee,
-      });
-    }
-  }
-
-  return items;
+  return parseHeartbeat(markdownContent)
+    .filter((item) => item.state !== "superseded")
+    .map((item) => ({
+      id: item.id,
+      text: item.text,
+      done: item.state === "done",
+      category: item.section,
+      due: item.due,
+      ownerHint: item.ownerHint,
+    }));
 }
 
 function getRelativeAge(dateStr) {

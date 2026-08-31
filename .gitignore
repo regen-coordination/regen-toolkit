@@ -53,3 +53,7 @@ docs/temp/
 # T3b work-order pipeline state — regenerable scratch (the corpus lives in kb-handoff/;
 # the scripts in scripts/validation/ + the manifest reproduce it). Mirrors kb-handoff/.
 .workorders-handoff-full/
+
+# Linear plan artifacts are regenerable output of a read-only command — noise in git.
+# Apply logs (*-apply.jsonl) record actual mutations and ARE tracked as the audit trail.
+data/linear/runs/*plan*.json
