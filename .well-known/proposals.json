@@ -1,4 +1,5 @@
 {
   "@context": "https://www.daostar.org/schemas",
+  "type": "ProposalRegistry",
   "proposals": []
 }

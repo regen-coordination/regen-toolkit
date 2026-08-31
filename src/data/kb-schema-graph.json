@@ -2,51 +2,51 @@
   "generated_from": "derived — rebuildable via npm run generate:kb-viz",
   "corpora": {
     "articles": 722,
-    "handoff": 146
+    "handoff": 3058
   },
   "nodes": [
     {
       "type": "resource",
-      "total": 251,
-      "raw": 251,
+      "total": 825,
+      "raw": 825,
       "reviewed": 0,
       "unspecified": 0,
       "byCorpus": {
         "articles": 226,
-        "handoff": 25
+        "handoff": 599
       }
     },
     {
       "type": "source-system",
-      "total": 88,
-      "raw": 67,
+      "total": 123,
+      "raw": 102,
       "reviewed": 1,
       "unspecified": 0,
       "byCorpus": {
         "articles": 21,
-        "handoff": 67
+        "handoff": 102
       }
     },
     {
       "type": "concept-lineage",
-      "total": 148,
-      "raw": 148,
+      "total": 260,
+      "raw": 260,
       "reviewed": 0,
       "unspecified": 0,
       "byCorpus": {
         "articles": 143,
-        "handoff": 5
+        "handoff": 117
       }
     },
     {
       "type": "claim-evidence",
-      "total": 161,
-      "raw": 161,
+      "total": 672,
+      "raw": 672,
       "reviewed": 0,
       "unspecified": 0,
       "byCorpus": {
         "articles": 146,
-        "handoff": 15
+        "handoff": 526
       }
     },
     {
@@ -62,35 +62,35 @@
     },
     {
       "type": "option-entry",
-      "total": 15,
-      "raw": 15,
+      "total": 365,
+      "raw": 365,
       "reviewed": 0,
       "unspecified": 0,
       "byCorpus": {
         "articles": 0,
-        "handoff": 15
+        "handoff": 365
       }
     },
     {
       "type": "public-use-boundary",
-      "total": 38,
+      "total": 305,
       "raw": 4,
       "reviewed": 0,
-      "unspecified": 34,
+      "unspecified": 301,
       "byCorpus": {
         "articles": 34,
-        "handoff": 4
+        "handoff": 271
       }
     },
     {
       "type": "implementation-record",
-      "total": 15,
-      "raw": 15,
+      "total": 345,
+      "raw": 345,
       "reviewed": 0,
       "unspecified": 0,
       "byCorpus": {
         "articles": 0,
-        "handoff": 15
+        "handoff": 345
       }
     },
     {
@@ -114,9 +114,48 @@
         "articles": 3,
         "handoff": 0
       }
+    },
+    {
+      "type": "organization",
+      "total": 66,
+      "raw": 66,
+      "reviewed": 0,
+      "unspecified": 0,
+      "byCorpus": {
+        "articles": 0,
+        "handoff": 66
+      }
+    },
+    {
+      "type": "person",
+      "total": 113,
+      "raw": 113,
+      "reviewed": 0,
+      "unspecified": 0,
+      "byCorpus": {
+        "articles": 0,
+        "handoff": 113
+      }
+    },
+    {
+      "type": "relationship-record",
+      "total": 554,
+      "raw": 554,
+      "reviewed": 0,
+      "unspecified": 0,
+      "byCorpus": {
+        "articles": 0,
+        "handoff": 554
+      }
     }
   ],
   "edges": [
+    {
+      "from": "resource",
+      "to": "resource",
+      "label": "original_source",
+      "count": 4
+    },
     {
       "from": "resource",
       "to": "resource",
@@ -145,7 +184,7 @@
       "from": "concept-lineage",
       "to": "concept-lineage",
       "label": "adjacent_meanings",
-      "count": 7
+      "count": 8
     },
     {
       "from": "concept-lineage",
@@ -154,16 +193,22 @@
       "count": 1
     },
     {
+      "from": "claim-evidence",
+      "to": "resource",
+      "label": "context",
+      "count": 1
+    },
+    {
       "from": "encyclopedia-entry",
       "to": "resource",
       "label": "related_concepts",
-      "count": 2
+      "count": 1
     },
     {
       "from": "encyclopedia-entry",
       "to": "resource",
       "label": "related_resources",
-      "count": 77
+      "count": 71
     },
     {
       "from": "encyclopedia-entry",
@@ -175,13 +220,19 @@
       "from": "encyclopedia-entry",
       "to": "concept-lineage",
       "label": "related_concepts",
-      "count": 71
+      "count": 72
+    },
+    {
+      "from": "option-entry",
+      "to": "resource",
+      "label": "context",
+      "count": 1
     },
     {
       "from": "implementation-record",
-      "to": "concept-lineage",
-      "label": "record_type",
-      "count": 2
+      "to": "resource",
+      "label": "related_source_system",
+      "count": 1
     },
     {
       "from": "signal",
@@ -205,6 +256,12 @@
       "from": "track",
       "to": "concept-lineage",
       "label": "concepts",
+      "count": 1
+    },
+    {
+      "from": "relationship-record",
+      "to": "resource",
+      "label": "subject",
       "count": 1
     }
   ]

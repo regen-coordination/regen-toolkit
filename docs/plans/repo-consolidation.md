@@ -1,11 +1,22 @@
 ---
 id: repo-consolidation
 title: "Repo consolidation — regen-toolkit-os (dev) → main (prod) + org migration"
-status: draft-and-present
+status: partially-superseded
 created: 2026-07-15
+updated: 2026-07-19
 scope: regen-toolkit
 decision_owner: Luiz (propose to the group 2026-07-16)
 ---
+
+> **2026-07-19 status.** **Part 2 is superseded** by
+> [`publish-pipeline/2026-07-16-design.md`](publish-pipeline/2026-07-16-design.md) (operator-approved
+> 2026-07-16): **Shape B decided**, and the mechanism upgraded from a one-off integration branch to a
+> **scripted curated projection** (`scripts/publish-to-main.mjs`, repeatable). The org migration
+> sequence stands — asks **sent to Heenal 2026-07-19**
+> ([`docs/comms/drafts/2026-07-16-heenal-asks.md`](../comms/drafts/2026-07-16-heenal-asks.md)); awaiting his action.
+> **Part 1 (push the dev branch) is still pending operator** — local `regen-toolkit-os` is ahead of
+> both remotes (~7 vs `fork`, ~11 vs `origin`); note [`dev-instance-build.md`](dev-instance-build.md)
+> **requires the `fork` push** to deploy.
 
 # Repo consolidation plan
 

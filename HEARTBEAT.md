@@ -12,12 +12,42 @@ _A living checklist of active coordination tasks. Agents consult this on every s
 
 > **2026-06-16 checkpoint.** Gap-fill (260521 + 260604 biweeklies) processed; **new master doc 2026-06-15 working iteration** is canonical (30,847 lines — integration pass, 10-layer core stable; see [`docs/MASTER-DOC-CHANGES-2026-06-15.md`](docs/MASTER-DOC-CHANGES-2026-06-15.md)); **resource DB V3** staged at [`data/resources/`](data/resources/). **Convergence is parked behind an operator checkpoint** (site merge, branch cleanup, framework/instance split, full resource lift) — see ⏸ section below.
 
+### 2026-08-27 Knowledge Commons Sync — V1 scope frozen, three Linear projects, org-os on a branch _(★ NEW 2026-08-28)_
+
+Notes: [`260827 Regen Knowledge Commons Sync.md`](packages/operations/meetings/260827%20Regen%20Knowledge%20Commons%20Sync.md). Chair: Monty. Absent: Corey.
+
+**The call where V1 got a frozen scope, a shipping date and named leads.** Source = **Regen Coordination Hub only** (two-layer link crawl; 5 categories, 31 topics). Crux = an **agentic API** (ingest → clean → apply ontology → structure → propose to Geo). **Geo Browser** adopted as the governed data layer (IPFS + The Graph, per-space subgraph under an embedded Aragon DAO); **forkable ontologies** explicitly to prevent *ontological violence*; the starter ontology lives in the **commons**, spaces fork from it. **Timeline: end-Sept API live + Geo set up · Oct run the pipeline in earnest · next cycle brings Regen OS / Coop / the KC corpus.**
+
+> ✅ **Answers `task-260827-luiz-kc-repo-role`** (the A/B/C framing). Resolved close to **A-lite**: `knowledge-commons` holds **API code, schemas, ontology configs, validation logic, README docs — not data** (data → R2 buckets / DB; *"GitHub is a version control system, not a data store"*). **No one-to-one repo mirroring.** Regen OS and the heavier layers **wait until V1 is stable**.
+
+> ⚠️ **`task-260827-luiz-clean-slate-main` was NOT discussed** and stays open. Monty's only toolkit-repo remark was that mirroring data creates complexity — a different question. The Heenal-content → branch → curated-projection move still needs its own conversation.
+
+**Three Linear projects, leads named:** **Commons Pipeline** → Monty · **Repo Stabilization** → **Luiz** (org-os + knowledge-management layer; *currently the only member*) · **Integrity Suite** → Durgadas (created live in the call, needs scoping). **Two-week cycles matched to this call's cadence; Linear = source of truth, Telegram = async.** Next call ~**2026-09-10**.
+
+- [ ] **Luiz — review + assign the Linear issues from the org-os ingestion** — review with agents, fill gaps, self-assign. **Monty's constraint: scope to what V1 needs *now*** ("not too overwhelming"); more later. — `task-260827-luiz-linear-review-assign`
+- [ ] **Luiz — branch a lightweight org-os instance off `knowledge-commons` and test** — `main` stays clean; prove value before proposing a merge. Monty: *"Feel free to branch off and then take a look."* — `task-260827-luiz-orgos-branch`
+- [ ] **Luiz — join the engineering sync with Monty and Brad** — repo structure, Cloudflare agents, technical architecture. Monty's explicit invite. — `task-260827-luiz-engineering-sync`
+- [ ] **Luiz — schedule the org-os session** (~2 weeks, once back in Brazil); start proposing times. *(Advances `task-260806-luiz-orgos-session`.)* — `task-260827-luiz-orgos-session-scheduling`
+- [ ] **Luiz — 1:1 with Durgadas on the org-os / Craft overlap** — *"I'm developing something that sounds very similar to it."* — `task-260827-luiz-durgadas-1to1`
+- [ ] **Monty — scope + set up the Integrity Suite project in Linear**; add team members to the projects. — `task-260827-monty-scope-integrity-suite`
+- [ ] **Monty — finish Matt's Claude + ChatGPT connectors**; update the Miro diagram for the Ore Instruct / Craft split; answer the open board comment (*"purpose of the dump vs the existing data source/cache"*). — `task-260827-monty-matt-connectors`
+- [ ] **Durgadas — share all GitHub repo links in Telegram** (3 accounts, unsynced since ~April, 4 months of drift on an 8-month-old corpus) + the **DAIAA** invite; fix the **MCP servers on Railway**. — `task-260827-regis-share-github-links`
+- [ ] **Durgadas — find a home for the existing Craft/Struck corpus work** — he asked directly; answer was partial (Linear docs / GitHub). **Open.** — `task-260827-regis-corpus-placement`
+- [ ] **Matt — onboard to Claude/ChatGPT/GitHub/Linear; own the fundraising lane.** — `task-260827-matt-tooling-onboarding`
+- [ ] **Drew — get Sugarbug.ai alpha invites for the group.** — `task-260827-drew-sugarbug-invites`
+- [ ] **Heenal — review Geo proposals** as capacity allows (limited near-term, committed). — `task-260827-heenal-geo-review`
+- [ ] **Team — join the Linear projects + self-assign within the two-week window**; **update the Artizen profile**; schedule the **AI primer call for Matt** (context windows, MCP, skills — Monty + Durgadas both offered). — `task-260827-team-linear-selfassign`
+
+> **Integrity Suite posture (new).** Calibrate first, hard-gate later: let everything flow through to tune scoring, then reject defective/invalid entries automatically. **Two workflows** — **Ore Instruct alone** for messy bulk data needing general discipline; **full 6-layer Craft chain** (Ore Instruct either side) when quality must be absolute. Relevant to `docs/CSIS.md` posture.
+
+> ⚠️ **Attribution caveat.** The Granola transcript has only two speaker labels (`Me` = Luiz, `Them` = everyone else). **"Brad"** appears both as a technical/engineering voice *and* as a SuperBenefit contact, while repo history records a *"Brad (Bread Co-op)"* — **one Brad or two is unresolved.** The "not ready to lead / can help with implementation" and multiparty-computation contributions are attributed to **Afo** by Granola but read as **Caue** in sequence. See the record's *Transcript quality* section before quoting anyone.
+
 ### 2026-08-27 catch-up — knowledge-commons repo surfaced + Matty reply _(★ NEW 2026-08-28)_
 
 The Rather+Afo "idea" Matt referenced (TG, Aug 26) is **`regen-coordination/knowledge-commons`** — created by Afo 2026-08-23, **empty shell**, README: *"canonical source of truth for the Regen Knowledge Commons with the website, agents and APIs."* Direction proposed to Matty (reply drafted in-session; operator sends): embrace it as the fresh canonical surface; on the toolkit repo, **move Heenal's content to its own branch and rebuild `main` clean via the publish projection** (`scripts/publish-to-main.mjs`, Shape B) — live site stays up until a conscious switch. Matt gets an explicit yes to own front-facing wording/visuals. Full context: `memory/2026-08-28.md`.
 
 - [ ] **Luiz — send the Matty reply** (final text agreed 2026-08-27; includes Cloudflare links prod `regen-toolkit.luizfernandolfsg.workers.dev` / dev `regen-toolkit-dev.luizfernandolfsg.workers.dev`) — `task-260827-luiz-matty-reply`
-- [ ] **Luiz — align on the `knowledge-commons` repo role at the call** — walk in with the framing: **A** canonical home (pipeline/data/agents move there; toolkit = one publication) / **B** front door only / **C** full migration. Afo's README reads A-or-C. — `task-260827-luiz-kc-repo-role`
+- [x] **Luiz — align on the `knowledge-commons` repo role at the call** — ✅ **RESOLVED at the 08-27 call.** Landed close to **A-lite**: the repo holds **API code, schemas, ontology configs, validation logic + README docs**; **data lives in R2 / a database, not Git**; no one-to-one mirroring; Regen OS and heavier layers wait until V1 is stable. org-os goes on a **branch**, `main` stays clean. — `task-260827-luiz-kc-repo-role`
 - [ ] **Luiz — spec the clean-slate `main` move** — Heenal content → own branch (nothing lost) → curated projection rebuilds `main`; sequence so prod never goes blank (prod Worker deploys from `main`). — `task-260827-luiz-clean-slate-main`
 - [ ] **Luiz — integrate `knowledge-commons` into `regen-coordination-os`** + find the workshop moment. — `task-260827-luiz-kc-orgos-integration`
 - [ ] **Luiz — restore `LINEAR_API_KEY` to `.env` and re-sync the KCM board** — id-map shows mass `orphaned` at last sync 2026-08-09; everything Rather/Afo did since is invisible locally. — `task-260827-luiz-linear-resync`

@@ -3,6 +3,85 @@
   "type": "MeetingRegistry",
   "meetings": [
     {
+      "id": "mtg-20260827-regen-knowledge-commons-sync",
+      "title": "Regen Knowledge Commons Sync — V1 Pipeline Scope, Geo Browser, Linear Projects + org-os on a Branch",
+      "date": "2026-08-27",
+      "type": "sync",
+      "participants": [
+        "Monty Bryant",
+        "Luiz",
+        "Matty Compost",
+        "Regis Chapman (Durgadas)",
+        "Drew Simon",
+        "Afo",
+        "Heenal",
+        "Caue Tomaz",
+        "Trinity Morphy",
+        "Rathermercurial",
+        "Brad"
+      ],
+      "absent": [
+        "Corey"
+      ],
+      "duration_minutes": null,
+      "recording_url": "https://notes.granola.ai/t/7cd9332f-d002-4d38-a4a8-64e0cdf56ecf-00demib2",
+      "transcript_path": "packages/operations/meetings/260827 Regen Knowledge Commons Sync.md",
+      "summary": "The call where V1 got a frozen scope, a shipping date and three tracked Linear projects with named leads. V1 source is the Regen Coordination Hub alone (two-layer link crawl; 5 categories, 31 topics); the crux is an agentic API that ingests, cleans, applies the ontology, structures and proposes to Geo Browser. Geo Browser adopted as the governed data layer (IPFS + The Graph; per-space subgraph governed by an embedded Aragon DAO, Privy login) with forkable ontologies explicitly as a guard against ontological violence — the starter ontology (repurposed from an OpenCivics swarm jam) lives in the commons, individual spaces fork from it. knowledge-commons repo holds API code, schemas, ontology configs, validation logic and README docs only; data lives in R2 buckets / a database (Git is version control, not a data store; durable-object migration pain). Schemas replicated into the repo for validation, so incomplete Geo entries get rejected before surfacing. Linear = source of truth, Telegram = async, two-week cycles matched to this call. Three projects: Commons Pipeline (Monty lead), Repo Stabilization (Luiz lead, org-os + knowledge-management layer, currently sole member), Integrity Suite (created live for Durgadas, needs scoping). Integrity Suite calibrates before it hard-gates; two workflows — Ore Instruct alone for messy bulk data, full 6-layer Craft chain with Ore Instruct either side when quality must be absolute. Luiz's org-os proposal answered: branch off knowledge-commons, keep main clean, prove value before merging; Regen OS deferred to next cycle. V1 editors = core team, proposing open-ish / approving closed; Greenpill S7 criteria already push project commitments to the Hub as a ready-made source. Timeline: end-Sept API live + Geo set up, Oct run the pipeline in earnest, next cycle brings Regen OS/Coop/KC corpus. Fundraising deferred to the Regen Coordination conversation (budget retro first, then incentive design; Artizen reimbursement unsolved; Matt's lane = fundraising). External sharing = reach a threshold then go targeted, DAIAA as first audience. NOTE: the regen-toolkit main clean-slate move was never discussed.",
+      "decisions": [
+        "V1 scope frozen narrow — Regen Coordination Hub as the sole source; Regen OS, Coop and the KC corpus deferred to the next cycle",
+        "Agentic API is the crux of V1; two APIs (toolkit ingestion + Durgadas's integrity harness) talking to each other",
+        "Geo Browser adopted as the governed data layer; forkable ontologies to prevent ontological violence",
+        "Starter ontology belongs in the commons space, not individual spaces; individual spaces fork from it",
+        "knowledge-commons repo holds code/schemas/configs, NOT data — data in R2 buckets / external DB",
+        "No one-to-one repo mirroring of pipeline data; complexity outweighs benefit",
+        "Linear is the source of truth; Telegram for async; two-week cycles synced to this call",
+        "Three Linear projects with leads — Commons Pipeline (Monty), Repo Stabilization (Luiz), Integrity Suite (Durgadas, created in-call)",
+        "org-os goes on a branch off knowledge-commons; main stays clean; evaluate before any merge",
+        "Integrity Suite lets everything through initially to calibrate scoring, becomes a hard gate later",
+        "V1 Geo editors = the core team; proposing relatively open, approving closed",
+        "Timeline: end-September API live + Geo set up; October run the pipeline in earnest",
+        "External sharing: reach a quality threshold, then share selectively with plugged-in people — not a broad blast",
+        "Fundraising deferred to the Regen Coordination conversation; budget retro precedes incentive design"
+      ],
+      "action_items": [
+        "Luiz: join the engineering sync with Monty and Brad (repo structure, Cloudflare agents)",
+        "Luiz: branch a lightweight org-os instance off knowledge-commons and test it, keeping main clean",
+        "Luiz: review and assign the Linear issues from the org-os ingestion — scoped to V1 needs only",
+        "Luiz: schedule the org-os session for the group (~2 weeks, once back in Brazil)",
+        "Luiz: 1:1 with Durgadas on the org-os / Craft overlap",
+        "Durgadas: share all relevant GitHub repo links in Telegram (3 accounts, unsynced since ~April)",
+        "Durgadas: share the DAIAA invite link; fix the MCP servers on Railway",
+        "Monty: scope and set up the Integrity Suite project in Linear",
+        "Monty: complete Claude + ChatGPT connector setup for Matt; add team members to Linear projects",
+        "Monty: update the Miro diagram to show the Ore Instruct / Craft-chain split; answer the open board comment",
+        "Matt: onboard to Claude/ChatGPT/GitHub/Linear and own the fundraising lane",
+        "Drew: get Sugarbug.ai alpha invites for the group",
+        "Heenal: plug in on the Geo side by reviewing proposals as capacity allows",
+        "Team: join the Linear projects and self-assign within the two-week window; update the Artizen profile"
+      ],
+      "open_questions": [
+        "Where does Durgadas's existing Craft/Struck corpus work live in the V1 structure? Answer was partial",
+        "Board comment unresolved: purpose of the dump relative to the existing data source / cache",
+        "How do external parties plug their own analysis models in? Deferred to Rather, who had left",
+        "Artizen reimbursement / incentive structure — deferred to Regen Coordination",
+        "The regen-toolkit main clean-slate move was never raised — still open from 2026-08-27"
+      ],
+      "tags": [
+        "regen-toolkit",
+        "knowledge-commons-repo",
+        "v1-pipeline-scope",
+        "geo-browser",
+        "agentic-api",
+        "integrity-suite",
+        "linear-two-week-cycles",
+        "org-os-on-a-branch",
+        "repo-holds-code-not-data",
+        "greenpill-season-7",
+        "daia",
+        "sugarbug-ai"
+      ]
+    },
+    {
       "id": "mtg-20260806-regen-toolkit-engineering-sync",
       "title": "Regen Toolkit Engineering Sync — Linear, Cloudflare, Sliced Repo Merge + Schema Convergence",
       "date": "2026-08-06",

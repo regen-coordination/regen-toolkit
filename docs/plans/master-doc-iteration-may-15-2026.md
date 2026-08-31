@@ -1,7 +1,17 @@
 # Plan — Master Doc Iteration (May 15, 2026)
 
-**Status:** active
+**Status:** closed — absorbed (2026-07-19)
 **Created:** 2026-05-15
+
+> **CLOSED 2026-07-19 — remaining phases absorbed.** Phases A–D shipped long since. The open
+> remainder is now delivered or superseded by the July arc:
+> **Phase E (structured refactor)** → superseded — the framework machine reprocessed the whole corpus
+> (`framework-validation-pass`, 722 objects; ontology/option-library/resources now live as typed KB +
+> the T4 schemas), and the master doc itself has iterated twice since (2026-06-15, July handoff).
+> **Phase F (repo dev infrastructure)** → delivered — dev→prod pipeline live (`regen-toolkit-os` dev /
+> `main` prod), publish pipeline designed, migration asks with Heenal.
+> **Phase G (site IA)** → carried by [`dev-instance-build.md`](dev-instance-build.md) (the framework-rendered
+> site IS the new IA). Master-doc integration work continues in [`handoff-integration.md`](handoff-integration.md).
 **Supersedes:** [`master-doc-iteration-may-2026.md`](master-doc-iteration-may-2026.md) Phase 3 (Phase 1 + Phase 2 reconciliation work carries forward — see §6 below)
 **Trigger:** Matty's 2026-05-15 Telegram message + new master-doc revision: ["OK ALL YOU LUIZ"](https://docs.google.com/document/d/1LPLqR51zUvvUDRFm8OqYNBj1LuWkrV-lCFH0YZCvBqg/edit?usp=sharing) ("done with this last pass. work your magic. blegh realized a lot was lost from the previous iteration. Still reworking it but feel free to run with what's in there and maybe cross reference the last doc too.")
 

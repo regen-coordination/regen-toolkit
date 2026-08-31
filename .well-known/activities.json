@@ -1,4 +1,111 @@
 {
   "@context": "https://www.daostar.org/schemas",
-  "activities": []
+  "type": "ActivityLog",
+  "activities": [
+    {
+      "id": "mtg-20260827-regen-knowledge-commons-sync",
+      "type": "meeting",
+      "title": "Regen Knowledge Commons Sync — V1 Pipeline Scope, Geo Browser, Linear Projects + org-os on a Branch",
+      "date": "2026-08-27",
+      "summary": "The call where V1 got a frozen scope, a shipping date and three tracked Linear projects with named leads. V1 source is the Regen Coordination Hub alone (two-layer link crawl; 5 categories, 31 topics); the crux is an agentic API that ingests, cleans, applies the ontology, structures and proposes to Geo Browser. Geo Browser adopted as the governed data layer (IPFS + The Graph; per-space subgraph governed by an embedded Aragon DAO, Privy login) with forkable ontologies explicitly as a guard against ontological violence — the starter ontology (repurposed from an OpenCivics swarm jam) lives in the commons, individual spaces fork from it. knowledge-commons repo holds API code, schemas, ontology configs, validation logic and README docs only; data lives in R2 buckets / a database (Git is version control, not a data store; durable-object migration pain). Schemas replicated into the repo for validation, so incomplete Geo entries get rejected before surfacing. Linear = source of truth, Telegram = async, two-week cycles matched to this call. Three projects: Commons Pipeline (Monty lead), Repo Stabilization (Luiz lead, org-os + knowledge-management layer, currently sole member), Integrity Suite (created live for Durgadas, needs scoping). Integrity Suite calibrates before it hard-gates; two workflows — Ore Instruct alone for messy bulk data, full 6-layer Craft chain with Ore Instruct either side when quality must be absolute. Luiz's org-os proposal answered: branch off knowledge-commons, keep main clean, prove value before merging; Regen OS deferred to next cycle. V1 editors = core team, proposing open-ish / approving closed; Greenpill S7 criteria already push project commitments to the Hub as a ready-made source. Timeline: end-Sept API live + Geo set up, Oct run the pipeline in earnest, next cycle brings Regen OS/Coop/KC corpus. Fundraising deferred to the Regen Coordination conversation (budget retro first, then incentive design; Artizen reimbursement unsolved; Matt's lane = fundraising). External sharing = reach a threshold then go targeted, DAIAA as first audience. NOTE: the regen-toolkit main clean-slate move was never discussed."
+    },
+    {
+      "id": "mtg-20260806-regen-toolkit-engineering-sync",
+      "type": "meeting",
+      "title": "Regen Toolkit Engineering Sync — Linear, Cloudflare, Sliced Repo Merge + Schema Convergence",
+      "date": "2026-08-06",
+      "summary": "The sync where process infrastructure landed. Three adoptions in one call: Linear for project management (Afo leads — initiatives/projects/issues, two-week cycles aligned to the biweekly with the cycle starting the day after, exponential estimates, free plan = everyone admin, AI/GitHub integrations, Customers feature), Cloudflare Workers for hosting (Rather — branch previews + built-in CI/CD, needs org access, replaces the 07-16 Netlify dev-build ask), and a dedicated coordination group (Afo to create; stops the split across the top group and the Regen Coordination council group). Repo merge unblocked with four ordered slices (framework+schemas with tests → deterministic generators+validation → public-safe aggregate data + selected Astro surfaces → reviewed knowledge objects after the promotion gate), keeping internal org-os coordination material out of the production projection; Afo's amendment: stabilise dev and prod as mirrors first so contribution can start, org-os work stays on its own branch until then. Schema convergence resolved the Rather↔Regis tension: converge on integration points and pin versions with strict Zod/TypeScript schemas validated on send and receive, but write a distinct schema per object class rather than flattening (Regis's law-vs-oracle-vs-time-standard objection). Ingestion layer named the near-term gate (Matty's four-stage priority frame: functionalise the engine → improve existing knowledge → feed the engine + human review → tracks/deployment). Rather's probabilistic-interpretation problem: big standards docs yield a thousand interpretations across a thousand agents — ship a reference implementation in code instead. Afo: organise around roles/boundaries and identify Customers. Artizen: weight behind the BREAD fund this week (Luiz ~100k, Afo 50–100k), boosts fund cash prizes only and raise matching availability, project boosts near-worthless, spend late against the leaderboard; ~$164 (+10% ≈ $182) executed live from the safe plus a Solidarity Fund transaction. Post-close tail: Harmonica evolving into a deliberative runtime (CLI + MCP, deterministic over probabilistic — Rather paying for it), Bonfire as knowledge-graph memory requiring a rigid ontology loaded early or you get slot mess, local Apple Silicon inference for deterministic tasks. Identity resolved: Regis Chapman = Durgadas (listed as two people in the 07-16 note)."
+    },
+    {
+      "id": "mtg-20260716-regen-web3-toolkit-planning",
+      "type": "meeting",
+      "title": "Regen Web3 Toolkit Planning Call — Repo Migration, Feed-the-Engine, CRAFT Layer + Artizen Funding",
+      "date": "2026-07-16",
+      "summary": "First biweekly after the framework build + dev pipeline (see same-day Matty 1-on-1). Through-line: the engine is built — now feed it. Two repo asks to Hina: migrate the repo to the Regen Coordination GitHub org + open a Netlify dev build for reviewing processed content. Content workflow ratified: feed raw data → RegenOS integration report (open tasks) → group review → PR to main → merge (regen-toolkit-os = dev, main = prod). Durgadas demoed a CRAFT-based evidentiary ingestion layer (six-layer/six-cohort 'prove it' counter-posture to RegenOS's 'trust all data, get it in'; modular/swappable) + the Temper UI widget (auto-summary mislabeled these 'Rathermercurial' — corrected). Rathermercurial will DM-fix the broken Astro content collections (v4→v7 foot guns) + jam on Geo Protocol with Luiz + Regis (Luiz to open a scoping doc, can start blank). Content legibility: developer-first as a useful filter now, subject-matter/complexity abstraction later; Trinity to create learn-and-teach content. GitHub Projects flagged as the task-management gap (set up post-migration; AI agents auto-create issues from reports). Funding: ~$2,400 unused in the Regen Coordination pool; consensus = hold Artizen boosts, wait for a 3-4x multiplier, then one coordinated push ($3k → $20k+); update existing project (lean) vs toolkit-specific — decide at next Regen Coordination sync; DM Monty for funds now."
+    },
+    {
+      "id": "mtg-20260716-toolkit-worksession-matty",
+      "type": "meeting",
+      "title": "Toolkit Work Session with Matty — Framework Build Done + Dev Pipeline Live",
+      "date": "2026-07-16",
+      "summary": "Morning 1-on-1 before the group biweekly. Framework package built from the master doc (living on regen-toolkit-os); all existing repo content + the recent handoff DB ingested (initial ~127-row slice of ~2,689; diff caught the eight-forms-of-capital gap + ontology alignment). Functional dev→prod pipeline live: regen-toolkit-os = dev/review, main = prod (auto-deploys to the live site on merge); same infra running in parallel for ReFi DAO + ReFi Barcelona (Julio + Andrea picking it up; Hermes agent live on the BCN Telegram with a CRM channel + a 'check later' auto-ingest channel). Feed-the-engine phase with provenance version-stamping + meeting-note ingestion as context. Plan: staging site to review framework-processed content side-by-side vs Hina's build (graph-view comparison, checklist + named-reviewer sign-off, ~2-4 weeks) → push live → forum post; skip the soft tap-on-shoulders stage → broader public share; privacy gate = verify the name-flagging/removal feature before going public. Network + standards surface: Greenpill NYC adopting, Bread Co-op knowledge-commons candidate (Brad call), Ron Teretsky overlap, Block Science integration, GeoBrowser exploration, DAOstar (Metagov) + CSIS + DAO IP5 + exit-to-community playbook + communityrule.info; ~69 source systems (ReFi DAO carbon-copy DB not yet integrated); Hermes opt-in ingestion (no scraping bots — manual curation) with Bonfire as an alternative; federated multi-commons + a local-node package concept. Regen Coordination positioning open (integrate into Regen Commons vs separate membership; contribution = structure a knowledge commons for Bread). Matty to self-educate on Zed + Obsidian + Claude/Codex/OpenCode, then tap Luiz for setup."
+    },
+    {
+      "id": "mtg-20260702-regen-web3-toolkit-planning",
+      "type": "meeting",
+      "title": "Regen Web3 Toolkit Planning Call — Framework-as-Package + First Ingestion Test Cases",
+      "date": "2026-07-02",
+      "summary": "Converged on framework-as-package (Luiz): a portable module dropped into a repo that ingests unstructured resources into an ontology-structured knowledge base, articulated with the live site (two pages integrated on regen-toolkit-os: Toolkit Framework + Regen-Toolkit-OS). Two first ingestion test cases: Koi's just-finished Gen Brasil Commons artifacts (2 books + a 6-call conflict-mediation protocol) and Durgadas's Proof of Coordination protocol — with Durgadas requiring ingestion and storage to be separable. Matty committed to one more master-doc iteration (handoff docs + new theory of change, incorporating Frame Language Analyzer + Idea Processor); Options (governance/tooling) named as the core of a real deployment. Durgadas issued a Frame 1 language warning ('structure beats intention 100%') and offered CSIS/Craft/Valcre standards. Infra interop thread: Geo Protocol (IPFS + The Graph, SDK/Aragon/API) + AT Protocol as connective tissue; push for more opinionated infra. Funding: no feedback yet on Regen Coordination budget/scope; expects a hunk of the QF distribution; not rushing. Next checkpoint ~2 weeks."
+    },
+    {
+      "id": "mtg-20260615-toolkit-worksession-matty",
+      "type": "meeting",
+      "title": "Toolkit Work Session with Matty — RegenOS + Knowledge Commons Architecture",
+      "date": "2026-06-15",
+      "summary": "Ad-hoc 1-on-1 (Matty + Luiz). Matty walked through master-doc artifacts (two GPT handoff docs, next working draft, structure-options doc, unified resource index); Luiz demoed the OrgOS overlay end-to-end and articulated RegenOS as the federation layer above OrgOS instances. Two strategic moves converged: (1) formally split into a domain-agnostic framework + ReFi Web3 Toolkit as its first instance; (2) house the toolkit under ReFi Commons with a standards + funding model. Knowledge-source vs organizational federation likely two distinct mechanisms. Self-qualifying adoption = non-arbitrary curation filter. Simplify infra first (GitHub+agents now; Radicle/COI/on-chain later). Coordination via small bites + standards stack (CIDS + DAO IP5 + impact accounting tied to funding flows); scale to 5-7 high-trust orgs, not open chapter calls. Matty's compensation preference: seed an Impact Vault for the knowledge commons. Matty + Luiz named as the two to drive this forward."
+    },
+    {
+      "id": "mtg-20260604-regen-web3-toolkit-planning",
+      "type": "meeting",
+      "title": "Regen Web3 Toolkit Planning Call — V1 Site + Hub Post Strategy",
+      "date": "2026-06-04",
+      "summary": "Converged on a two-deliverable strategy: Heenal's simplified V1 public website (3 journeys — newcomers, local nodes, knowledge commoners) + a forthcoming hub/forum post. Heenal owns + frames V1 and merged it to main (PR #311); live at regen-web3-toolkit.vercel.app. 'Public is not the same as commons' (Heenal) reframes the hub post toward inviting use + co-stewardship. Swarm should not overdetermine the work — ship something aligned + invite others. Andrea + RegenOS conversation deferred (Andrea = bioregional knowledge, bioregioning.org / Recover). Afo to funnel toolkit into the Greenpill Network site. Matty drafting a Regen Coordination budget/scope doc (allocation mostly toward the knowledge commons). Resources/option library is the acknowledged master-doc gap."
+    },
+    {
+      "id": "mtg-20260521-regen-web3-toolkit-planning",
+      "type": "meeting",
+      "title": "Regen Web3 Toolkit Planning Call — Theory of Change Check-in",
+      "date": "2026-05-21",
+      "summary": "Diverged from the planned persona/skill-card game into an open strategic check-in dominated by Durgadas's 'theory of build vs theory of change' challenge: the project risks being a thing in search of a problem. Group agreed its highest-leverage next move is to author a revised problem + mission statement. Afo: derive the theory of change from parent ecosystems (Green Pill + ReFi DAO), don't invent it fresh. 'Transformational journeys' framing (Koi) gained traction as shared direction (later operationalized by Heenal's v1 site). Rather deployed a forkable metadata ontology to Geo Protocol. Framework-vs-instance surfaced ('are we building the toolkit or the knowledge?'). Unresolved: agree-on-the-problem (Koi) vs represent-everyone's-priorities (Matty); call dropped on a connectivity cut. Luiz absent."
+    },
+    {
+      "id": "mtg-20260507-regen-web3-toolkit-planning",
+      "type": "meeting",
+      "title": "Regen Web3 Toolkit Planning Call",
+      "date": "2026-05-07",
+      "summary": "Master doc 2026-05-06 iteration accepted as working checkpoint (renamed Knowledge Commons Toolkit). Swarm Pulse 1 attended partially — schedule conflicts, Matty in Philadelphia. OrgOS adopted as team's shared task/Kanban layer; Obsidian Canvas adopted as visual architecture map. Koi raises Toolkit→Transformational Journeys framing tension (unresolved, folded into Phase 2 reconciliation). Persona / meta-game format adopted for next biweekly. Bonfires (KOI stack, Brazil) demoed as methodological model + live infrastructure for Evolution layer."
+    },
+    {
+      "id": "mtg-20260423-regen-web3-toolkit-planning",
+      "type": "meeting",
+      "title": "Regen Web3 Toolkit Planning Call",
+      "date": "2026-04-23",
+      "summary": "Matt one push away from completing master-doc iteration; team takes layer ownership next. Rather's ontology adopted as standard. OrgOS confirmed as toolkit consolidation framework + Bread Co-op deployment template. CSIS × OrgOS architectural alignment confirmed. Frame-language critique introduced (Durgadas) — Frame 1 (extractive) vs Frame 2 (situational) vs Frame 3 (holistic). May hackathon target communities locked: Geo Protocol, Ethereum Localism, Open Civics Consortium."
+    },
+    {
+      "id": "mtg-20260225-regen-toolkit-restructure-and-pipeline",
+      "type": "meeting",
+      "title": "Regen Toolkit — Restructure + AI Writing Pipeline Sync",
+      "date": "2026-02-25",
+      "summary": "Decided to move from track-based to tag-based structure (10 modules); adopt ship-V1-imperfect stance; AI writing pipeline (5-stage) ready with 5 pilot articles; reach out to Ethereum Localism / ReFi Commons / Superbenefit before more structural decisions"
+    },
+    {
+      "id": "mtg-20260312-regen-toolkit-funding-and-pipeline",
+      "type": "meeting",
+      "title": "Regen Toolkit — Funding + Pipeline Sync",
+      "date": "2026-03-12",
+      "summary": "Apply for Artisan funding under single Region Coordination profile (time-sensitive, boosts running). AI pipeline currently broken — needs fix. Toolkit's niche: hyper-specific for local nodes/chapters; link rather than duplicate Gitcoin/Superbenefit/Bioregional content. Co-op browser extension idea floated (foreshadows Coop PL Genesis)."
+    },
+    {
+      "id": "mtg-20260115-greenpill-toolkit-planning-kickoff",
+      "type": "meeting",
+      "title": "Greenpill Toolkit Planning Call (Kickoff)",
+      "date": "2026-01-15",
+      "summary": "Project kickoff. Three audiences agreed (university/governance education, communities needing onboarding, normie nonprofits). GitHub-based workflow chosen. Tools-First (Monty) vs Comprehensive (Luiz) content approaches surfaced. $2.5k available, $5k minimum. Biweekly cadence."
+    },
+    {
+      "id": "mtg-20260129-greenpill-toolkit-github-workflow",
+      "type": "meeting",
+      "title": "Greenpill Toolkit Planning Call — GitHub Workflow + Tier Prioritization",
+      "date": "2026-01-29",
+      "summary": "229 article placeholders created in GitHub. Tier-based prioritization (Tier 1 = 3+ audiences). High-trust assignment (multiple per article). Strategic depth: broad first, deep second. Matt's AI writing system in dev. LifeOS web editor as alt interface for non-GitHub users."
+    },
+    {
+      "id": "mtg-20260212-regen-web3-toolkit-planning",
+      "type": "meeting",
+      "title": "Regen Web3 Toolkit Planning Call",
+      "date": "2026-02-12",
+      "summary": "ReFi DAO transitioning to distributed leadership / headless brand; possible future Greenpill alignment. Submit content to Regen Web3 Toolkit repo (Local ReFi Toolkit becomes a subset). Branching workflow ratified. AI-assisted drafting standard. Artisan funding $300-5,600/month confirmed via Drew Simon. Knowledge Commons WG access limited (Luiz request met with pushback)."
+    }
+  ]
 }

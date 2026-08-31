@@ -1,7 +1,10 @@
 {
   "@context": "https://www.daostar.org/schemas",
-  "type": "KnowledgeCommons",
-  "status": "pending",
+  "type": "KnowledgeManifest",
   "domains": [],
+  "exchange": {
+    "published_domains": [],
+    "subscribed_domains": []
+  },
   "sources": []
 }
