@@ -113,6 +113,25 @@ The hosting work is split across two people and two branches, and Linear records
 config. Luiz's two-Worker deployment — the thing actually serving both instances — is on Linear
 nowhere except the comment added to KC-6 on 2026-08-31.
 
+### ⚠️ Live defect — the org rename never reached `main` (KC-37)
+
+Verified against the live prod Worker on 2026-08-31. Prod misrepresents who owns the project, three ways at once:
+
+| Element | Currently | Should be |
+|---|---|---|
+| "Contribute on GitHub" links | `github.com/explorience/regen-toolkit` | `github.com/regen-coordination/regen-toolkit` |
+| Canonical URL / sitemap / OG | `regen-toolkit.superbenefit.dev` | a Regen Coordination domain |
+| Content | 52 articles | 67 documented; 3,931 pages on dev |
+
+`a38d5d41` ("point every repo reference at regen-coordination/regen-toolkit") landed **only on
+`regen-toolkit-os`**. `origin/main` still carries `explorience` in `astro.config.mjs`,
+`src/layouts/Page.astro` and `src/pages/index.astro`, and PR #315 set the `superbenefit.dev`
+canonical on 08-12 — four days after the repo moved orgs. `main` is **275 commits behind**.
+
+This reframes KC-34 and KC-6. The dev/prod gap is not a page-count difference: **the two branches
+disagree about who owns the project**, and prod is the surface KC-28 (Greenpill) and KC-29 (ReFi
+DAO) are being invited to consume in V1. Filed as **KC-37**, priority 1, blocking KC-34.
+
 ### Two divergences that need a decision
 
 1. **Two wrangler configs, two Worker names.** `main` → `name: "regen-toolkit"` (compat 2026-08-12).
