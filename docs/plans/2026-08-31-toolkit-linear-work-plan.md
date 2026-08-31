@@ -242,9 +242,15 @@ v0 is written down.
 **What it is.** Generators and validation commands run reliably from develop, so content processing
 is reproducible for any contributor. Lower risk than KC-1 — mechanics, not semantics.
 
-**Watch for.** Inherits KC-1's ontology exposure only if the generators are schema-coupled. Worth
-checking whether they can land independently; if so, this is the safest thing to ship first and a
-good candidate to start with while the KC-18 question is open.
+**✅ Confirmed safe to ship (2026-08-31).** Checked: 4 of 5 generators have no framework or ontology
+import at all; `gen-framework-manifest.mjs` reads the framework only to snapshot its API to JSON for
+the site to display — a rendering bridge, not a type dependency. All four validators
+(`validate-identity`, `validate-structure`, `compile-knowledge`, `lint-knowledge`) are clean. **This
+does not inherit KC-1's ontology exposure and can land while D1 is open.** It is the safest thing to
+start with.
+
+**Watch for.** One real coupling: if the framework package is ever removed rather than revised,
+`gen-framework-manifest.mjs` breaks. That is a supersession risk, not a schema risk.
 
 **Done when** validation commands run clean against existing repo content.
 
@@ -399,6 +405,49 @@ Given the flags, the sequence that unblocks the most while waiting on other peop
 **The honest read:** of 12 open issues, **five are blocked on questions that have not been asked**,
 and only KC-37 and KC-35 can move today without someone else's input. Asking the three questions is
 worth more this week than any amount of merging.
+
+---
+
+## Decision log
+
+Most of the critical path is **questions**, not work. This is where answers land — without it, a
+reply from Afo lives in a Linear comment and never reaches the plan.
+
+| # | Question | Asked of | Asked | Status | Unblocks |
+|---|---|---|---|---|---|
+| D1 | Framework 0.2.0 vs the v0 ontology — kernel, superseded, or parallel? | Afo | ✅ 2026-08-31, comment on KC-18 | **awaiting reply** | KC-1, KC-11 |
+| D2 | One Worker with branch previews, or two Workers? | Rather | ⚠️ partially — conceded on KC-5, no answer yet | **awaiting reply** | KC-6, shapes KC-34 |
+| D3 | How should Heenal's content be handled in the `main` cutover? | Heenal | ❌ not asked — draft ready | **blocked on sending** | KC-34 |
+| D4 | Named counterpart at ReFi DAO for the upstream decision | ReFi DAO | ❌ not asked | — | KC-31 |
+| D5 | Does Durgadas want Integrity Suite Integration populated? | Durgadas | ❌ not asked | — | that project (0 issues) |
+| D6 | Which `wrangler.jsonc` drives prod? | verify directly | ❌ not checked | **do before merging KC-37** | KC-37 merge |
+| D7 | Repo → Linear or Linear → repo: which is authoritative? | 09-04 council | ❌ not raised | — | the seeding pipeline's future |
+| D8 | Do the four non-rendered `explorience` refs ride along on the KC-37 PR? | operator | ❌ open | — | KC-37 scope |
+
+**Resolved**
+
+| # | Question | Answer | Date |
+|---|---|---|---|
+| R1 | Are slice-2 generators/validators ontology-coupled? | **No.** 4 of 5 generators have no framework import; `gen-framework-manifest.mjs` only snapshots the framework API to JSON for the site to display (a rendering bridge, not a type dependency); all four validators are clean. **KC-2 is safe to ship while D1 is open.** | 2026-08-31 |
+| R2 | Are the empty initiative owners a gap? | **No** — deliberate. Afo's structure doc: *"no owner until the council assigns stewardship."* | 2026-08-31 |
+| R3 | Is the prod `explorience` defect real, or agent error? | **Real**, re-verified on `regen-toolkit.superbenefit.dev` after the pushback. Live prod, wrong org links. | 2026-08-31 |
+
+---
+
+## Estimates — set 2026-08-31
+
+Afo's convention: exponential, 1 small → 8 big, never 16.
+
+| Issue | Est | Reasoning |
+|---|---|---|
+| KC-1 | 4 | Framework is built; this is the merge into develop with tests |
+| KC-2 | 2 | Mechanics only — confirmed not ontology-coupled (R1) |
+| KC-3 | 4 | The privacy gate is real work; "public-safe" carries weight |
+| KC-4 | 8 | New R2 integration, depends on Afo's KC-25 |
+| KC-11 | 4 | Engine run + the framework→v0 mapping, once D1 lands |
+| KC-14 | 2 | Session prep and delivery |
+| KC-31 | 2 | A decision and a conversation, not a build |
+| **KC-6** | **held** | **Scope contested (D2).** An estimate here would be a guess dressed as a plan — it is 2 under Rather's model and 4 under Option B |
 
 ---
 
