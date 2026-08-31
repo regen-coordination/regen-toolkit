@@ -18,13 +18,34 @@ month earlier. After: **12**, across the two projects he leads plus two claimed 
 | Action | Issues |
 |---|---|
 | Self-assigned | KC-1, KC-2, KC-3, KC-4, KC-6, KC-11, KC-14, KC-31 |
-| Created | KC-34, KC-35, KC-36 |
+| Created | KC-34, KC-35, KC-36, KC-37 |
 | Reassigned to Afo | KC-8 (repo records it as `task-260806-afo-linear-seed`) |
 | Closed | GROW-16 — Discourse migration, done 2026-07-29, evidence in the comment |
 | Reopened as started | KC-6 — Backlog → In Progress, with a comment splitting done from not-done |
 
 **Deliberately not done:** no cycle assignments (Linear owns cycle position — propose, don't
-impose), no issues filed into other people's lanes, no bulk seed.
+impose), no bulk seed.
+
+### Retracted the same day — a boundary this plan now holds
+
+A comment was posted on **KC-5** — Rather's issue, which *he* had closed — and he was @-mentioned
+on KC-37. He objected: *"productivity theater from your agent"*, *"Do not EVER plan under an issue
+without the assignee's permission"*, *"stop planning on my issues FOREVER."*
+
+**He was right on process.** Operator approval is not the issue owner's consent. The comment was
+deleted, the mention stripped from KC-37, and short replies posted owning it.
+
+**The rule from here:** check `assignee` and `createdBy` before any Linear write. If either is
+someone else, surface it rather than writing. Leading a project is not authorship of its issues.
+
+Two things survived the retraction, and both matter for the review below:
+
+- **His technical objection is a live disagreement, not an error** — see KC-6. He designed one
+  Worker with branch previews; the two-Worker split was a 2026-08-08 operator call. His model may
+  well be the better one.
+- **The KC-37 finding was re-verified before responding** and holds: `regen-toolkit.superbenefit.dev`
+  is live production and serves `explorience/regen-toolkit` links. Being right did not license how
+  it was raised — but the defect is real and is now a branch instead of a board argument.
 
 ---
 
@@ -97,6 +118,287 @@ Repo Stabilization targets **09-30**, mid-cycle-4.
 
 KC-4 slipping past 09-30 is legitimate, not a miss: it depends on Afo's publish mode. Worth saying
 out loud at the council rather than letting the target quietly fail.
+
+---
+
+## Issue-by-issue — the review surface
+
+Thirteen issues assigned. Each entry decodes what the issue actually is, what doing it means, and
+what could go wrong — so this can be reviewed once, thoroughly, before anything executes.
+
+**Read the four flags first.** They are the difference between this being a work queue and a
+sequencing trap:
+
+| Flag | Issues affected |
+|---|---|
+| 🔴 **Architecture unsettled** — Rather disputes the two-Worker design | KC-6, KC-34, KC-37 |
+| 🔴 **Blocked on a decision nobody has made** — framework vs v0 ontology | KC-1, KC-11 |
+| 🟡 **Third party required, not yet asked** | KC-4 (Afo), KC-31 (ReFi DAO), KC-34 (Heenal) |
+| 🟡 **No estimate** — cycle placement is guesswork until set | KC-1, KC-2, KC-3, KC-4, KC-6, KC-14 |
+
+---
+
+### KC-37 · Prod site points at the wrong GitHub org
+`Urgent · est 2 · Backlog · blocks KC-34` — **branch ready, unpushed**
+
+**What it is.** The live site links "Contribute on GitHub" to `explorience/regen-toolkit`. Five
+occurrences across `astro.config.mjs`, `src/layouts/Page.astro`, `src/pages/index.astro`. The
+rename commit `a38d5d41` landed only on `regen-toolkit-os`.
+
+**Ready to go.** Branch `fix/prod-github-org-links`, one commit off `origin/main`, 5 lines / 3
+files. Built in a disposable worktree; nothing else touched.
+
+```
+git push -u origin fix/prod-github-org-links
+gh pr create --base main --title "fix(site): point prod GitHub links at regen-coordination, not explorience"
+```
+
+**⚠ Before merging.** Merging to `main` triggers a **prod deploy** — build-on-push is live. Two
+`wrangler.jsonc` files exist (`main`: `regen-toolkit`, `regen-toolkit-os`: `regen-toolkit-dev`);
+confirm which drives prod first. This is the first prod deploy since the Rather disagreement, so
+it is also the first test of whose hosting model is actually in force.
+
+**Deliberately excluded.** Four non-rendered `explorience` refs remain on `main` — `CONTRIBUTING.md`,
+`scripts/sync-issues-to-frontmatter.ts`, `skills/SKILL.md`, `skills/regen-toolkit/SKILL.md` (that
+last one is a `git clone` URL that resolves to nothing). Each is a one-line fix; decide whether they
+ride along as a second commit. Historical records left alone on purpose.
+
+**Done when** the live site's GitHub links resolve to `regen-coordination/regen-toolkit`, verified
+against the deployed site rather than a local build.
+
+---
+
+### KC-6 · Mirrored dev & prod instances
+`High · no estimate · In Progress · blocked by KC-34` — 🔴 **scope contested**
+
+**What it is.** *"Production tracks main; development tracks the OS branch. Stabilize both to be
+mirrors."* The hosting half has been live since 08-09. The mirror half is not: prod is ~124 pages
+of Heenal's build, dev is 3,931 framework-processed pages.
+
+**🔴 Do not execute yet.** Rather's position: *"We do NOT need a staging environment. It's already
+built-in to the site. Do not EVER suggest split staging/production instances."* He designed this as
+one Worker with branch previews; the two-Worker Option B was a 2026-08-08 operator call, on the
+grounds that dev renders `/validation`, `/kb` and handoff pages that shouldn't reach prod. **His
+counter has merit — preview URLs are not prod.** He owns the hosting.
+
+**Resolve the architecture first, then this issue is one of two different jobs:**
+- *If Rather's model wins:* tear down `regen-toolkit-dev`, configure branch previews, and this
+  becomes "make `main` deployable and previews visible." Smaller.
+- *If Option B stands:* keep both Workers and this stays as written.
+
+**Watch for.** The issue text assumes the two-instance model. If the architecture changes, the
+issue needs rewriting, not just closing.
+
+**Done when** dev and prod are mirrors under whichever architecture is agreed — and the agreement
+is written down somewhere other than a Linear comment.
+
+---
+
+### KC-34 · Spec the clean-slate `main` move
+`High · est 4 · Backlog · blocked by KC-37 · blocks KC-6`
+
+**What it is.** A written sequence for `main` becoming a curated projection of the
+framework-processed corpus, ordered so prod never goes blank. **A spec, not an execution.**
+
+**What doing it means.** Decide: which subset of 3,931 pages is the curated projection; where
+Heenal's content lives afterwards; the step order; who signs off before the merge.
+
+**🟡 Heenal is not on this issue and should be.** It is her content being branched. The issue says
+"Heenal content → own branch (nothing lost)" as if it were a mechanical move; it is a decision
+about someone else's work. **Ask her before writing the spec, not after.** This is the same mistake
+pattern as the Rather episode — deciding the disposition of another person's work without them.
+
+**Watch for.** Scope creep into execution. The value is in the ordering being reviewable *before*
+anything runs.
+
+**Done when** a named reviewer has signed off on a sequence that can answer "what does the public
+site show right now" at every step.
+
+---
+
+### KC-1 · Merge slice 1 — framework & schemas
+`High · no estimate · Backlog` — 🔴 **blocked in substance, not on the board**
+
+**What it is.** Merge `toolkit-framework` and its schemas into develop with passing tests. On the
+board this is the *only* issue that represents the framework build as a thing that exists.
+
+**🔴 The unmarked blocker.** KC-18 is pinning a v0 ontology (11 classes / 12 predicates) while this
+merges the framework's 15 core types + 31 extensions. If v0 supersedes the framework kernel, this
+merges something about to be replaced. **The question is posted on KC-18 and unanswered.** Merging
+before it resolves risks either wasted work or two type systems over one corpus.
+
+**Watch for.** KC-1's own description says "version pinning follows in KC-10" — so the board already
+sequences this into the Zod convergence. That sequencing assumes the framework's schemas are an
+input to v0, which is exactly the assumption nobody has confirmed.
+
+**Done when** the framework and schemas are in develop, tests green — *and* their relationship to
+v0 is written down.
+
+---
+
+### KC-2 · Merge slice 2 — deterministic generators & validation
+`High · no estimate · Backlog · depends on KC-1`
+
+**What it is.** Generators and validation commands run reliably from develop, so content processing
+is reproducible for any contributor. Lower risk than KC-1 — mechanics, not semantics.
+
+**Watch for.** Inherits KC-1's ontology exposure only if the generators are schema-coupled. Worth
+checking whether they can land independently; if so, this is the safest thing to ship first and a
+good candidate to start with while the KC-18 question is open.
+
+**Done when** validation commands run clean against existing repo content.
+
+---
+
+### KC-3 · Merge slice 3 — public-safe aggregate data & Astro surfaces
+`Medium · no estimate · Backlog · depends on KC-2`
+
+**What it is.** Public-safe aggregate data and selected Astro surfaces render from develop, giving
+contributors a visible site to build against.
+
+**Watch for.** "Public-safe" is doing real work in that sentence — this is the privacy gate.
+Internal org-os coordination material must stay out. Interacts with KC-34: what renders here is
+close to what the curated projection becomes.
+
+**Done when** a preview build renders the selected surfaces without errors and nothing internal
+leaks.
+
+---
+
+### KC-4 · Merge slice 4 — content layer → R2
+`Medium · no estimate · Backlog · depends on Afo's KC-25` — 🟡 **third party**
+
+**What it is. Reframed twice; the repo registry is stale on it.** No longer "merge reviewed
+knowledge objects." Now: wire the Astro content layer to the R2 published state. Knowledge objects
+never land in the repo — they live in Geo, sync to R2, the site reads them. Ratification went
+onchain (the DAO vote became the promotion gate, so merging stopped being review) and R2 became the
+state layer.
+
+**🟡 Not startable.** Depends on KC-25 (Afo) writing state to R2, and on the Astro rebuild. Likely
+slips past the 09-30 target — **legitimately**, but say so at the council rather than letting the
+target quietly fail.
+
+**Done when** the site renders published knowledge objects sourced from R2, schema-conformant, with
+provenance intact, and no knowledge objects committed to the repo.
+
+---
+
+### KC-11 · Validate the consolidated engine package
+`Medium · no estimate · Todo · cycle 3` — 🔴 **the framework↔v0 mapping lands here**
+
+**What it is.** Validate the framework + skills against real workflows and log needed adjustments.
+
+**Why it matters more than its title.** This is the natural home for the framework-to-v0 mapping —
+which of the 15 core types collapse into the 11 classes, via `maps_to_core`. That work is only
+worth doing once KC-18 answers whether v0 is a reduction of the kernel, an independent derivation,
+or a supersession.
+
+**Watch for.** Doing the mapping speculatively before the decision. Offer the type-by-type
+comparison as input to the decision instead.
+
+**Done when** the engine has run against a representative content set, output compared to schema
+and to human expectation, adjustments logged as sub-issues.
+
+---
+
+### KC-31 · DECIDE with ReFi DAO — which toolkit is upstream
+`High · no estimate · Todo · cycle 3` — 🟡 **needs a counterpart**
+
+**What it is.** `docs.refidao.com` hosts a Local Node Toolkit covering substantially the same ground
+as the Regen Toolkit. Two toolkits, same audience, maintained separately. Three viable answers:
+Regen Toolkit upstream and ReFi renders a slice; ReFi upstream for node-specific material and the
+commons ingests it; or genuinely different audiences and both continue.
+
+**Why it is yours.** You hold the ReFi DAO relationship and run `refi-dao-os`. You are also the
+person who would notice this is the same question as framework-vs-v0, one layer out: *who is
+upstream of whom.*
+
+**🟡 Needs a named counterpart at ReFi DAO** — not just an owner here. That ask has not been made.
+
+**Watch for.** Cost rises with every page added on either side. And ReFi is one of only two partner
+integrations in V1 (KC-29) — starting that relationship on an unacknowledged duplication is a bad
+footing.
+
+**Done when** the decision is recorded and both sides have named it.
+
+---
+
+### KC-35 · Branch a lightweight org-os instance off `knowledge-commons`
+`Medium · est 4 · Backlog · blocks KC-36 and KC-14`
+
+**What it is.** A running org-os instance on a branch, demonstrated against real work. Deliberately
+not a merge and not a proposal — Monty's constraint: `main` stays clean, prove value first.
+
+**What doing it means.** Branch off `knowledge-commons` (A-lite role: API code, schemas, ontology
+configs, validation logic), pull in `packages/org-os-kms` (SP10, already tested), run it against
+real content.
+
+**Watch for.** Scope. "Lightweight" and "what V1 needs" are the constraint — the full org-os surface
+is not the goal. Also: if this surfaces a conflict with v0, raise it on KC-18, don't resolve it here.
+
+**Done when** the instance runs and someone other than you can open it and see what it does.
+
+---
+
+### KC-36 · Integrate `knowledge-commons` into `regen-coordination-os`
+`Medium · est 4 · Backlog · blocked by KC-35`
+
+**What it is.** Two halves — wire the commons into the coordination OS, *and* find the workshop
+moment where the group actually uses it.
+
+**The second half is the hard one.** Integration nobody is present for produces a working system
+nobody adopts. The moment is as much the deliverable as the wiring.
+
+**Watch for.** This touches knowledge-source federation vs organizational federation — two different
+mechanisms. Where it forces a choice, record it rather than deciding unilaterally.
+
+**Done when** the instance resolves against `knowledge-commons`, a date exists, and someone else
+has used it in that session.
+
+---
+
+### KC-14 · Host the Org OS demo session
+`Medium · no estimate · Backlog · blocked by KC-35`
+
+**What it is.** Attendees leave able to reason about running an instance — per-community, personal,
+local review browsers, upstream federation.
+
+**Watch for.** Blocked for a reason: there is currently no instance to demo. The repo notes
+scheduling this ~2 weeks out, once you are back in Brazil. Artifact goes into the commons as ore;
+learnings seed this project's next issues.
+
+**Done when** the session has happened and its notes are in the commons.
+
+---
+
+### GROW-16 · Discourse migration — ✅ Done
+`Closed 2026-08-31 with evidence`
+
+Completed 2026-07-29. Hetzner self-host, ~$1,100/yr saved, 7-day stability check passed 08-05.
+
+**Four things it surfaced that nothing tracks:**
+- Hub ops handoff to Afo and Matty (account access, runbook, monthly rebuild rotation)
+- Offsite backups to Cloudflare R2 — backups currently sit on the same server
+- Uptime monitoring and alerting
+- **`regencoordination.xyz` expires 2026-10-10** — Namecheap, Monty is registrar owner. If it
+  lapses the hub goes down regardless of hosting. **Six weeks out and on no board.**
+
+---
+
+## Suggested execution order
+
+Given the flags, the sequence that unblocks the most while waiting on other people:
+
+1. **KC-37** — push the branch, confirm the wrangler question, merge. Independent of everyone.
+2. **Ask three questions in parallel** — Rather on the Worker architecture (unblocks KC-6/KC-34),
+   Afo on KC-18 (unblocks KC-1/KC-11), Heenal on her content (unblocks KC-34).
+3. **KC-2** — if the generators are not schema-coupled, the safest thing to ship while waiting.
+4. **KC-35** — the entire Org OS lane depends on nobody else. Fully parallel.
+5. Everything else follows from the answers.
+
+**The honest read:** of 12 open issues, **five are blocked on questions that have not been asked**,
+and only KC-37 and KC-35 can move today without someone else's input. Asking the three questions is
+worth more this week than any amount of merging.
 
 ---
 
