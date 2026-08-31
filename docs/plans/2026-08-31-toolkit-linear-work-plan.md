@@ -100,6 +100,45 @@ out loud at the council rather than letting the target quietly fail.
 
 ---
 
+## Cloudflare hosting — under-tracked, and misattributed
+
+The hosting work is split across two people and two branches, and Linear records only half of it.
+
+| When | Who | What |
+|---|---|---|
+| 2026-08-08/09 | **Luiz** | Option B — two Workers under his **personal** account; build-on-push git-connected and verified end to end (`b719a949..a38d5d41` → auto-build `c4b209fc`, ~2 min, all routes 200). `scripts/deploy-cloudflare.mjs`, `npm run deploy:cf` / `deploy:cf:prod`, runbook `docs/onboarding/cloudflare-hosting.md`. Dev config in `wrangler.jsonc` on `regen-toolkit-os`; **prod deployed via CLI flags, no config on `main`**. |
+| 2026-08-12/13 | **Rather** | PRs [#314](https://github.com/regen-coordination/regen-toolkit/pull/314) + [#315](https://github.com/regen-coordination/regen-toolkit/pull/315) merged to `main` — a second, overlapping setup: adds `wrangler.jsonc` to `main`, wrangler devDependency, repoints the Astro site URL, swaps Vercel refs for Workers. |
+
+**KC-5 is marked Done, assigned to Rather, with his two PRs attached.** It records the main-branch
+config. Luiz's two-Worker deployment — the thing actually serving both instances — is on Linear
+nowhere except the comment added to KC-6 on 2026-08-31.
+
+### Two divergences that need a decision
+
+1. **Two wrangler configs, two Worker names.** `main` → `name: "regen-toolkit"` (compat 2026-08-12).
+   `regen-toolkit-os` → `name: "regen-toolkit-dev"` (compat 2026-08-01). Prod originally deployed
+   by CLI flag with no committed config; Rather then committed one. Which config drives prod now
+   depends on which deploy path ran last — worth confirming before the next prod deploy.
+2. **`main` declares `site: 'https://regen-toolkit.superbenefit.dev'`** — a SuperBenefit domain,
+   set four days after the repo was renamed to `regen-coordination/regen-toolkit`. This is the
+   canonical URL Astro bakes into sitemap, canonical tags and OG metadata on the prod build. It
+   does not change where the site is *served*, but prod is publishing canonical links to a domain
+   that is not Regen Coordination's. Verify against the live site, then decide.
+
+### Untracked on Linear
+
+None of these has an issue on either board:
+
+- Cloudflare account handover / transfer off Luiz's personal account
+- Custom domain on prod — and the `superbenefit.dev` question above
+- Disabling non-production-branch builds on the prod Worker
+- The deploy scripts and operator runbook (built, working, undocumented on the board)
+
+Filing these means filing into Rather's lane as much as Luiz's, so it needs a word with him first
+rather than unilateral creation.
+
+---
+
 ## Dependencies outside our control
 
 - **KC-4** waits on **KC-25** (Afo) — agentic API publish mode writing state to R2.
