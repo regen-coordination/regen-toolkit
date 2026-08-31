@@ -153,10 +153,29 @@ git push -u origin fix/prod-github-org-links
 gh pr create --base main --title "fix(site): point prod GitHub links at regen-coordination, not explorience"
 ```
 
-**⚠ Before merging.** Merging to `main` triggers a **prod deploy** — build-on-push is live. Two
-`wrangler.jsonc` files exist (`main`: `regen-toolkit`, `regen-toolkit-os`: `regen-toolkit-dev`);
-confirm which drives prod first. This is the first prod deploy since the Rather disagreement, so
-it is also the first test of whose hosting model is actually in force.
+**🛑 ON HOLD — do not merge yet (D6/D9, 2026-08-31).** The assumption behind this issue was that
+merging to `main` triggers a prod deploy via build-on-push. **That is now in doubt.**
+
+`regen-toolkit.luizfernandolfsg.workers.dev` **no longer responds** — two 40-second curl timeouts
+plus a WebFetch failure, after serving content earlier the same session. The sibling Worker
+`regen-toolkit-dev` on the same account returns 200 in under a second, so this is not a network or
+account problem. DNS still resolves, but on a different Cloudflare IP range from the working hosts
+— the pattern you get when a hostname matches the `workers.dev` wildcard with no Worker bound to it.
+
+**The live production site is `regen-toolkit.superbenefit.dev`** (200, serving the stale
+`explorience` build). That is not the Worker in question, and it is not on infrastructure this repo
+demonstrably controls.
+
+**Consequence:** merging this PR might fix nothing at all. Before merging, establish (operator, in
+the Cloudflare dashboard — I cannot see it):
+
+1. Does the `regen-toolkit` Worker still exist under the personal account? Deleted, disabled, or
+   workers.dev subdomain turned off?
+2. **What actually builds and serves `regen-toolkit.superbenefit.dev`** — whose account, which
+   project, which branch?
+3. If it deploys from `main`, this PR fixes it. If not, the fix has to go wherever that build lives.
+
+The branch is ready and costs nothing sitting there. Merging blind is the only bad option.
 
 **Deliberately excluded.** Four non-rendered `explorience` refs remain on `main` — `CONTRIBUTING.md`,
 `scripts/sync-issues-to-frontmatter.ts`, `skills/SKILL.md`, `skills/regen-toolkit/SKILL.md` (that
@@ -420,7 +439,8 @@ reply from Afo lives in a Linear comment and never reaches the plan.
 | D3 | How should Heenal's content be handled in the `main` cutover? | Heenal | ❌ not asked — draft ready | **blocked on sending** | KC-34 |
 | D4 | Named counterpart at ReFi DAO for the upstream decision | ReFi DAO | ❌ not asked | — | KC-31 |
 | D5 | Does Durgadas want Integrity Suite Integration populated? | Durgadas | ❌ not asked | — | that project (0 issues) |
-| D6 | Which `wrangler.jsonc` drives prod? | verify directly | ❌ not checked | **do before merging KC-37** | KC-37 merge |
+| D6 | Which `wrangler.jsonc` drives prod? | verify directly | ⚠️ **checked 2026-08-31 — answer is neither, see R4** | **KC-37 merge is on hold** | KC-37 merge |
+| D9 | Is the prod Worker `regen-toolkit` deleted, disabled, or down? Who/what serves `regen-toolkit.superbenefit.dev`? | Cloudflare dashboard — operator only | ❌ not checked | **blocks KC-37** | KC-37, KC-6 |
 | D7 | Repo → Linear or Linear → repo: which is authoritative? | 09-04 council | ❌ not raised | — | the seeding pipeline's future |
 | D8 | Do the four non-rendered `explorience` refs ride along on the KC-37 PR? | operator | ❌ open | — | KC-37 scope |
 
@@ -431,6 +451,7 @@ reply from Afo lives in a Linear comment and never reaches the plan.
 | R1 | Are slice-2 generators/validators ontology-coupled? | **No.** 4 of 5 generators have no framework import; `gen-framework-manifest.mjs` only snapshots the framework API to JSON for the site to display (a rendering bridge, not a type dependency); all four validators are clean. **KC-2 is safe to ship while D1 is open.** | 2026-08-31 |
 | R2 | Are the empty initiative owners a gap? | **No** — deliberate. Afo's structure doc: *"no owner until the council assigns stewardship."* | 2026-08-31 |
 | R3 | Is the prod `explorience` defect real, or agent error? | **Real**, re-verified on `regen-toolkit.superbenefit.dev` after the pushback. Live prod, wrong org links. | 2026-08-31 |
+| R4 | Does merging `main` deploy to the live prod site? | **Unknown — and probably not.** `regen-toolkit.luizfernandolfsg.workers.dev` **stopped responding** on 2026-08-31 (2× 40s curl timeouts + WebFetch failure, after succeeding earlier the same session). Its sibling `regen-toolkit-dev` on the same account returns 200, so this is not an account or network problem. DNS resolves on a different Cloudflare IP range (188.114.96/97) from the two working hosts (172.67/104.21) — consistent with a hostname resolving via the workers.dev wildcard with no Worker bound. **The live production site is `regen-toolkit.superbenefit.dev`, and it is not that Worker.** So neither committed `wrangler.jsonc` is demonstrably what serves prod. | 2026-08-31 |
 
 ---
 
