@@ -248,9 +248,17 @@ From [Structure & templates — Knowledge Commons](https://linear.app/regen-coor
 - **"The promotion gate is sacred: no knowledge object reaches production without review."**
 - Partner needs get logged as **customer requests** on the partner record, with a source link.
 
-**Compliance of the four issues filed on 2026-08-31:** labels conform (one per group). Descriptions
-do **not** follow the Engineering-task shape — they lead with Outcome but omit the explicit
-*Slice/branch* and *Integration points* headers. Worth reshaping to match.
+**Compliance of the four issues filed on 2026-08-31:** labels conformed from the start (one per
+group). Descriptions initially omitted the *Slice/branch* and *Integration points* headers —
+**reshaped 2026-08-31** so KC-34, KC-35, KC-36 and KC-37 all now carry the full Engineering-task
+shape (Outcome / Slice-branch / Integration points / Validation).
+
+**Framework question raised on KC-18** (2026-08-31) rather than as a new issue — it is Afo's call
+as much as ours, and KC-18 is where v0 gets pinned. Three named options: v0 is a deliberate
+reduction of the framework kernel (then `maps_to_core` is the bridge and someone writes the
+collapse mapping); v0 was derived independently (then reconcile before pinning, or maintain two
+type systems over one corpus); or the framework is superseded (defensible, but say it out loud).
+KC-11 is the natural place to do the mapping work, once there is a decision to do it against.
 
 ---
 
