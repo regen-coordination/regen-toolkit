@@ -42,19 +42,21 @@ labels:
   - origin/meeting-260702
   - origin/meeting-260704
   - origin/meeting-260705
+  - origin/meeting-260710
   - origin/meeting-260715
   - origin/meeting-260716
   - origin/meeting-260719
   - origin/meeting-260806
   - origin/meeting-260809
+  - origin/regen-coordination-os
   - seed/repo
   - strategic
 issues:
   - task_id: task-260806-luiz-rather-org-access
     title: Grant Rather GitHub org access
     description: >-
-      **Luiz — grant Rather GitHub org access** — ★ **unblocks the Cloudflare setup**, which is now
-      the whole dev-review surface.
+      **Luiz — grant Rather GitHub org access** — ✅ **DONE 2026-08-27** (operator). Unblocks the
+      Cloudflare handover (account ownership + custom domain) and Rather+Afo onboarding Durgadas.
 
 
       ---
@@ -267,12 +269,14 @@ issues:
     title: Finish Cloudflare Workers hosting handover to Rather
     description: >-
       **Rather — set up Cloudflare Workers hosting** (after org access) — branch previews + built-in
-      CI/CD + merge controls on `main`. **⚡ 2026-08-08: bootstrapped by Luiz** — Option B live under
-      Luiz's personal Cloudflare account: **prod** `regen-toolkit.luizfernandolfsg.workers.dev`
-      (main @ `4bf9cecf`, 124 pages) + **dev** `regen-toolkit-dev.luizfernandolfsg.workers.dev`
-      (regen-toolkit-os, 3,931 pages); `wrangler.jsonc` on the dev branch. **Remaining for Rather:**
-      dashboard git-connection (build-on-push), account handover/transfer, custom domain on prod.
-      See `memory/2026-08-08.md`.
+      CI/CD + merge controls on `main`. **⚡ 2026-08-09: DONE except ownership** — Option B live
+      under Luiz's personal Cloudflare account, **build-on-push working end-to-end**: **prod**
+      `regen-toolkit.luizfernandolfsg.workers.dev` ← `main` · **dev**
+      `regen-toolkit-dev.luizfernandolfsg.workers.dev` ← `regen-toolkit-os` (3,931 pages, 3,780 KB
+      objects). Verified by pushing `b719a949..a38d5d41` → auto-build deployed `c4b209fc` in ~2 min,
+      all routes 200. **Remaining for Rather:** account handover/transfer, custom domain on prod,
+      and disabling non-production-branch builds on the prod Worker. Runbook:
+      [`docs/onboarding/cloudflare-hosting.md`](docs/onboarding/cloudflare-hosting.md).
 
 
       ---
@@ -5222,4 +5226,73 @@ issues:
     assignee_email: luizfernandolfsg@gmail.com
     cycle: null
     parent: task-260615-luiz-build-regenos-website
+    blocked_by: []
+  - task_id: task-260710-luiz-koi-integrate-vs-defer
+    title: Decide KOI integrate-now vs defer-interoperable for the ReFi DAO knowledge commons
+    description: >-
+      ReFi DAO knowledge commons — continue the joint review with Monty; decide KOI
+      ("CAR"/BlockScience, Regen Network) integrate-now vs defer-interoperable. Gregory pinged.
+      Distinct from task-260507-luiz-decide-task-manager-vs-koi-bridge, which is the narrower Task
+      Manager vs KOI-bridge build decision.
+
+
+      ---
+
+
+      ```
+
+      source: regen-coordination-os/HEARTBEAT.md § Toolkit, Discourse, budget & wind-down (260710 —
+      cadence now BIWEEKLY) · `task-260710-luiz-koi-integrate-vs-defer`
+
+      repo: regen-coordination/regen-toolkit @ regen-toolkit-os
+
+      refs: regen-coordination-os/packages/operations/meetings/260710 Regen Coordination Council
+      Sync.md
+
+      ```
+    project: org-os-framework
+    labels:
+      - layer/10
+      - origin/meeting-260710
+      - origin/regen-coordination-os
+      - seed/repo
+    estimate: 2
+    assignee_email: luizfernandolfsg@gmail.com
+    cycle: null
+    parent: null
+    blocked_by: []
+  - task_id: task-260710-luiz-three-way-toolkit-call
+    title: Set up the three-way toolkit call with Matt and Rather
+    description: >-
+      Set up a three-way toolkit call with Matt + Rather. The 260710 precondition was "confirm
+      Rather's interests first (likely GeoBrowser)" — that has since been met
+      (task-260716-luiz-geo-protocol-scoping, task-260615-luiz-review-geo-browser), and Rather now
+      has org access and active collaboration items. Verify this is still wanted before scheduling;
+      it may be subsumed by existing coordination.
+
+
+      ---
+
+
+      ```
+
+      source: regen-coordination-os/HEARTBEAT.md § Toolkit, Discourse, budget & wind-down (260710 —
+      cadence now BIWEEKLY) · `task-260710-luiz-three-way-toolkit-call`
+
+      repo: regen-coordination/regen-toolkit @ regen-toolkit-os
+
+      refs: regen-coordination-os/packages/operations/meetings/260710 Regen Coordination Council
+      Sync.md
+
+      ```
+    project: org-os-framework
+    labels:
+      - layer/10
+      - origin/meeting-260710
+      - origin/regen-coordination-os
+      - seed/repo
+    estimate: 1
+    assignee_email: luizfernandolfsg@gmail.com
+    cycle: null
+    parent: null
     blocked_by: []

@@ -69,9 +69,9 @@ export const PROJECT_DEFS = [
 //    A fenced code block sidesteps all of that at once: it always opens a new block regardless
 //    of what precedes it (unlike the setext case above), so it can't misparse the footer's own
 //    text, and it preserves the one-field-per-line layout exactly as authored.
-function renderFooter({ section, taskId, refs, ownerName, unassigned }) {
+function renderFooter({ file, section, taskId, refs, ownerName, unassigned }) {
   const lines = [
-    `source: HEARTBEAT.md § ${section} · \`${taskId}\``,
+    `source: ${file} § ${section} · \`${taskId}\``,
     `repo: ${REPO_SLUG} @ ${BRANCH}`,
     `refs: ${refs && refs.length > 0 ? refs.join(", ") : "none"}`,
   ];
@@ -90,9 +90,15 @@ function renderFooter({ section, taskId, refs, ownerName, unassigned }) {
 // HEARTBEAT.md — heartbeat.find() correctly returns undefined for those, and task.title (which
 // is itself a real, human-written description of the sub-task, not a placeholder) is a useful
 // fallback rather than an empty body.
+// source.text is the third case: an item ported from another instance's backlog (see the
+// 2026-08-31 handoff routing toolkit work out of regen-coordination-os). It has no entry in
+// this repo's HEARTBEAT.md and it is not a decomposition child, so both branches above would
+// collapse the body to the bare title and lose the original prose — the only text that lets a
+// reviewer judge what the item actually is. A matching HEARTBEAT item still wins, so this can
+// never shadow live local text.
 function describeBody(task, heartbeat) {
   const item = (heartbeat ?? []).find((h) => h.id === task.id);
-  return item?.text || task.title;
+  return item?.text || task.source?.text || task.title;
 }
 
 export function buildManifest({ tasks, members, heartbeat }) {
@@ -102,6 +108,12 @@ export function buildManifest({ tasks, members, heartbeat }) {
     const labels = deriveLabels(task, { assigneeResolved });
 
     const footer = renderFooter({
+      // Defaults to this repo's HEARTBEAT.md, which is where all 172 original records came
+      // from. Cross-instance items (e.g. toolkit work ported out of regen-coordination-os)
+      // carry their own source.file, and the footer must name it — an issue that claims the
+      // wrong origin is worse than one that claims none, because it sends a reviewer looking
+      // for a section that does not exist here.
+      file: task.source?.file ?? "HEARTBEAT.md",
       section: task.source?.section ?? "unknown",
       taskId: task.id,
       refs: task.source?.refs ?? [],

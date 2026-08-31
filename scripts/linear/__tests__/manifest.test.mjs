@@ -200,3 +200,65 @@ test("an owner absent from the member registry does not throw and yields no assi
   assert.ok(issue.labels.includes("needs-assignee"));
   assert.match(issue.description, /owner of record: nobody-real \(no Linear account yet\)/);
 });
+
+// Cross-instance provenance. The 2026-08-31 handoff routes toolkit-workstream items out of
+// regen-coordination-os's HEARTBEAT.md into this registry, and its whole argument for doing so
+// by hand rests on the footer making that origin visible. renderFooter used to hardcode the
+// literal "HEARTBEAT.md" and ignore task.source.file, so a ported item claimed it came from
+// this repo's heartbeat — not merely missing provenance but asserting the wrong one, on an
+// issue whose text no reviewer could trace back to a real section here.
+test("footer names the source file from the task record, not a hardcoded HEARTBEAT.md", () => {
+  const { issues } = buildManifest({
+    tasks: [
+      task({
+        id: "task-260710-luiz-rc-org-repo-migration",
+        source: {
+          file: "../../HEARTBEAT.md",
+          section: "Toolkit, Discourse, budget & wind-down (260710 — cadence now BIWEEKLY)",
+          refs: [],
+        },
+      }),
+    ],
+    members,
+    heartbeat: [],
+  });
+  assert.match(issues[0].description, /source: \.\.\/\.\.\/HEARTBEAT\.md § Toolkit, Discourse/);
+  assert.doesNotMatch(issues[0].description, /source: HEARTBEAT\.md §/);
+});
+
+test("footer source file still defaults to HEARTBEAT.md when the task record omits it", () => {
+  const { issues } = buildManifest({
+    tasks: [task({ source: { section: "s", refs: [] } })],
+    members,
+    heartbeat: [],
+  });
+  assert.match(issues[0].description, /source: HEARTBEAT\.md § s/);
+});
+
+// Cross-instance items have no matching entry in this repo's HEARTBEAT.md, so describeBody's
+// fallback made the issue body identical to its title — the ported prose (which is the only
+// reason a reviewer can tell what the item means) was dropped. source.text carries it.
+test("description body uses source.text for items with no HEARTBEAT match", () => {
+  const { issues } = buildManifest({
+    tasks: [
+      task({
+        id: "task-260710-luiz-koi-integrate-vs-defer",
+        title: "Decide KOI integrate-now vs defer-interoperable",
+        source: { file: "regen-coordination-os/HEARTBEAT.md", section: "s", refs: [], text: "Continue the joint review with Monty; decide KOI integrate-now vs defer-interoperable." },
+      }),
+    ],
+    members,
+    heartbeat: [],
+  });
+  assert.match(issues[0].description, /Continue the joint review with Monty/);
+});
+
+test("a matching HEARTBEAT item still wins over source.text", () => {
+  const { issues } = buildManifest({
+    tasks: [task({ source: { file: "HEARTBEAT.md", section: "s", refs: [], text: "ported prose" } })],
+    members,
+    heartbeat: [heartbeatItem({ text: "the heartbeat text" })],
+  });
+  assert.match(issues[0].description, /the heartbeat text/);
+  assert.doesNotMatch(issues[0].description, /ported prose/);
+});

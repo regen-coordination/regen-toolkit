@@ -2637,3 +2637,54 @@ tasks:
       file: HEARTBEAT.md
       section: RegenOS Documentation + Public Website
       refs: []
+  # Ported from regen-coordination-os per the 2026-08-31 handoff (council action item,
+  # 260828). Scope is deliberately narrow: the council piloted Linear on the toolkit and
+  # Artizen workstreams only, and did not ratify it — so the ~122-item RC OS backlog stays
+  # where it is. Of the toolkit-workstream items the handoff named, all but these two were
+  # already tracked here under later wording (260716 / 260827 sessions); see the session
+  # memory for the item-by-item reconciliation.
+  - id: task-260710-luiz-koi-integrate-vs-defer
+    title: Decide KOI integrate-now vs defer-interoperable for the ReFi DAO knowledge commons
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 2
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260710
+      - origin/regen-coordination-os
+    blocked_by: []
+    source:
+      file: regen-coordination-os/HEARTBEAT.md
+      section: Toolkit, Discourse, budget & wind-down (260710 — cadence now BIWEEKLY)
+      text: >-
+        ReFi DAO knowledge commons — continue the joint review with Monty; decide KOI
+        ("CAR"/BlockScience, Regen Network) integrate-now vs defer-interoperable. Gregory
+        pinged. Distinct from task-260507-luiz-decide-task-manager-vs-koi-bridge, which is
+        the narrower Task Manager vs KOI-bridge build decision.
+      refs:
+        - regen-coordination-os/packages/operations/meetings/260710 Regen Coordination Council Sync.md
+  - id: task-260710-luiz-three-way-toolkit-call
+    title: Set up the three-way toolkit call with Matt and Rather
+    owner: luiz
+    project: org-os-framework
+    layer: 10
+    estimate: 1
+    parent: null
+    cycle: null
+    labels:
+      - origin/meeting-260710
+      - origin/regen-coordination-os
+    blocked_by: []
+    source:
+      file: regen-coordination-os/HEARTBEAT.md
+      section: Toolkit, Discourse, budget & wind-down (260710 — cadence now BIWEEKLY)
+      text: >-
+        Set up a three-way toolkit call with Matt + Rather. The 260710 precondition was
+        "confirm Rather's interests first (likely GeoBrowser)" — that has since been met
+        (task-260716-luiz-geo-protocol-scoping, task-260615-luiz-review-geo-browser), and
+        Rather now has org access and active collaboration items. Verify this is still
+        wanted before scheduling; it may be subsumed by existing coordination.
+      refs:
+        - regen-coordination-os/packages/operations/meetings/260710 Regen Coordination Council Sync.md
