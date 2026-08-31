@@ -187,6 +187,73 @@ only while nobody runs the seed.
 
 ---
 
+## The framework build is barely legible on the board
+
+`@regen-commons/toolkit-framework` **0.2.0** is fully built (SP0–SP10): 34/34 tests, 21 schemas,
+15 frozen core types + 31 extensions, 10 layer entry schemas, the compatibility engine, 3 agentic
+skills, `packages/org-os-kms`, a JSON-LD generator, and all R1–R10 master-doc proposals resolved.
+Its own package description calls it *"the operational distillation of the master doc; adopt the
+package, not the 30k-line doc."*
+
+**On Linear it appears as two issues, both mine, both unstarted:**
+
+- **KC-1** — "Merge slice 1: framework & schemas with existing tests"
+- **KC-11** — "Validate the consolidated engine package; log needed adjustments"
+
+Nothing on the board conveys that it exists as a built, tested system rather than a thing to be
+merged and checked.
+
+### And the V1 lane is independently deriving the same ground
+
+| Concern | Repo framework 0.2.0 | V1 lane on the board |
+|---|---|---|
+| Type system | 15 frozen core types + 31 extensions | **KC-18** — v0 ontology, 11 classes / 12 predicates |
+| Schema format | YAML + JSON-LD generator | **KC-10** — Zod, object-specific variants on a shared base |
+| Ingestion | work-order pipeline, agents draft → CLI accept gate | **KC-13** — ingestion filter, validate & summarize before human review |
+| State axes | 3-axis canonical state model (R1), review-maturity (K1) | `flowState` ore→craft→struck · `workflowState` proposed→reviewed→published |
+| Promotion gate | CLI accept gate + named-reviewer review | Onchain **Geo DAO vote**, quorum 2, agent proposes and abstains |
+| State layer | repo + generated artifacts | **Geo canonical → R2 → three surfaces** |
+
+These are not the same system. The V1 design is coherent and in progress, with a clear end-to-end
+milestone. But **the framework is not visible to it as an input**, and KC-18 says the v0 baseline
+"already exists" without referencing where the framework's kernel sits relative to it.
+
+The risk is not that V1 is wrong — it is that a built, tested distillation of Matty's master doc
+gets re-derived instead of adopted, or silently superseded without anyone deciding to supersede it.
+**That decision should be made explicitly.** It is the framework-side twin of the repo/Linear
+authority question.
+
+---
+
+## How to plug in properly — Afo's conventions
+
+From [Structure & templates — Knowledge Commons](https://linear.app/regen-coordination/document/structure-and-templates-knowledge-commons-52267bb03b7b) (Afo, 2026-08-13). Follow these:
+
+- **Initiatives** are year-scoped workstreams, not tasks. **No owner until the council assigns
+  stewardship.** Milestones live at *project* level, never initiative level.
+- **Four project types**, each with a required description shape: **Build** (Outcome → Approach →
+  Milestones → Definition of done), **Campaign**, **Synthesis**, **Process**. Outcome states what
+  changes for contributors and users — not what gets built.
+- **Issue templates:** *Knowledge object* (Source / Commons Layer / Flow stage / Schema /
+  Promotion criteria / Where it lands) · *Engineering task* (**Outcome / Slice-branch /
+  Integration points / Validation**) · *Session-demo* (Purpose / Audience / Prep / Artifact).
+- **Labels — one per group:** one **Capital** (Intellectual / Social / Material — "the singular tag
+  is deliberate discipline"), one **Work Type**, optionally one **Commons Layer**.
+- **Estimates:** exponential, 1 = small, 8 = big, **never 16** — break into sub-issues. *This is
+  the same rule as `skills/linear-sync/SKILL.md`.* The two systems already agree here.
+- **Cycles:** 2 weeks, starting Friday after Thursday calls.
+- **Log time in issue comments** for retro-compensated work.
+- **Linear documents are internal.** Anything external-facing lives on the hub or a Google Doc,
+  linked from the issue.
+- **"The promotion gate is sacred: no knowledge object reaches production without review."**
+- Partner needs get logged as **customer requests** on the partner record, with a source link.
+
+**Compliance of the four issues filed on 2026-08-31:** labels conform (one per group). Descriptions
+do **not** follow the Engineering-task shape — they lead with Outcome but omit the explicit
+*Slice/branch* and *Integration points* headers. Worth reshaping to match.
+
+---
+
 ## Open questions for the 2026-09-04 council
 
 1. **Which direction is authoritative** — repo → Linear, or Linear → repo? Today it is ambiguous,
@@ -194,8 +261,13 @@ only while nobody runs the seed.
 2. **Does the seeding pipeline continue?** If Linear is the source of truth it needs an `adopt`
    command mapping existing issues onto registry ids, or it should be retired. Leaving it as-is is
    the risky option, because it looks runnable and is not.
-3. **All four initiatives have `owner: null`** — including *Knowledge Commons*, which houses every
-   toolkit project. Directly relevant to the named-owner ask.
-4. **Integrity Suite Integration has zero issues** and is the only project attached to **no
+3. ~~All four initiatives have `owner: null`~~ — **corrected 2026-08-31.** This is *by design*.
+   Afo's structure doc states: *"initiatives are year-scoped workstreams, not tasks. No owner
+   until the council assigns stewardship."* The council still needs to assign it, but the empty
+   field is the convention working, not neglect.
+4. **Where does `toolkit-framework` 0.2.0 stand relative to the v0 ontology?** Adopted as the
+   kernel, superseded by the V1 design, or running in parallel? All three are defensible; drifting
+   is not. This is the same authority question as (1), on the semantic layer.
+5. **Integrity Suite Integration has zero issues** and is the only project attached to **no
    initiative**. Durgadas is its lead. Ask him whether he wants it populated — five open CSIS
    records and two 08-27 commitments sit behind it — rather than filling it for him.
