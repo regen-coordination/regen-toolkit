@@ -12,6 +12,21 @@ _A living checklist of active coordination tasks. Agents consult this on every s
 
 > **2026-06-16 checkpoint.** Gap-fill (260521 + 260604 biweeklies) processed; **new master doc 2026-06-15 working iteration** is canonical (30,847 lines — integration pass, 10-layer core stable; see [`docs/MASTER-DOC-CHANGES-2026-06-15.md`](docs/MASTER-DOC-CHANGES-2026-06-15.md)); **resource DB V3** staged at [`data/resources/`](data/resources/). **Convergence is parked behind an operator checkpoint** (site merge, branch cleanup, framework/instance split, full resource lift) — see ⏸ section below.
 
+### Repo hygiene — deferred by decision _(★ NEW 2026-09-10)_
+
+Two operational items surfaced at close-out on 2026-09-10 and **deliberately held** — recorded so they
+are not re-litigated each session. Context: `memory/2026-09-10.md`.
+
+- [ ] **Decide on the push — 51 commits unpushed** (2026-08-08 → 2026-08-31) to `origin` =
+      `regen-coordination/regen-toolkit` (the **shared org repo**; `fork` is personal). `regen-toolkit-os`
+      is a **deploying branch** — pushing fires the Cloudflare **dev** Worker *and* a **GitHub Pages
+      preview**. Prod is unaffected (deploys from `main`). **3+ weeks of work currently exists only on
+      this machine.** — `task-260910-luiz-push-decision`
+- [ ] **Resolve the `kb-graph/` tree** — dirty since before 2026-08-28: **2,196 untracked · 54 modified ·
+      14 deleted** against 880 tracked files. Likely an `npm run knowledge` regeneration, but provenance
+      is unconfirmed and **the 14 deletions are unexplained**. Confirm intent before staging. —
+      `task-260910-luiz-kbgraph-resolve`
+
 ### 2026-08-27 Knowledge Commons Sync — V1 scope frozen, three Linear projects, org-os on a branch _(★ NEW 2026-08-28)_
 
 Notes: [`260827 Regen Knowledge Commons Sync.md`](packages/operations/meetings/260827%20Regen%20Knowledge%20Commons%20Sync.md). Chair: Monty. Absent: Corey.
@@ -428,7 +443,7 @@ Pulse 1: 2026-05-09–10. Two-month hackathon follows. Toolkit reframed as a *co
 
 ---
 
-_Last updated: 2026-08-31 (merged `feature/linear-seeding` into `regen-toolkit-os` — the Linear pipeline, `data/tasks.yaml` and the task-id scheme are now on the working branch)_
+_Last updated: 2026-09-10 (close-out: 260827 processing verified committed; push of 51 commits and the `kb-graph/` tree both deferred by decision — see `memory/2026-09-10.md`)_
 
 _Prior: 2026-08-28 (catch-up: Rather org access done; knowledge-commons shell repo surfaced; Matty reply drafted — repo-role alignment + clean-slate `main` spec are next)_
 
