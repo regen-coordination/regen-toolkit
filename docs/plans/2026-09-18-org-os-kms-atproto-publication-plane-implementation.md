@@ -2,73 +2,79 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+**Revision:** 2 (2026-09-18) — after independent review. Folds in the refi-dao-commons pilot's gate composition; keys the gate on the adapter's `schema`, not `object.type`; makes the lifecycle async; fixes `--dry`; guards against empty peers; forces pulled objects to `not-public-yet`; upserts pulls by origin URI.
+
 **Goal:** Publish every publishable knowledge object from `data/kb/` to the instance's AT Proto repo and to a static JSON-LD surface, and pull peers' repos and Open Haven back into the review queue — all from `close`.
 
-**Architecture:** Git/yaml stays the editorial plane. A pure gate (`isPublishable`) selects objects; Lexicons are generated from the framework's yaml schemas; a `publish` op diffs against a manifest and writes to the PDS (via a fetch-based XRPC client) and to `public/api/`. A framework-side `runConnector` orchestrates `describe → pull → map → store` for an `atproto` connector (peers) and a `static-json` connector (Open Haven). Everything pulled lands at `maturity: raw`.
+**Architecture:** Git/yaml stays the editorial plane. A pure gate (`isPublishable`, keyed on schema + `public_use`) plus an optional stricter instance gate selects objects; Lexicons are generated from the framework's yaml schemas; a `publish` op diffs against a manifest and writes to the PDS (fetch-based XRPC client) and to `public/api/`. A framework-side `runConnector` orchestrates `describe → pull → map → store` for an `atproto` connector (peers) and a `static-json` connector (Open Haven). Everything pulled lands at `maturity: raw`, `public_use: not-public-yet`.
 
-**Tech Stack:** Node ≥ 18 (native `fetch`, `crypto.randomUUID`), `node:test` + `node:assert/strict`, `js-yaml`. **No new dependencies** — both packages have zero devDependencies today and the XRPC surface needed is four endpoints.
+**Tech Stack:** Node ≥ 18 (native `fetch`, `crypto.randomUUID`), `node:test` + `node:assert/strict`, `js-yaml`. **No new dependencies.**
 
 **Spec:** `docs/plans/2026-09-18-org-os-kms-atproto-publication-plane-design.md` · ADR: `docs/adr/0001-atproto-as-publication-plane.md` · Glossary: `CONTEXT.md`
 
-**Companion plan:** `refi-dao-os/docs/kms/2026-09-18-refi-dao-commons-atproto-pilot.md` — the first real publisher. Its Tasks A (publishable-type default → 10, opt-in for `source-system`/`public-use-boundary`) and B (instance gate hook `publish.gate`, `publish.static: false`) amend Tasks 1, 3, 5, 10, 12 here and should be executed right after Task 15, before any instance adopts. Proving-ground order is reversed by that plan: refi-dao-commons publishes, regen-toolkit pulls.
+**Companion plan:** `refi-dao-os/docs/kms/2026-09-18-refi-dao-commons-atproto-pilot.md` — the first real publisher. Its former Tasks A/B are now Tasks 1 and 11 here. Proving-ground order: refi-dao-commons publishes, regen-toolkit pulls.
 
 ## Global Constraints
 
-- Publication gate: `type ∈ PUBLISHABLE_TYPES` (12 types, **never `person`**) ∧ `public_use ∈ {ok-with-caveat, source-linked-unreviewed, reviewed-for-explanation, reviewed-for-guidance}`. Maturity is not a gate.
-- NSID authority: `xyz.regencoordination.kb` (from `kms.yaml.atproto.nsid_authority`; never hard-coded outside config/tests).
-- Identity: `did:plc`; the DID comes from `kms.yaml.atproto.did`; credentials only from env `ATPROTO_APP_PASSWORD`.
-- `rkey = object.id` (UUIDv4). Objects without `id` get one minted at first publish, written back to yaml.
-- Never delete locally on a peer's delete: flag with `maturity: held` + `review_needs`.
-- Records: no floats (yaml integers only), ≤ 1 MB serialized, `$type` = NSID.
-- `write: true` ops fail hard (executor policy). `NOT_IMPLEMENTED` and unreachable-peer are the only per-item continue-on-error cases.
-- org-os-kms imports the framework **only** through `src/framework.mjs`.
-- Test runner: `node --test` from the package dir. Baseline before starting: `cd packages/org-os-kms && npm test` → 65 pass; `cd packages/toolkit-framework && npm test` → all pass. Both must stay green after every task.
-- Plan deviation from spec, deliberate: no `atproto` **storage adapter** is built. The publish op needs diff + `swapRecord` + delete, which the 5-method adapter contract (idempotent-by-slug `store`) cannot express; wrapping the client in an adapter would add a layer nothing calls. Revisit only if a caller appears.
+- **Schema, not `type`.** The adapter's `schema` (the yaml file an object lives in) identifies an object's kind everywhere in this plan. `object.type` is *not* reliable: `source-system` objects carry their *kind* there (`repo`, `blog`, `docs-site`, …, an enum in `schemas/source-system.yaml`), and all 34 `public-use-boundary` objects in this repo have no `type` at all. Every `isPublishable`, `nsidFor`, grouping, and gate-context call takes `item.schema`.
+- Publication gate (framework floor): `schema ∈ publishableTypes(config)` ∧ `public_use ∈ {ok-with-caveat, source-linked-unreviewed, reviewed-for-explanation, reviewed-for-guidance}`. Default types = 10 (never `person`); `source-system` and `public-use-boundary` are opt-in per instance. Maturity is not a gate. An instance gate (`kms.yaml.publish.gate`) may only narrow.
+- NSID authority from `kms.yaml.atproto.nsid_authority` (`xyz.regencoordination.kb`); never hard-coded outside config/tests.
+- Identity `did:plc`; DID from `kms.yaml.atproto.did`; credential only from env `ATPROTO_APP_PASSWORD`.
+- `rkey = object.id` (UUIDv4), minted at first publish **only for objects that passed every gate**, written back to yaml. `--dry` mints nothing.
+- Never delete locally on a peer's delete: `maturity: held` + `review_needs`.
+- Records: no floats, ≤ 1 MB serialized, `$type` = NSID.
+- `write: true` ops fail hard (executor policy). Per-item continue-on-error only for `NOT_IMPLEMENTED`, unreachable peer, and a per-record `swapRecord` conflict.
+- org-os-kms imports the framework **only** through `src/framework.mjs` (relative sibling path — see Task 5 note on installs).
+- `public/api/**` and `public/.well-known/` are **committed** (regenerated on `close`; `git diff` of them is the publication change feed, same pattern as refi-dao-os's `commons/content/`). Expect ~700 files at first publish.
+- Test runner: `node --test` from the package dir. **Baseline: org-os-kms 44 pass, toolkit-framework 125 pass.** Both stay green after every task.
+- Deviation from spec, deliberate: no `atproto` storage adapter (the 5-method contract cannot express diff + `swapRecord` + delete).
 
 ## File map
 
 ```
 packages/toolkit-framework/
-  src/publishable.mjs                 NEW  gate constants + isPublishable
-  src/lexicon.mjs                     NEW  yaml schema → Lexicon doc; validateRecord
+  src/publishable.mjs                 NEW  gate constants, publishableTypes, isPublishable(object,{schema,types})
+  src/lexicon.mjs                     NEW  yaml schema → Lexicon; validateRecord; toRecord
   src/connector.mjs                   NEW  Connector contract + runConnector
   schemas/frontmatter.yaml            MOD  +id, grc20Id, sourceUri, viaUri
-  lexicons/xyz.regencoordination.kb.*.json  NEW (generated, committed)
-  scripts/gen-lexicons.mjs            NEW  regenerates lexicons/
-  test/publishable.test.mjs, lexicon.test.mjs, connector.test.mjs  NEW
+  lexicons/*.json                     NEW  12 generated (10 default + 2 opt-in), committed
+  scripts/gen-lexicons.mjs            NEW
+  test/{publishable,lexicon,connector}.test.mjs  NEW
 
 packages/org-os-kms/
-  src/framework.mjs                   MOD  re-export new framework seams
-  src/identity.mjs                    NEW  ensureIds (mint id + grc20Id, write back)
-  src/refs.mjs                        NEW  rewriteRefs (slug → origin AT-URI)
-  src/manifest.mjs                    NEW  read/write data/kms-published.json
-  src/atproto/client.mjs              NEW  fetch-based XRPC client
-  src/atproto/publish.mjs             NEW  planPublish (pure) + applyPublish
-  src/atproto/connector.mjs           NEW  'atproto' connector
-  src/static/surface.mjs              NEW  public/api/** + public/.well-known/
-  src/connectors/index.mjs            NEW  connector registry
-  src/connectors/static-json/index.mjs     NEW  'static-json' connector
-  src/connectors/static-json/openhaven.mjs NEW  pure mapper
+  src/executor.mjs, src/cli.mjs       MOD  async lifecycle; boolean flags
+  src/framework.mjs                   MOD  re-exports
+  src/manifest.mjs                    NEW
+  src/identity.mjs                    NEW  ensureIds over pre-selected items
+  src/refs.mjs                        NEW
+  src/gate.mjs                        NEW  instance gate hook
+  src/atproto/{client,publish,connector}.mjs  NEW
+  src/static/surface.mjs              NEW
+  src/connectors/index.mjs            NEW
+  src/connectors/static-json/{index,openhaven}.mjs  NEW
   src/ops.mjs                         MOD  +publish, +ingest.pull
-  src/bind.mjs                        MOD  close lifecycle
+  src/bind.mjs + profile/profile.yaml MOD  close lifecycle (both, in the same commit)
+  src/config.mjs                      MOD  defaults
   docs/CONNECTORS.md                  NEW
-  test/*.test.mjs                     NEW one per module; test/fixtures/openhaven/*.json
+  test/*.test.mjs, test/fixtures/openhaven/*.json  NEW/MOD
 
 repo root
-  kms.yaml                            MOD  +atproto, +geo, +connectors, +publish
-  .env.example                        MOD  +ATPROTO_APP_PASSWORD
+  kms.yaml, .env.example              MOD
+  public/api/**, public/.well-known/  NEW (generated, committed)
 ```
 
 ---
 
-### Task 1: Publication gate
+### Task 1: Publication gate (schema-keyed, opt-in types)
 
 **Files:**
 - Create: `packages/toolkit-framework/src/publishable.mjs`
 - Test: `packages/toolkit-framework/test/publishable.test.mjs`
 
 **Interfaces:**
-- Produces: `PUBLISHABLE_TYPES: string[]`, `PUBLISHABLE_PUBLIC_USE: string[]`, `isPublishable(object) → boolean`
+- `PUBLISHABLE_TYPES` (10), `OPT_IN_TYPES = ['source-system','public-use-boundary']`, `ALL_TYPES = [...PUBLISHABLE_TYPES, ...OPT_IN_TYPES]`, `PUBLISHABLE_PUBLIC_USE` (4)
+- `publishableTypes(config = {}) → string[]` — default ∪ `config.publish?.types_opt_in` ∖ `config.publish?.types_opt_out`; throws on `person` or unknown
+- `isPublishable(object, { schema = object?.type, types = PUBLISHABLE_TYPES } = {}) → boolean`
 
 - [ ] **Step 1: Write the failing test**
 
@@ -76,13 +82,14 @@ repo root
 // packages/toolkit-framework/test/publishable.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { PUBLISHABLE_TYPES, PUBLISHABLE_PUBLIC_USE, isPublishable } from '../src/publishable.mjs';
+import { PUBLISHABLE_TYPES, OPT_IN_TYPES, ALL_TYPES, PUBLISHABLE_PUBLIC_USE, publishableTypes, isPublishable } from '../src/publishable.mjs';
 import { listSchemas, loadSchema } from '../src/index.mjs';
 
-test('publishable set is the 12 hub types minus person', () => {
-  assert.equal(PUBLISHABLE_TYPES.length, 12);
-  assert.ok(!PUBLISHABLE_TYPES.includes('person'));
-  for (const t of PUBLISHABLE_TYPES) assert.ok(listSchemas().includes(t), `schema missing: ${t}`);
+test('default set is 10 schemas, never person; opt-in adds source-system + public-use-boundary', () => {
+  assert.equal(PUBLISHABLE_TYPES.length, 10);
+  assert.ok(!ALL_TYPES.includes('person'));
+  assert.deepEqual(OPT_IN_TYPES, ['source-system', 'public-use-boundary']);
+  for (const t of ALL_TYPES) assert.ok(listSchemas().includes(t), `schema missing: ${t}`);
 });
 
 test('every PUBLISHABLE_PUBLIC_USE value is a real axis value', () => {
@@ -90,53 +97,70 @@ test('every PUBLISHABLE_PUBLIC_USE value is a real axis value', () => {
   for (const v of PUBLISHABLE_PUBLIC_USE) assert.ok(axis.includes(v), v);
 });
 
-test('isPublishable: type × public_use table', () => {
-  assert.equal(isPublishable({ type: 'resource', public_use: 'ok-with-caveat' }), true);
+test('publishableTypes composes opt-in/opt-out; refuses person and unknown', () => {
+  assert.equal(publishableTypes({}).length, 10);
+  const t = publishableTypes({ publish: { types_opt_in: ['source-system'], types_opt_out: ['signal'] } });
+  assert.ok(t.includes('source-system') && !t.includes('signal'));
+  assert.throws(() => publishableTypes({ publish: { types_opt_in: ['person'] } }), /person/);
+  assert.throws(() => publishableTypes({ publish: { types_opt_in: ['nope'] } }), /unknown/);
+});
+
+test('isPublishable is keyed on schema, not object.type', () => {
+  const ok = 'ok-with-caveat';
+  assert.equal(isPublishable({ type: 'resource', public_use: ok }), true);
   assert.equal(isPublishable({ type: 'resource', public_use: 'internal-only' }), false);
   assert.equal(isPublishable({ type: 'resource', public_use: 'requires-community-consent' }), false);
-  assert.equal(isPublishable({ type: 'person', public_use: 'reviewed-for-guidance' }), false);
   assert.equal(isPublishable({ type: 'resource' }), false);
   assert.equal(isPublishable(null), false);
-  assert.equal(isPublishable({ type: 'resource', public_use: 'ok-with-caveat', maturity: 'raw' }), true, 'maturity is not a gate');
+  assert.equal(isPublishable({ type: 'resource', public_use: ok, maturity: 'raw' }), true, 'maturity is not a gate');
+  // a source-system card: object.type is its KIND ('blog'); schema says what it is
+  const card = { type: 'blog', public_use: ok };
+  assert.equal(isPublishable(card, { schema: 'source-system' }), false, 'opt-in type off by default');
+  assert.equal(isPublishable(card, { schema: 'source-system', types: publishableTypes({ publish: { types_opt_in: ['source-system'] } }) }), true);
+  assert.equal(isPublishable({ tier: 'public-with-caveat', public_use: ok }, { schema: 'public-use-boundary' }), false);
+  assert.equal(isPublishable({ title: 'x', public_use: ok }, { schema: 'person' }), false);
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [ ] **Step 2: Run** `cd packages/toolkit-framework && node --test test/publishable.test.mjs` → FAIL, module not found
 
-Run: `cd packages/toolkit-framework && node --test test/publishable.test.mjs`
-Expected: FAIL — `Cannot find module '../src/publishable.mjs'`
-
-- [ ] **Step 3: Write minimal implementation**
+- [ ] **Step 3: Implement**
 
 ```js
-// packages/toolkit-framework/src/publishable.mjs — the publication gate (spec Q9/Q11).
-// One definition; the publish op, the static surface and every test use it.
+// packages/toolkit-framework/src/publishable.mjs — the publication gate (floor). Keyed on the adapter's schema, never object.type.
 export const PUBLISHABLE_TYPES = Object.freeze([
   'claim-evidence', 'concept-lineage', 'encyclopedia-entry', 'implementation-record',
-  'option-entry', 'organization', 'public-use-boundary', 'relationship-record',
-  'resource', 'signal', 'source-system', 'track',
+  'option-entry', 'organization', 'relationship-record', 'resource', 'signal', 'track',
 ]);
-
+export const OPT_IN_TYPES = Object.freeze(['source-system', 'public-use-boundary']);
+export const ALL_TYPES = Object.freeze([...PUBLISHABLE_TYPES, ...OPT_IN_TYPES]);
 export const PUBLISHABLE_PUBLIC_USE = Object.freeze([
   'ok-with-caveat', 'source-linked-unreviewed', 'reviewed-for-explanation', 'reviewed-for-guidance',
 ]);
 
-export function isPublishable(object) {
+export function publishableTypes(config = {}) {
+  const optIn = config.publish?.types_opt_in ?? [];
+  const optOut = config.publish?.types_opt_out ?? [];
+  for (const t of [...optIn, ...optOut]) {
+    if (t === 'person') throw new Error('person is never publishable');
+    if (!ALL_TYPES.includes(t)) throw new Error(`unknown publishable type: ${t}`);
+  }
+  return [...new Set([...PUBLISHABLE_TYPES, ...optIn])].filter((t) => !optOut.includes(t));
+}
+
+export function isPublishable(object, { schema = object?.type, types = PUBLISHABLE_TYPES } = {}) {
   if (!object || typeof object !== 'object') return false;
-  return PUBLISHABLE_TYPES.includes(object.type) && PUBLISHABLE_PUBLIC_USE.includes(object.public_use);
+  return types.includes(schema) && PUBLISHABLE_PUBLIC_USE.includes(object.public_use);
 }
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
-
-Run: `cd packages/toolkit-framework && node --test test/publishable.test.mjs`
-Expected: PASS (3 tests). If the axis test fails on `loadSchema('review-maturity').axes.public_use.values`, open `schemas/review-maturity.yaml` and fix the path in the test to the real key — `isValid()` in `src/index.mjs:37` shows the exact access path.
+- [ ] **Step 4: Run** → PASS (4 tests). If `loadSchema('review-maturity').axes.public_use.values` is not the real path, match `isValid()` in `src/index.mjs:37`.
 
 - [ ] **Step 5: Commit**
 
 ```bash
 git add packages/toolkit-framework/src/publishable.mjs packages/toolkit-framework/test/publishable.test.mjs
-git commit -m "feat(framework): publication gate — PUBLISHABLE_TYPES × PUBLISHABLE_PUBLIC_USE"
+git commit -m "feat(framework): schema-keyed publication gate with opt-in types"
 ```
 
 ---
@@ -147,17 +171,14 @@ git commit -m "feat(framework): publication gate — PUBLISHABLE_TYPES × PUBLIS
 - Modify: `packages/toolkit-framework/schemas/frontmatter.yaml`
 - Test: `packages/toolkit-framework/test/publishable.test.mjs` (append)
 
-**Interfaces:**
-- Produces: every schema that `extends: frontmatter` now accepts `id`, `grc20Id`, `sourceUri`, `viaUri` (all optional strings). Spec said "each publishable schema gains …"; adding them to `frontmatter` is equivalent (all 12 extend it) and avoids 12 edits.
+**Interfaces:** every schema that `extends: frontmatter` accepts optional `id`, `grc20Id`, `sourceUri`, `viaUri`. **`public-use-boundary` does not extend frontmatter** (deliberate; `schemas.test.mjs:62`) — the test loops `PUBLISHABLE_TYPES` only; boundary records carry no identity fields and are never republished across instances.
 
-- [ ] **Step 1: Write the failing test**
-
-Append to `packages/toolkit-framework/test/publishable.test.mjs`:
+- [ ] **Step 1: Write the failing test** (append)
 
 ```js
 import { schemaFields, validateObject } from '../src/index.mjs';
 
-test('identity + provenance fields exist on every publishable schema', () => {
+test('identity + provenance fields exist on every default publishable schema', () => {
   for (const t of PUBLISHABLE_TYPES) {
     const f = schemaFields(t);
     for (const k of ['id', 'grc20Id', 'sourceUri', 'viaUri']) assert.ok(f[k], `${t} lacks ${k}`);
@@ -167,14 +188,9 @@ test('identity + provenance fields exist on every publishable schema', () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [ ] **Step 2: Run** → FAIL — `resource lacks id`
 
-Run: `cd packages/toolkit-framework && node --test test/publishable.test.mjs`
-Expected: FAIL — `resource lacks id`
-
-- [ ] **Step 3: Add the fields**
-
-In `packages/toolkit-framework/schemas/frontmatter.yaml`, under `fields:`, after `notes: { type: string }` add:
+- [ ] **Step 3:** In `schemas/frontmatter.yaml` under `fields:` after `notes: { type: string }` add:
 
 ```yaml
   id: { type: string }                   # stable object id (UUIDv4); minted by the origin at first publish — CONTEXT.md "Object ID"
@@ -183,39 +199,24 @@ In `packages/toolkit-framework/schemas/frontmatter.yaml`, under `fields:`, after
   viaUri: { type: string }               # immediate peer AT-URI this copy was pulled from (optional)
 ```
 
-- [ ] **Step 4: Run the whole framework suite**
+- [ ] **Step 4:** `cd packages/toolkit-framework && npm test` → 125 + new PASS. If a test enumerates frontmatter fields as a snapshot, update it — the new fields are intended.
 
-Run: `cd packages/toolkit-framework && npm test`
-Expected: all PASS. If a snapshot-style test of `schemaFields('frontmatter')` or of `toJsonLdContext()` fails because it enumerates fields, update that snapshot — the new fields are intended.
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/toolkit-framework/schemas/frontmatter.yaml packages/toolkit-framework/test/publishable.test.mjs
-git commit -m "feat(framework): id / grc20Id / sourceUri / viaUri on frontmatter"
-```
+- [ ] **Step 5: Commit** — `feat(framework): id / grc20Id / sourceUri / viaUri on frontmatter`
 
 ---
 
 ### Task 3: Lexicon generator + record validator
 
 **Files:**
-- Create: `packages/toolkit-framework/src/lexicon.mjs`
-- Create: `packages/toolkit-framework/scripts/gen-lexicons.mjs`
-- Create: `packages/toolkit-framework/lexicons/` (12 generated files)
-- Modify: `packages/toolkit-framework/package.json` (add script)
+- Create: `packages/toolkit-framework/src/lexicon.mjs`, `packages/toolkit-framework/scripts/gen-lexicons.mjs`, `packages/toolkit-framework/lexicons/` (12 files)
+- Modify: `packages/toolkit-framework/package.json` (`"gen:lexicons": "node scripts/gen-lexicons.mjs"`)
 - Test: `packages/toolkit-framework/test/lexicon.test.mjs`
 
 **Interfaces:**
-- Consumes: `loadSchema(name)`, `listSchemas()` from `src/index.mjs`; `PUBLISHABLE_TYPES`.
-- Produces:
-  - `nsidFor(type, authority) → string` (`'resource'` → `'xyz.regencoordination.kb.resource'`, `'claim-evidence'` → `'…kb.claimEvidence'`)
-  - `typeForNsid(nsid, authority) → string | null`
-  - `flattenSchema(name) → { required: string[], fields: Record<string, def> }` (resolves `extends`)
-  - `generateLexicon(type, { authority }) → LexiconDoc`
-  - `generateAll({ authority }) → Record<nsid, LexiconDoc>`
-  - `validateRecord(record, lexiconDoc) → { ok: boolean, errors: string[] }`
-  - `toRecord(object, nsid) → record` (adds `$type`, strips `undefined`/`null`)
+- `nsidFor(schema, authority)`, `typeForNsid(nsid, authority) → schema | null` (over `ALL_TYPES`)
+- `flattenSchema(name) → { required, fields }` (resolves `extends`)
+- `generateLexicon(schema, { authority })`, `generateAll({ authority }) → Record<nsid, doc>` over `ALL_TYPES` (12)
+- `validateRecord(record, doc) → { ok, errors }`, `toRecord(object, nsid)` (adds `$type`, strips `undefined`/`null`)
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -227,22 +228,25 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nsidFor, typeForNsid, flattenSchema, generateLexicon, generateAll, validateRecord, toRecord } from '../src/lexicon.mjs';
-import { PUBLISHABLE_TYPES } from '../src/publishable.mjs';
+import { ALL_TYPES } from '../src/publishable.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const AUTH = 'xyz.regencoordination.kb';
 
-test('nsidFor camel-cases the type under the authority; typeForNsid inverts it', () => {
+test('nsidFor camel-cases the schema under the authority; typeForNsid inverts it over ALL_TYPES', () => {
   assert.equal(nsidFor('resource', AUTH), 'xyz.regencoordination.kb.resource');
   assert.equal(nsidFor('claim-evidence', AUTH), 'xyz.regencoordination.kb.claimEvidence');
   assert.equal(typeForNsid('xyz.regencoordination.kb.claimEvidence', AUTH), 'claim-evidence');
+  assert.equal(typeForNsid('xyz.regencoordination.kb.sourceSystem', AUTH), 'source-system');
+  assert.equal(typeForNsid('xyz.regencoordination.kb.person', AUTH), null);
   assert.equal(typeForNsid('com.example.other', AUTH), null);
 });
 
-test('flattenSchema resolves extends: resource has title (from frontmatter) and url (own)', () => {
+test('flattenSchema resolves extends', () => {
   const f = flattenSchema('resource');
   assert.ok(f.fields.title && f.fields.url && f.fields.id);
   assert.deepEqual(f.required, ['title', 'type']);
+  assert.ok(flattenSchema('public-use-boundary').fields.tier, 'boundary schema stands alone');
 });
 
 test('generateLexicon maps yaml defs to Lexicon properties', () => {
@@ -256,16 +260,13 @@ test('generateLexicon maps yaml defs to Lexicon properties', () => {
   assert.deepEqual(p.title, { type: 'string' });
   assert.deepEqual(p.is_source_system_candidate, { type: 'boolean' });
   assert.deepEqual(p.related_concepts, { type: 'array', items: { type: 'string' } });
-  assert.equal(p.link_status.type, 'string');
   assert.ok(p.link_status.knownValues.includes('active'));
-  assert.equal(p.maturity.type, 'string');
   assert.ok(p.maturity.knownValues.includes('pattern-generating'));
   assert.deepEqual(main.record.required, ['title', 'type']);
 });
 
-test('generateAll yields exactly one doc per publishable type', () => {
-  const all = generateAll({ authority: AUTH });
-  assert.equal(Object.keys(all).length, PUBLISHABLE_TYPES.length);
+test('generateAll yields one doc per ALL_TYPES entry (12)', () => {
+  assert.equal(Object.keys(generateAll({ authority: AUTH })).length, ALL_TYPES.length);
 });
 
 test('committed lexicons/ match a fresh generation (drift test)', () => {
@@ -274,55 +275,47 @@ test('committed lexicons/ match a fresh generation (drift test)', () => {
   const files = readdirSync(dir).filter((f) => f.endsWith('.json')).sort();
   assert.deepEqual(files, Object.keys(all).sort().map((n) => `${n}.json`));
   for (const [nsid, doc] of Object.entries(all)) {
-    const onDisk = JSON.parse(readFileSync(join(dir, `${nsid}.json`), 'utf8'));
-    assert.deepEqual(onDisk, doc, `lexicons/${nsid}.json is stale — run: npm run gen:lexicons`);
+    assert.deepEqual(JSON.parse(readFileSync(join(dir, `${nsid}.json`), 'utf8')), doc, `lexicons/${nsid}.json is stale — npm run gen:lexicons`);
   }
 });
 
-test('validateRecord: required, types, no floats, size, $type', () => {
+test('validateRecord: required, types, no floats, size, $type; unknown fields allowed', () => {
   const doc = generateLexicon('resource', { authority: AUTH });
-  const good = toRecord({ title: 'A', type: 'resource', related_concepts: ['x'], startYear: 2020 }, doc.id);
+  const good = toRecord({ title: 'A', type: 'resource', related_concepts: ['x'], extra_unknown: 2020 }, doc.id);
   assert.equal(good.$type, doc.id);
   assert.deepEqual(validateRecord(good, doc), { ok: true, errors: [] });
-
   assert.match(validateRecord({ $type: doc.id, type: 'resource' }, doc).errors[0], /missing required field: title/);
   assert.match(validateRecord({ $type: doc.id, title: 'A', type: 'resource', related_concepts: 'nope' }, doc).errors[0], /related_concepts must be an array/);
   assert.match(validateRecord({ $type: doc.id, title: 'A', type: 'resource', provenance: { score: 0.5 } }, doc).errors[0], /float at provenance\.score/);
   assert.match(validateRecord({ $type: 'wrong', title: 'A', type: 'resource' }, doc).errors[0], /\$type/);
-  const big = { $type: doc.id, title: 'A', type: 'resource', notes: 'x'.repeat(1_000_001) };
-  assert.match(validateRecord(big, doc).errors[0], /exceeds 1 MB/);
+  assert.match(validateRecord({ $type: doc.id, title: 'A', type: 'resource', notes: 'x'.repeat(1_000_001) }, doc).errors[0], /exceeds 1 MB/);
 });
 
 test('toRecord strips undefined and null, keeps nested objects', () => {
-  const r = toRecord({ title: 'A', type: 'resource', notes: undefined, url: null, provenance: { origin: 'o' } }, 'x.y.z');
-  assert.deepEqual(r, { $type: 'x.y.z', title: 'A', type: 'resource', provenance: { origin: 'o' } });
+  assert.deepEqual(toRecord({ title: 'A', type: 'resource', notes: undefined, url: null, provenance: { origin: 'o' } }, 'x.y.z'),
+    { $type: 'x.y.z', title: 'A', type: 'resource', provenance: { origin: 'o' } });
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
-
-Run: `cd packages/toolkit-framework && node --test test/lexicon.test.mjs`
-Expected: FAIL — `Cannot find module '../src/lexicon.mjs'`
+- [ ] **Step 2: Run** → FAIL, module not found
 
 - [ ] **Step 3: Implement `src/lexicon.mjs`**
 
 ```js
-// packages/toolkit-framework/src/lexicon.mjs — yaml schema → AT Proto Lexicon. Generated, never hand-edited.
-// Lexicon objects are open (unknown fields allowed) — same as validateObject's open model.
+// packages/toolkit-framework/src/lexicon.mjs — yaml schema → AT Proto Lexicon. Generated, never hand-edited. Lexicon objects are open (unknown fields allowed).
 import { loadSchema } from './index.mjs';
-import { PUBLISHABLE_TYPES } from './publishable.mjs';
+import { ALL_TYPES } from './publishable.mjs';
 
 const MAX_RECORD_BYTES = 1_000_000;
-
 const camel = (s) => s.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
 const kebab = (s) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
-export function nsidFor(type, authority) { return `${authority}.${camel(type)}`; }
+export function nsidFor(schema, authority) { return `${authority}.${camel(schema)}`; }
 
 export function typeForNsid(nsid, authority) {
-  if (!nsid.startsWith(`${authority}.`)) return null;
-  const type = kebab(nsid.slice(authority.length + 1));
-  return PUBLISHABLE_TYPES.includes(type) ? type : null;
+  if (!nsid || !nsid.startsWith(`${authority}.`)) return null;
+  const schema = kebab(nsid.slice(authority.length + 1));
+  return ALL_TYPES.includes(schema) ? schema : null;
 }
 
 export function flattenSchema(name) {
@@ -336,9 +329,7 @@ export function flattenSchema(name) {
   return { required, fields };
 }
 
-function axisValues(axis) {
-  return loadSchema('review-maturity').axes[axis].values;
-}
+const axisValues = (axis) => loadSchema('review-maturity').axes[axis].values;
 
 function toProperty(def) {
   if (def.enum) return { type: 'string', knownValues: [...def.enum] };
@@ -349,31 +340,23 @@ function toProperty(def) {
   return { type: 'string' };
 }
 
-export function generateLexicon(type, { authority }) {
-  const { required, fields } = flattenSchema(type);
+export function generateLexicon(schema, { authority }) {
+  const { required, fields } = flattenSchema(schema);
   const properties = {};
   for (const [k, def] of Object.entries(fields)) properties[k] = toProperty(def);
-  return {
-    lexicon: 1,
-    id: nsidFor(type, authority),
-    defs: { main: { type: 'record', key: 'any', record: { type: 'object', required: [...required], properties } } },
-  };
+  return { lexicon: 1, id: nsidFor(schema, authority), defs: { main: { type: 'record', key: 'any', record: { type: 'object', required: [...required], properties } } } };
 }
 
 export function generateAll({ authority }) {
   const out = {};
-  for (const t of PUBLISHABLE_TYPES) { const d = generateLexicon(t, { authority }); out[d.id] = d; }
+  for (const t of ALL_TYPES) { const d = generateLexicon(t, { authority }); out[d.id] = d; }
   return out;
 }
 
 export function toRecord(object, nsid) {
   const clean = (v) => {
     if (Array.isArray(v)) return v.map(clean);
-    if (v && typeof v === 'object') {
-      const o = {};
-      for (const [k, x] of Object.entries(v)) if (x !== undefined && x !== null) o[k] = clean(x);
-      return o;
-    }
+    if (v && typeof v === 'object') { const o = {}; for (const [k, x] of Object.entries(v)) if (x !== undefined && x !== null) o[k] = clean(x); return o; }
     return v;
   };
   return { $type: nsid, ...clean(object) };
@@ -390,9 +373,7 @@ export function validateRecord(record, doc) {
   const errors = [];
   const main = doc.defs.main.record;
   if (record.$type !== doc.id) errors.push(`$type must be ${doc.id}, got ${record.$type}`);
-  for (const r of main.required) {
-    if (record[r] === undefined || record[r] === null || record[r] === '') errors.push(`missing required field: ${r}`);
-  }
+  for (const r of main.required) if (record[r] === undefined || record[r] === null || record[r] === '') errors.push(`missing required field: ${r}`);
   for (const [k, p] of Object.entries(main.properties)) {
     const v = record[k];
     if (v === undefined) continue;
@@ -409,10 +390,10 @@ export function validateRecord(record, doc) {
 }
 ```
 
-- [ ] **Step 4: Write the generator script and run it**
+- [ ] **Step 4: Generator + run it**
 
 ```js
-// packages/toolkit-framework/scripts/gen-lexicons.mjs — regenerates lexicons/ from schemas/. Usage: node scripts/gen-lexicons.mjs [authority]
+// packages/toolkit-framework/scripts/gen-lexicons.mjs — regenerates lexicons/. Usage: node scripts/gen-lexicons.mjs [authority]
 import { mkdirSync, writeFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -427,39 +408,96 @@ for (const [nsid, doc] of Object.entries(all)) writeFileSync(join(dir, `${nsid}.
 console.log(`wrote ${Object.keys(all).length} lexicons to ${dir} (authority ${authority})`);
 ```
 
-Add to `packages/toolkit-framework/package.json` `scripts`: `"gen:lexicons": "node scripts/gen-lexicons.mjs"`.
+Run: `cd packages/toolkit-framework && npm run gen:lexicons` → `wrote 12 lexicons`
 
-Run: `cd packages/toolkit-framework && npm run gen:lexicons`
-Expected: `wrote 12 lexicons to …/lexicons`
-
-- [ ] **Step 5: Run tests**
-
-Run: `cd packages/toolkit-framework && npm test`
-Expected: all PASS, including the drift test. If `loadSchema('review-maturity').axes[axis].values` is not the real shape, fix `axisValues()` to match how `isValid()` reads it in `src/index.mjs:37`.
-
-- [ ] **Step 6: Commit**
-
-```bash
-git add packages/toolkit-framework/src/lexicon.mjs packages/toolkit-framework/scripts/gen-lexicons.mjs packages/toolkit-framework/lexicons packages/toolkit-framework/package.json packages/toolkit-framework/test/lexicon.test.mjs
-git commit -m "feat(framework): generate AT Proto Lexicons from yaml schemas + record validator"
-```
+- [ ] **Step 5: Run** `npm test` → PASS. **Commit:** `feat(framework): generate AT Proto Lexicons from yaml schemas + record validator`
 
 ---
 
-### Task 4: Framework seam re-exports + manifest module
+### Task 4: Async lifecycle + boolean flags
+
+**Why:** `executor.runLifecycle` is synchronous (`const res = op.run(ctx) || {}` at `executor.mjs:20`) and `cli.parseFlags` consumes the next token as a flag value (`cli.mjs:19-22`), so `--dry` at the end of argv is `undefined`. `publish` and `ingest.pull` are async and `--dry` must work.
+
+**Files:**
+- Modify: `packages/org-os-kms/src/executor.mjs`, `packages/org-os-kms/src/cli.mjs`
+- Modify: `packages/org-os-kms/test/executor.test.mjs`, `test/cli.test.mjs`, `test/e2e.test.mjs` (await)
+
+**Interfaces:**
+- `runLifecycle(event, ctx, deps) → Promise<report>` — the unknown-event check stays synchronous (throws before returning the promise, so `assert.throws` in existing tests keeps working); each `op.run(ctx)` is awaited.
+- `parseFlags`: `--k` followed by nothing or another `--x` → `flags.k = true`; otherwise `flags.k = next`.
+- `dispatch` passes `{ dir, flags }` as `ctx` to `runLifecycle`.
+
+- [ ] **Step 1: Write the failing tests** (append to `test/cli.test.mjs` and `test/executor.test.mjs`)
+
+```js
+// cli.test.mjs
+test('trailing --dry is a boolean flag; --dir takes a value', () => {
+  const r = dispatch(['lifecycle', 'close', '--dir', '/tmp/x', '--dry'], { dry: true });
+  assert.equal(r.flags.dir, '/tmp/x');
+  assert.equal(r.flags.dry, true);
+});
+
+// executor.test.mjs
+test('runLifecycle awaits async ops in order', async () => {
+  const order = [];
+  const ops = { a: { kind: 'exec', write: false, run: async () => { await new Promise((r) => setTimeout(r, 5)); order.push('a'); return { ok: true }; } },
+                b: { kind: 'exec', write: false, run: () => { order.push('b'); return { ok: true }; } } };
+  const r = await runLifecycle('initialize', {}, { ops, bindings: { initialize: ['a', 'b'] } });
+  assert.deepEqual(order, ['a', 'b']);
+  assert.equal(r.ran.length, 2);
+});
+```
+
+Read `test/executor.test.mjs` first: match its actual `deps` injection shape (`ops`/`bindings` names may differ — use what the existing tests pass).
+
+- [ ] **Step 2: Run** → the new tests FAIL; note which existing tests fail after the change (they will need `await`).
+
+- [ ] **Step 3: Implement** — in `executor.mjs`, keep the synchronous validation, then:
+
+```js
+export function runLifecycle(event, ctx = {}, deps = {}) {
+  // …existing synchronous checks (unknown event → throw; resolve ops/bindings) unchanged…
+  return (async () => {
+    // …existing loop body, with:  const res = (await op.run(ctx)) || {};
+    // everything else (fail-hard on write, report shape) unchanged
+  })();
+}
+```
+
+In `cli.mjs`:
+
+```js
+function parseFlags(argv) {
+  const args = [], flags = {};
+  for (let i = 0; i < argv.length; i++) {
+    const t = argv[i];
+    if (!t.startsWith('--')) { args.push(t); continue; }
+    const next = argv[i + 1];
+    if (next === undefined || next.startsWith('--')) flags[t.slice(2)] = true;
+    else { flags[t.slice(2)] = next; i++; }
+  }
+  return { args, flags };
+}
+```
+
+and where `dispatch` calls `runLifecycle(args[0], { dir })` → `runLifecycle(args[0], { dir, flags })`; the CLI `main` must `await` the result before `JSON.stringify`. Update every existing test that reads `runLifecycle(...)`'s report to `await` it (`executor.test.mjs`, `e2e.test.mjs:48`, `cli.test.mjs`).
+
+- [ ] **Step 4: Run** `cd packages/org-os-kms && npm test` → 44 + 2 PASS. **Commit:** `refactor(kms): async lifecycle; boolean CLI flags`
+
+---
+
+### Task 5: Framework seam re-exports + manifest module
 
 **Files:**
 - Modify: `packages/org-os-kms/src/framework.mjs`
 - Create: `packages/org-os-kms/src/manifest.mjs`
 - Test: `packages/org-os-kms/test/manifest.test.mjs`
 
+**Note on installs:** `framework.mjs` imports the framework by **relative sibling path** (`../../toolkit-framework/src/…`). An adopter therefore installs org-os-kms by vendoring **both** `packages/toolkit-framework` and `packages/org-os-kms` unedited, pinned to a tag (Mode 1 of the adoption runbook). `node node_modules/@org-os/kms/...` does not work. The pilot plan says so.
+
 **Interfaces:**
-- Produces (framework.mjs): re-exports `isPublishable, PUBLISHABLE_TYPES, nsidFor, typeForNsid, generateAll, validateRecord, toRecord`.
-- Produces (manifest.mjs):
-  - `MANIFEST_PATH = 'data/kms-published.json'`
-  - `readManifest(dir) → Manifest` where `Manifest = { version: 1, objects: Record<id, { slug, type, rkey, atUri, cid, hash, publishedAt }> }` (empty when file absent)
-  - `writeManifest(dir, manifest) → path`
-  - `slugIndex(manifest) → Map<slug, entry[]>`
+- framework.mjs re-exports: `isPublishable, publishableTypes, PUBLISHABLE_TYPES, OPT_IN_TYPES, ALL_TYPES, PUBLISHABLE_PUBLIC_USE, nsidFor, typeForNsid, generateAll, validateRecord, toRecord, toJsonLdContext` (last one already exported from `index.mjs` — confirm it's in the list; add if missing).
+- manifest.mjs: `MANIFEST_PATH = 'data/kms-published.json'`; `readManifest(dir)`; `writeManifest(dir, m) → path`; `slugIndex(m) → Map<slug, entry[]>`; `slugFromRef(ref) → string` (`ref.slice(ref.lastIndexOf('#') + 1)`; a ref without `#` returns the ref's basename without extension). Entry shape `{ slug, type, rkey, atUri, cid, hash, publishedAt }` where `type` is the **schema**.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -470,51 +508,40 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { readManifest, writeManifest, slugIndex, MANIFEST_PATH } from '../src/manifest.mjs';
+import { readManifest, writeManifest, slugIndex, slugFromRef, MANIFEST_PATH } from '../src/manifest.mjs';
 
-test('readManifest returns an empty manifest when absent; write/read round-trips', () => {
+test('readManifest empty when absent; write/read round-trips', () => {
   const dir = mkdtempSync(join(tmpdir(), 'kms-manifest-'));
   assert.deepEqual(readManifest(dir), { version: 1, objects: {} });
-  const m = { version: 1, objects: { 'id-1': { slug: 'a', type: 'resource', rkey: 'id-1', atUri: 'at://did/x/id-1', cid: 'c', hash: 'h', publishedAt: '2026-09-18T00:00:00.000Z' } } };
+  const m = { version: 1, objects: { 'id-1': { slug: 'a', type: 'resource', rkey: 'id-1', atUri: 'at://did/x/id-1', cid: 'c', hash: 'h', publishedAt: 't' } } };
   const p = writeManifest(dir, m);
   assert.equal(p, join(dir, MANIFEST_PATH));
   assert.ok(existsSync(p));
   assert.deepEqual(readManifest(dir), m);
 });
 
-test('slugIndex groups entries by slug', () => {
-  const m = { version: 1, objects: { a: { slug: 's', type: 'resource' }, b: { slug: 's', type: 'concept-lineage' }, c: { slug: 't', type: 'resource' } } };
-  const ix = slugIndex(m);
+test('slugIndex groups by slug; slugFromRef reads the adapter key', () => {
+  const ix = slugIndex({ version: 1, objects: { a: { slug: 's' }, b: { slug: 's' }, c: { slug: 't' } } });
   assert.equal(ix.get('s').length, 2);
-  assert.equal(ix.get('t').length, 1);
+  assert.equal(slugFromRef('data/kb/resource.yaml#1hive'), '1hive');
+  assert.equal(slugFromRef('/x/kb/resource/some-slug.yaml'), 'some-slug');
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
-
-Run: `cd packages/org-os-kms && node --test test/manifest.test.mjs`
-Expected: FAIL — module not found
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
-
-Append to `packages/org-os-kms/src/framework.mjs`:
-
-```js
-export { isPublishable, PUBLISHABLE_TYPES, PUBLISHABLE_PUBLIC_USE } from '../../toolkit-framework/src/publishable.mjs';
-export { nsidFor, typeForNsid, generateAll, validateRecord, toRecord } from '../../toolkit-framework/src/lexicon.mjs';
-```
 
 ```js
 // packages/org-os-kms/src/manifest.mjs — the publish manifest: what this instance has on its publication plane.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { join, dirname, basename, extname } from 'node:path';
 
 export const MANIFEST_PATH = 'data/kms-published.json';
 
 export function readManifest(dir) {
   const p = join(dir, MANIFEST_PATH);
-  if (!existsSync(p)) return { version: 1, objects: {} };
-  return JSON.parse(readFileSync(p, 'utf8'));
+  return existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : { version: 1, objects: {} };
 }
 
 export function writeManifest(dir, manifest) {
@@ -526,37 +553,35 @@ export function writeManifest(dir, manifest) {
 
 export function slugIndex(manifest) {
   const ix = new Map();
-  for (const e of Object.values(manifest.objects)) {
-    if (!ix.has(e.slug)) ix.set(e.slug, []);
-    ix.get(e.slug).push(e);
-  }
+  for (const e of Object.values(manifest.objects)) { if (!ix.has(e.slug)) ix.set(e.slug, []); ix.get(e.slug).push(e); }
   return ix;
+}
+
+export function slugFromRef(ref) {
+  const i = ref.lastIndexOf('#');
+  return i >= 0 ? ref.slice(i + 1) : basename(ref, extname(ref));
 }
 ```
 
-- [ ] **Step 4: Run tests**
+Append to `framework.mjs`:
 
-Run: `cd packages/org-os-kms && npm test`
-Expected: 65 + 2 PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/org-os-kms/src/framework.mjs packages/org-os-kms/src/manifest.mjs packages/org-os-kms/test/manifest.test.mjs
-git commit -m "feat(kms): publish manifest + framework seam re-exports"
+```js
+export { isPublishable, publishableTypes, PUBLISHABLE_TYPES, OPT_IN_TYPES, ALL_TYPES, PUBLISHABLE_PUBLIC_USE } from '../../toolkit-framework/src/publishable.mjs';
+export { nsidFor, typeForNsid, generateAll, validateRecord, toRecord } from '../../toolkit-framework/src/lexicon.mjs';
 ```
+
+- [ ] **Step 4: Run** → PASS. **Commit:** `feat(kms): publish manifest + framework seam re-exports`
 
 ---
 
-### Task 5: Identity minting (`id`, `grc20Id`) with yaml write-back
+### Task 6: Identity minting over pre-selected items
 
 **Files:**
 - Create: `packages/org-os-kms/src/identity.mjs`
 - Test: `packages/org-os-kms/test/identity.test.mjs`
 
 **Interfaces:**
-- Consumes: `getAdapter(name).list(target) → [{schema, object, ref}]`, `.update(target, ref, patch)` via `framework.mjs`; `isPublishable`.
-- Produces: `ensureIds({ adapter, target, uuid = crypto.randomUUID }) → { minted: [{ ref, id, grc20Id }], items: [{ schema, object, ref }] }` — `items` is the post-mint listing of **publishable** objects, each guaranteed to have `id` and `grc20Id`. `assertRkey(id)` throws if `id` is not `[a-zA-Z0-9.\-_:~]{1,512}`.
+- `ensureIds({ adapter, target, items, uuid = randomUUID, write = true }) → { minted: [{ ref, id, grc20Id }], items }` — `items` is the caller's already-gated list `[{schema, object, ref}]`; only those are minted. With `write: true` the patch goes through `adapter.update(target, ref, patch)` and `items` is re-read from `adapter.list(target)` filtered to the same refs; with `write: false` the patch is applied in memory only (dry run). Every returned item has `id` and `grc20Id`; `assertRkey(id)` runs on each.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -569,6 +594,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import yaml from 'js-yaml';
 import { ensureIds, assertRkey } from '../src/identity.mjs';
+import { getAdapter } from '../src/framework.mjs';
 
 function instance() {
   const dir = mkdtempSync(join(tmpdir(), 'kms-id-'));
@@ -580,27 +606,35 @@ function instance() {
   } }));
   return dir;
 }
+const selected = (dir) => getAdapter('repo-data').list(dir).filter(({ object }) => object.public_use === 'ok-with-caveat');
 
-test('ensureIds mints id + grc20Id only for publishable objects lacking them and writes back', () => {
+test('mints id + grc20Id only for the given items lacking them; writes back', () => {
   const dir = instance();
   let n = 0; const uuid = () => `uuid-${++n}`;
-  const { minted, items } = ensureIds({ adapter: 'repo-data', target: dir, uuid });
+  const { minted, items } = ensureIds({ adapter: 'repo-data', target: dir, items: selected(dir), uuid });
   assert.equal(minted.length, 1);
-  assert.deepEqual(minted[0], { ref: minted[0].ref, id: 'uuid-1', grc20Id: 'uuid-2' });
+  assert.equal(minted[0].id, 'uuid-1'); assert.equal(minted[0].grc20Id, 'uuid-2');
   const disk = yaml.load(readFileSync(join(dir, 'data', 'kb', 'resource.yaml'), 'utf8')).entries;
-  assert.equal(disk.pub.id, 'uuid-1');
-  assert.equal(disk.pub.grc20Id, 'uuid-2');
-  assert.equal(disk.internal.id, undefined, 'non-publishable untouched');
+  assert.equal(disk.pub.id, 'uuid-1'); assert.equal(disk.pub.grc20Id, 'uuid-2');
+  assert.equal(disk.internal.id, undefined, 'not selected → untouched');
   assert.equal(disk.haveid.id, 'existing-id');
   assert.equal(items.length, 2);
   for (const it of items) assert.ok(it.object.id && it.object.grc20Id);
 });
 
-test('ensureIds is idempotent', () => {
+test('write:false mints in memory only', () => {
   const dir = instance();
-  ensureIds({ adapter: 'repo-data', target: dir });
-  const { minted } = ensureIds({ adapter: 'repo-data', target: dir });
-  assert.equal(minted.length, 0);
+  const { minted, items } = ensureIds({ adapter: 'repo-data', target: dir, items: selected(dir), write: false });
+  assert.equal(minted.length, 1);
+  assert.ok(items.find((i) => i.object.title === 'Pub').object.id);
+  const disk = yaml.load(readFileSync(join(dir, 'data', 'kb', 'resource.yaml'), 'utf8')).entries;
+  assert.equal(disk.pub.id, undefined);
+});
+
+test('idempotent', () => {
+  const dir = instance();
+  ensureIds({ adapter: 'repo-data', target: dir, items: selected(dir) });
+  assert.equal(ensureIds({ adapter: 'repo-data', target: dir, items: selected(dir) }).minted.length, 0);
 });
 
 test('assertRkey enforces the AT Proto rkey charset', () => {
@@ -610,66 +644,52 @@ test('assertRkey enforces the AT Proto rkey charset', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
-
-Run: `cd packages/org-os-kms && node --test test/identity.test.mjs`
-Expected: FAIL — module not found
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
 
 ```js
-// packages/org-os-kms/src/identity.mjs — mint object ids at first publish (spec Q8/Q10). git holds the ids.
+// packages/org-os-kms/src/identity.mjs — mint object ids at first publish, only for objects that passed every gate. git holds the ids.
 import { randomUUID } from 'node:crypto';
 import * as fw from './framework.mjs';
 
 const RKEY = /^[a-zA-Z0-9.\-_:~]{1,512}$/;
-
 export function assertRkey(id) {
   if (typeof id !== 'string' || !RKEY.test(id)) throw new Error(`invalid rkey: ${JSON.stringify(id)}`);
   return id;
 }
 
-export function ensureIds({ adapter, target, uuid = randomUUID }) {
+export function ensureIds({ adapter, target, items, uuid = randomUUID, write = true }) {
   const a = fw.getAdapter(adapter);
   const minted = [];
-  for (const { object, ref } of a.list(target)) {
-    if (!fw.isPublishable(object)) continue;
+  const out = [];
+  for (const it of items) {
     const patch = {};
-    if (!object.id) patch.id = uuid();
-    if (!object.grc20Id) patch.grc20Id = uuid();
+    if (!it.object.id) patch.id = uuid();
+    if (!it.object.grc20Id) patch.grc20Id = uuid();
     if (Object.keys(patch).length) {
-      a.update(target, ref, patch);
-      minted.push({ ref, id: patch.id ?? object.id, grc20Id: patch.grc20Id ?? object.grc20Id });
+      minted.push({ ref: it.ref, id: patch.id ?? it.object.id, grc20Id: patch.grc20Id ?? it.object.grc20Id });
+      if (write) a.update(target, it.ref, patch);
     }
+    out.push({ ...it, object: { ...it.object, ...patch } });
   }
-  const items = a.list(target).filter(({ object }) => fw.isPublishable(object));
-  for (const { object } of items) assertRkey(object.id);
-  return { minted, items };
+  const items2 = write ? (() => { const refs = new Set(items.map((i) => i.ref)); return a.list(target).filter((i) => refs.has(i.ref)); })() : out;
+  for (const { object } of items2) assertRkey(object.id);
+  return { minted, items: items2 };
 }
 ```
 
-- [ ] **Step 4: Run tests**
-
-Run: `cd packages/org-os-kms && npm test`
-Expected: PASS. If `repo-data.update` rejects the patch because the ref shape differs, print `a.list(target)[0].ref` in the test and match it — refs are adapter-issued; the code above only ever replays refs from `list()`.
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/org-os-kms/src/identity.mjs packages/org-os-kms/test/identity.test.mjs
-git commit -m "feat(kms): mint id + grc20Id for publishable objects, write back to yaml"
-```
+- [ ] **Step 4: Run** → PASS. **Commit:** `feat(kms): mint id + grc20Id for gated objects, write back to yaml`
 
 ---
 
-### Task 6: Cross-reference rewriting
+### Task 7: Cross-reference rewriting
 
 **Files:**
 - Create: `packages/org-os-kms/src/refs.mjs`
 - Test: `packages/org-os-kms/test/refs.test.mjs`
 
-**Interfaces:**
-- Produces: `REF_ARRAY_FIELDS = ['related_concepts','related_options','related_resources','source_traditions']`, `REF_STRING_FIELDS = ['subject','object']` (relationship-record), `rewriteRefs(object, resolve) → object` (new object; `resolve(slug) → atUri | null`), `resolverFrom(manifest) → (slug) => atUri | null` (null when 0 or >1 manifest entries share the slug).
+**Interfaces:** `REF_ARRAY_FIELDS`, `REF_STRING_FIELDS`, `resolverFrom(manifest) → (slug) => atUri | null` (null on 0 or >1), `rewriteRefs(object, resolve, schema) → object` (new object; string fields only when `schema === 'relationship-record'`).
 
 - [ ] **Step 1: Write the failing test**
 
@@ -685,39 +705,28 @@ const manifest = { version: 1, objects: {
   i3: { slug: 'dup', type: 'concept-lineage', atUri: 'at://did:plc:me/x.kb.conceptLineage/i3' },
 } };
 
-test('resolverFrom resolves unique slugs, null for unknown or ambiguous', () => {
+test('resolverFrom: unique → uri; ambiguous or unknown → null', () => {
   const r = resolverFrom(manifest);
   assert.equal(r('decentralization'), 'at://did:plc:me/x.kb.conceptLineage/i1');
-  assert.equal(r('dup'), null);
-  assert.equal(r('nope'), null);
+  assert.equal(r('dup'), null); assert.equal(r('nope'), null);
 });
 
-test('rewriteRefs rewrites resolvable slugs in array fields and leaves the rest', () => {
-  const r = resolverFrom(manifest);
-  const out = rewriteRefs({ title: 'A', type: 'resource', related_concepts: ['decentralization', 'nope', 'dup'] }, r);
+test('array fields rewritten where resolvable; non-mutating', () => {
+  const src = { title: 'A', related_concepts: ['decentralization', 'nope', 'dup'] };
+  const out = rewriteRefs(src, resolverFrom(manifest), 'resource');
   assert.deepEqual(out.related_concepts, ['at://did:plc:me/x.kb.conceptLineage/i1', 'nope', 'dup']);
+  assert.equal(src.related_concepts[0], 'decentralization');
 });
 
-test('rewriteRefs handles relationship-record subject/object strings and is non-mutating', () => {
-  const r = resolverFrom(manifest);
-  const src = { type: 'relationship-record', subject: 'decentralization', predicate: 'related_to', object: 'nope' };
-  const out = rewriteRefs(src, r);
-  assert.equal(out.subject, 'at://did:plc:me/x.kb.conceptLineage/i1');
-  assert.equal(out.object, 'nope');
-  assert.equal(src.subject, 'decentralization');
-});
-
-test('rewriteRefs never rewrites a value that is already an at:// URI', () => {
-  const r = () => 'at://should-not-be-called';
-  const out = rewriteRefs({ type: 'resource', related_concepts: ['at://did:plc:x/c/1'] }, r);
-  assert.deepEqual(out.related_concepts, ['at://did:plc:x/c/1']);
+test('relationship-record subject/object strings; already-at:// untouched', () => {
+  const out = rewriteRefs({ subject: 'decentralization', predicate: 'related_to', object: 'nope' }, resolverFrom(manifest), 'relationship-record');
+  assert.equal(out.subject, 'at://did:plc:me/x.kb.conceptLineage/i1'); assert.equal(out.object, 'nope');
+  const keep = rewriteRefs({ related_concepts: ['at://did:plc:x/c/1'] }, () => 'at://never', 'resource');
+  assert.deepEqual(keep.related_concepts, ['at://did:plc:x/c/1']);
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails**
-
-Run: `cd packages/org-os-kms && node --test test/refs.test.mjs`
-Expected: FAIL — module not found
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
 
@@ -727,52 +736,33 @@ import { slugIndex } from './manifest.mjs';
 
 export const REF_ARRAY_FIELDS = ['related_concepts', 'related_options', 'related_resources', 'source_traditions'];
 export const REF_STRING_FIELDS = ['subject', 'object'];
-
 const isAtUri = (v) => typeof v === 'string' && v.startsWith('at://');
 
 export function resolverFrom(manifest) {
   const ix = slugIndex(manifest);
-  return (slug) => {
-    const hits = ix.get(slug);
-    return hits && hits.length === 1 && hits[0].atUri ? hits[0].atUri : null;
-  };
+  return (slug) => { const h = ix.get(slug); return h && h.length === 1 && h[0].atUri ? h[0].atUri : null; };
 }
 
-export function rewriteRefs(object, resolve) {
+export function rewriteRefs(object, resolve, schema) {
   const out = { ...object };
   const one = (v) => (isAtUri(v) ? v : (resolve(v) ?? v));
   for (const f of REF_ARRAY_FIELDS) if (Array.isArray(out[f])) out[f] = out[f].map(one);
-  if (out.type === 'relationship-record') for (const f of REF_STRING_FIELDS) if (typeof out[f] === 'string') out[f] = one(out[f]);
+  if (schema === 'relationship-record') for (const f of REF_STRING_FIELDS) if (typeof out[f] === 'string') out[f] = one(out[f]);
   return out;
 }
 ```
 
-- [ ] **Step 4: Run tests** — `cd packages/org-os-kms && npm test` → PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/org-os-kms/src/refs.mjs packages/org-os-kms/test/refs.test.mjs
-git commit -m "feat(kms): rewrite cross-references to origin AT-URIs at publish"
-```
+- [ ] **Step 4: Run** → PASS. **Commit:** `feat(kms): rewrite cross-references to origin AT-URIs at publish`
 
 ---
 
-### Task 7: XRPC client
+### Task 8: XRPC client
 
 **Files:**
 - Create: `packages/org-os-kms/src/atproto/client.mjs`
 - Test: `packages/org-os-kms/test/atproto-client.test.mjs`
 
-**Interfaces:**
-- Produces: `createClient({ pds, fetchImpl = globalThis.fetch }) → client` with:
-  - `client.login({ identifier, password }) → { did }` (stores `accessJwt`)
-  - `client.putRecord({ repo, collection, rkey, record, swapRecord? }) → { uri, cid }`
-  - `client.deleteRecord({ repo, collection, rkey }) → void`
-  - `client.listRecords({ repo, collection, cursor?, limit = 100 }) → { records: [{ uri, cid, value }], cursor? }`
-  - `client.listAllRecords({ repo, collection }) → [{ uri, cid, value }]` (follows cursor)
-  - `client.getLatestCommit({ did }) → { cid, rev }`
-  - Errors: non-2xx → `XrpcError` with `.status`, `.error` (the XRPC `error` field), `.message`.
+**Interfaces:** `createClient({ pds, fetchImpl = globalThis.fetch })` — **throws `atproto: pds not configured` when `pds` is falsy**; `login`, `putRecord` (adds `validate: false` — the PDS does not know our Lexicons; we validated already), `deleteRecord`, `listRecords`, `listAllRecords`, `getLatestCommit`; `XrpcError { status, error }`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -785,68 +775,60 @@ import { createClient, XrpcError } from '../src/atproto/client.mjs';
 function fakeFetch(routes) {
   const calls = [];
   const f = async (url, init = {}) => {
-    const u = new URL(url);
-    const nsid = u.pathname.split('/xrpc/')[1];
+    const u = new URL(url); const nsid = u.pathname.split('/xrpc/')[1];
     calls.push({ nsid, method: init.method || 'GET', headers: init.headers || {}, body: init.body ? JSON.parse(init.body) : undefined, query: Object.fromEntries(u.searchParams) });
     const r = routes[nsid];
     if (!r) return new Response(JSON.stringify({ error: 'NotFound', message: 'no route' }), { status: 404 });
     const out = typeof r === 'function' ? r(calls.at(-1)) : r;
     return new Response(JSON.stringify(out.body ?? out), { status: out.status ?? 200, headers: { 'content-type': 'application/json' } });
   };
-  f.calls = calls;
-  return f;
+  f.calls = calls; return f;
 }
 
-test('login stores the token and sends it as Bearer on writes', async () => {
-  const fetchImpl = fakeFetch({
-    'com.atproto.server.createSession': { accessJwt: 'JWT', did: 'did:plc:abc' },
-    'com.atproto.repo.putRecord': { uri: 'at://did:plc:abc/x.y/k', cid: 'bafy1' },
-  });
+test('pds is required', () => { assert.throws(() => createClient({ pds: null }), /pds not configured/); });
+
+test('login stores the token; putRecord sends Bearer, swapRecord and validate:false', async () => {
+  const fetchImpl = fakeFetch({ 'com.atproto.server.createSession': { accessJwt: 'JWT', did: 'did:plc:abc' }, 'com.atproto.repo.putRecord': { uri: 'at://did:plc:abc/x.y/k', cid: 'bafy1' } });
   const c = createClient({ pds: 'https://pds.test', fetchImpl });
   const { did } = await c.login({ identifier: 'kc.test', password: 'pw' });
   assert.equal(did, 'did:plc:abc');
   const res = await c.putRecord({ repo: did, collection: 'x.y', rkey: 'k', record: { $type: 'x.y', title: 'T' }, swapRecord: 'bafy0' });
   assert.deepEqual(res, { uri: 'at://did:plc:abc/x.y/k', cid: 'bafy1' });
   const put = fetchImpl.calls[1];
-  assert.equal(put.method, 'POST');
   assert.equal(put.headers.Authorization, 'Bearer JWT');
-  assert.deepEqual(put.body, { repo: 'did:plc:abc', collection: 'x.y', rkey: 'k', record: { $type: 'x.y', title: 'T' }, swapRecord: 'bafy0' });
+  assert.deepEqual(put.body, { repo: 'did:plc:abc', collection: 'x.y', rkey: 'k', record: { $type: 'x.y', title: 'T' }, validate: false, swapRecord: 'bafy0' });
 });
 
-test('listAllRecords follows the cursor; getLatestCommit is a GET with did', async () => {
+test('listAllRecords follows cursor; getLatestCommit GETs did', async () => {
   let page = 0;
   const fetchImpl = fakeFetch({
-    'com.atproto.repo.listRecords': () => (page++ === 0
-      ? { records: [{ uri: 'at://d/c/1', cid: 'c1', value: { a: 1 } }], cursor: 'next' }
-      : { records: [{ uri: 'at://d/c/2', cid: 'c2', value: { a: 2 } }] }),
+    'com.atproto.repo.listRecords': () => (page++ === 0 ? { records: [{ uri: 'at://d/c/1', cid: 'c1', value: { a: 1 } }], cursor: 'next' } : { records: [{ uri: 'at://d/c/2', cid: 'c2', value: { a: 2 } }] }),
     'com.atproto.sync.getLatestCommit': { cid: 'ccid', rev: '3abc' },
   });
   const c = createClient({ pds: 'https://pds.test', fetchImpl });
-  const all = await c.listAllRecords({ repo: 'd', collection: 'c' });
-  assert.equal(all.length, 2);
+  assert.equal((await c.listAllRecords({ repo: 'd', collection: 'c' })).length, 2);
   assert.equal(fetchImpl.calls[1].query.cursor, 'next');
   assert.deepEqual(await c.getLatestCommit({ did: 'd' }), { cid: 'ccid', rev: '3abc' });
-  assert.equal(fetchImpl.calls[2].query.did, 'd');
 });
 
-test('non-2xx becomes XrpcError with status and error code', async () => {
-  const fetchImpl = fakeFetch({ 'com.atproto.repo.deleteRecord': { status: 400, body: { error: 'InvalidSwap', message: 'record was modified' } } });
-  const c = createClient({ pds: 'https://pds.test', fetchImpl });
+test('non-2xx → XrpcError', async () => {
+  const c = createClient({ pds: 'https://pds.test', fetchImpl: fakeFetch({ 'com.atproto.repo.deleteRecord': { status: 400, body: { error: 'InvalidSwap', message: 'modified' } } }) });
   await assert.rejects(c.deleteRecord({ repo: 'd', collection: 'c', rkey: 'k' }), (e) => e instanceof XrpcError && e.status === 400 && e.error === 'InvalidSwap');
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — `cd packages/org-os-kms && node --test test/atproto-client.test.mjs` → FAIL, module not found
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
 
 ```js
-// packages/org-os-kms/src/atproto/client.mjs — the four XRPC calls the publication plane needs. No SDK.
+// packages/org-os-kms/src/atproto/client.mjs — the XRPC calls the publication plane needs. No SDK.
 export class XrpcError extends Error {
   constructor(status, error, message) { super(`${error}: ${message}`); this.status = status; this.error = error; }
 }
 
 export function createClient({ pds, fetchImpl = globalThis.fetch }) {
+  if (!pds) throw new Error('atproto: pds not configured');
   const base = pds.replace(/\/$/, '');
   let accessJwt = null;
 
@@ -863,27 +845,15 @@ export function createClient({ pds, fetchImpl = globalThis.fetch }) {
   }
 
   return {
-    async login({ identifier, password }) {
-      const s = await call('com.atproto.server.createSession', { method: 'POST', body: { identifier, password } });
-      accessJwt = s.accessJwt;
-      return { did: s.did };
-    },
+    async login({ identifier, password }) { const s = await call('com.atproto.server.createSession', { method: 'POST', body: { identifier, password } }); accessJwt = s.accessJwt; return { did: s.did }; },
     putRecord({ repo, collection, rkey, record, swapRecord }) {
-      return call('com.atproto.repo.putRecord', { method: 'POST', body: { repo, collection, rkey, record, ...(swapRecord ? { swapRecord } : {}) } });
+      return call('com.atproto.repo.putRecord', { method: 'POST', body: { repo, collection, rkey, record, validate: false, ...(swapRecord ? { swapRecord } : {}) } });
     },
-    async deleteRecord({ repo, collection, rkey }) {
-      await call('com.atproto.repo.deleteRecord', { method: 'POST', body: { repo, collection, rkey } });
-    },
-    listRecords({ repo, collection, cursor, limit = 100 }) {
-      return call('com.atproto.repo.listRecords', { query: { repo, collection, cursor, limit } });
-    },
+    async deleteRecord({ repo, collection, rkey }) { await call('com.atproto.repo.deleteRecord', { method: 'POST', body: { repo, collection, rkey } }); },
+    listRecords({ repo, collection, cursor, limit = 100 }) { return call('com.atproto.repo.listRecords', { query: { repo, collection, cursor, limit } }); },
     async listAllRecords({ repo, collection }) {
       const out = []; let cursor;
-      do {
-        const page = await this.listRecords({ repo, collection, cursor });
-        out.push(...page.records);
-        cursor = page.cursor;
-      } while (cursor);
+      do { const page = await this.listRecords({ repo, collection, cursor }); out.push(...page.records); cursor = page.cursor; } while (cursor);
       return out;
     },
     getLatestCommit({ did }) { return call('com.atproto.sync.getLatestCommit', { query: { did } }); },
@@ -891,29 +861,20 @@ export function createClient({ pds, fetchImpl = globalThis.fetch }) {
 }
 ```
 
-- [ ] **Step 4: Run tests** — `cd packages/org-os-kms && npm test` → PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/org-os-kms/src/atproto/client.mjs packages/org-os-kms/test/atproto-client.test.mjs
-git commit -m "feat(kms): fetch-based XRPC client for putRecord/deleteRecord/listRecords/getLatestCommit"
-```
+- [ ] **Step 4: Run** → PASS. **Commit:** `feat(kms): fetch-based XRPC client`
 
 ---
 
-### Task 8: Publish planner (pure) + applier
+### Task 9: Publish planner (pure) + applier
 
 **Files:**
 - Create: `packages/org-os-kms/src/atproto/publish.mjs`
 - Test: `packages/org-os-kms/test/atproto-publish.test.mjs`
 
 **Interfaces:**
-- Consumes: `nsidFor, generateAll, validateRecord, toRecord` (framework), `rewriteRefs, resolverFrom`, manifest shape.
-- Produces:
-  - `contentHash(record) → sha256 hex of stable-key JSON`
-  - `planPublish({ items, manifest, did, authority }) → { ok, errors: [{ slug, errors[] }], create: Op[], update: Op[], delete: Op[], skip: string[] }` where `Op = { id, slug, type, collection, rkey, record, hash, swapRecord? }`. **Validates every item before returning; `ok:false` means nothing may be applied.**
-  - `applyPublish(plan, { client, did, now = () => new Date().toISOString() }) → { manifest, applied: { created, updated, deleted }, failures: [{ id, error }] }` — returns the **new** manifest (input not mutated); a `swapRecord` failure is recorded per record and does not stop the others.
+- `contentHash(record)`
+- `planPublish({ items, manifest, did, authority }) → { ok, errors, create, update, delete, skip, previous }` — `items` are `[{schema, object, ref}]`; NSID from `item.schema`; slug from `slugFromRef(item.ref)`; `previous = manifest.objects` (attached for the applier). Validates all before returning ops; `ok:false` ⇒ no ops.
+- `applyPublish(plan, { client, did, now }) → { manifest, applied: {created, updated, deleted}, failures }` — new manifest; skipped entries carried from `plan.previous`; a failed update/delete keeps its previous entry.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -924,131 +885,115 @@ import assert from 'node:assert/strict';
 import { planPublish, applyPublish, contentHash } from '../src/atproto/publish.mjs';
 import { XrpcError } from '../src/atproto/client.mjs';
 
-const AUTH = 'xyz.regencoordination.kb';
-const DID = 'did:plc:me';
-const item = (slug, extra = {}) => ({ schema: 'resource', ref: `data/kb/resource.yaml#${slug}`, object: { title: slug, type: 'resource', public_use: 'ok-with-caveat', id: `id-${slug}`, grc20Id: `g-${slug}`, ...extra } });
+const AUTH = 'xyz.regencoordination.kb'; const DID = 'did:plc:me';
+const item = (slug, extra = {}, schema = 'resource') => ({ schema, ref: `data/kb/${schema}.yaml#${slug}`, object: { title: slug, type: 'resource', public_use: 'ok-with-caveat', id: `id-${slug}`, grc20Id: `g-${slug}`, ...extra } });
 const empty = { version: 1, objects: {} };
+const RES = `${AUTH}.resource`;
 
-test('planPublish: new objects → create; unchanged → skip; changed → update with swapRecord; gone → delete', () => {
+test('create / skip / update(swapRecord) / delete', () => {
   const a = item('a'); const b = item('b');
   const first = planPublish({ items: [a, b], manifest: empty, did: DID, authority: AUTH });
-  assert.equal(first.ok, true);
-  assert.equal(first.create.length, 2);
-  assert.equal(first.create[0].collection, 'xyz.regencoordination.kb.resource');
-  assert.equal(first.create[0].rkey, 'id-a');
-  assert.equal(first.create[0].record.$type, 'xyz.regencoordination.kb.resource');
-
+  assert.equal(first.ok, true); assert.equal(first.create.length, 2);
+  assert.equal(first.create[0].collection, RES); assert.equal(first.create[0].rkey, 'id-a'); assert.equal(first.create[0].slug, 'a');
+  assert.equal(first.create[0].record.$type, RES);
   const manifest = { version: 1, objects: {
-    'id-a': { slug: 'a', type: 'resource', rkey: 'id-a', atUri: `at://${DID}/xyz.regencoordination.kb.resource/id-a`, cid: 'cid-a', hash: first.create[0].hash, publishedAt: 't' },
-    'id-b': { slug: 'b', type: 'resource', rkey: 'id-b', atUri: `at://${DID}/xyz.regencoordination.kb.resource/id-b`, cid: 'cid-b', hash: first.create[1].hash, publishedAt: 't' },
-  } };
+    'id-a': { slug: 'a', type: 'resource', rkey: 'id-a', atUri: `at://${DID}/${RES}/id-a`, cid: 'cid-a', hash: first.create[0].hash, publishedAt: 't' },
+    'id-b': { slug: 'b', type: 'resource', rkey: 'id-b', atUri: `at://${DID}/${RES}/id-b`, cid: 'cid-b', hash: first.create[1].hash, publishedAt: 't' } } };
   const second = planPublish({ items: [a, item('b', { notes: 'changed' })], manifest, did: DID, authority: AUTH });
-  assert.deepEqual(second.skip, ['id-a']);
-  assert.equal(second.update.length, 1);
-  assert.equal(second.update[0].swapRecord, 'cid-b');
-
+  assert.deepEqual(second.skip, ['id-a']); assert.equal(second.update.length, 1); assert.equal(second.update[0].swapRecord, 'cid-b');
   const third = planPublish({ items: [a], manifest, did: DID, authority: AUTH });
-  assert.equal(third.delete.length, 1);
-  assert.equal(third.delete[0].rkey, 'id-b');
+  assert.equal(third.delete.length, 1); assert.equal(third.delete[0].rkey, 'id-b');
 });
 
-test('planPublish rewrites refs against the manifest and validates everything up front', () => {
+test('source-system card: NSID from schema, not from object.type', () => {
+  const card = item('blog', { type: 'blog', steward: 's', return_path: 'r' }, 'source-system');
+  const p = planPublish({ items: [card], manifest: empty, did: DID, authority: AUTH });
+  assert.equal(p.ok, true, JSON.stringify(p.errors));
+  assert.equal(p.create[0].collection, `${AUTH}.sourceSystem`);
+  assert.equal(p.create[0].record.type, 'blog');
+});
+
+test('refs rewritten against the manifest; validation is all-or-nothing', () => {
   const manifest = { version: 1, objects: { 'id-c': { slug: 'c', type: 'concept-lineage', atUri: `at://${DID}/x/id-c`, rkey: 'id-c', cid: 'x', hash: 'h', publishedAt: 't' } } };
   const p = planPublish({ items: [item('a', { related_concepts: ['c', 'zzz'] })], manifest, did: DID, authority: AUTH });
   assert.deepEqual(p.create[0].record.related_concepts, [`at://${DID}/x/id-c`, 'zzz']);
-
-  const bad = planPublish({ items: [item('a', { provenance: { score: 0.1 } })], manifest: empty, did: DID, authority: AUTH });
-  assert.equal(bad.ok, false);
-  assert.equal(bad.create.length, 0, 'no ops when validation fails');
-  assert.match(bad.errors[0].errors[0], /float/);
+  const bad = planPublish({ items: [item('a', { provenance: { score: 0.1 } }), item('b')], manifest: empty, did: DID, authority: AUTH });
+  assert.equal(bad.ok, false); assert.equal(bad.create.length, 0); assert.match(bad.errors[0].errors[0], /float/);
 });
 
-test('applyPublish calls the client per op, records per-record failures, returns a new manifest', async () => {
+test('applyPublish: per-op calls, per-record failures, new manifest', async () => {
   const calls = [];
   const client = {
     async putRecord(op) { calls.push(['put', op.rkey]); if (op.rkey === 'id-b') throw new XrpcError(400, 'InvalidSwap', 'modified'); return { uri: `at://${DID}/${op.collection}/${op.rkey}`, cid: `cid-${op.rkey}` }; },
     async deleteRecord(op) { calls.push(['del', op.rkey]); },
   };
-  const plan = planPublish({ items: [item('a'), item('b')], manifest: { version: 1, objects: { 'id-z': { slug: 'z', type: 'resource', rkey: 'id-z', atUri: 'u', cid: 'c', hash: 'h', publishedAt: 't' } } }, did: DID, authority: AUTH });
+  const prev = { version: 1, objects: { 'id-z': { slug: 'z', type: 'resource', rkey: 'id-z', atUri: 'u', cid: 'c', hash: 'h', publishedAt: 't' } } };
+  const plan = planPublish({ items: [item('a'), item('b')], manifest: prev, did: DID, authority: AUTH });
   const out = await applyPublish(plan, { client, did: DID, now: () => 'NOW' });
   assert.deepEqual(calls, [['put', 'id-a'], ['put', 'id-b'], ['del', 'id-z']]);
-  assert.equal(out.applied.created, 1);
-  assert.equal(out.applied.deleted, 1);
-  assert.equal(out.failures.length, 1);
+  assert.equal(out.applied.created, 1); assert.equal(out.applied.deleted, 1);
   assert.equal(out.failures[0].id, 'id-b');
-  assert.ok(out.manifest.objects['id-a']);
-  assert.equal(out.manifest.objects['id-a'].cid, 'cid-id-a');
-  assert.equal(out.manifest.objects['id-a'].publishedAt, 'NOW');
-  assert.equal(out.manifest.objects['id-b'], undefined, 'failed record not recorded as published');
-  assert.equal(out.manifest.objects['id-z'], undefined, 'deleted removed');
+  assert.equal(out.manifest.objects['id-a'].cid, 'cid-id-a'); assert.equal(out.manifest.objects['id-a'].publishedAt, 'NOW');
+  assert.equal(out.manifest.objects['id-b'], undefined); assert.equal(out.manifest.objects['id-z'], undefined);
+  assert.equal(prev.objects['id-z'].slug, 'z', 'input not mutated');
 });
 
-test('contentHash is stable across key order', () => {
+test('contentHash stable across key order', () => {
   assert.equal(contentHash({ a: 1, b: [1, { c: 2, d: 3 }] }), contentHash({ b: [1, { d: 3, c: 2 }], a: 1 }));
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — `node --test test/atproto-publish.test.mjs` → FAIL, module not found
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
 
 ```js
-// packages/org-os-kms/src/atproto/publish.mjs — plan (pure) then apply. Validation is all-or-nothing; application is per-record.
+// packages/org-os-kms/src/atproto/publish.mjs — plan (pure) then apply. Validation all-or-nothing; application per-record.
 import { createHash } from 'node:crypto';
 import * as fw from '../framework.mjs';
 import { rewriteRefs, resolverFrom } from '../refs.mjs';
+import { slugFromRef } from '../manifest.mjs';
 
 function stable(v) {
   if (Array.isArray(v)) return `[${v.map(stable).join(',')}]`;
   if (v && typeof v === 'object') return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${stable(v[k])}`).join(',')}}`;
   return JSON.stringify(v);
 }
-
 export function contentHash(record) { return createHash('sha256').update(stable(record)).digest('hex'); }
 
 export function planPublish({ items, manifest, did, authority }) {
   const lexicons = fw.generateAll({ authority });
   const resolve = resolverFrom(manifest);
-  const plan = { ok: true, errors: [], create: [], update: [], delete: [], skip: [] };
+  const plan = { ok: true, errors: [], create: [], update: [], delete: [], skip: [], previous: manifest.objects };
   const seen = new Set();
-
-  for (const { object } of items) {
-    const collection = fw.nsidFor(object.type, authority);
-    const record = fw.toRecord(rewriteRefs(object, resolve), collection);
+  for (const { schema, object, ref } of items) {
+    const collection = fw.nsidFor(schema, authority);
+    const slug = slugFromRef(ref);
+    const record = fw.toRecord(rewriteRefs(object, resolve, schema), collection);
     const v = fw.validateRecord(record, lexicons[collection]);
-    if (!v.ok) { plan.errors.push({ slug: fw.slugify(object.title), errors: v.errors }); continue; }
+    if (!v.ok) { plan.errors.push({ slug, errors: v.errors }); continue; }
     const id = object.id; seen.add(id);
     const hash = contentHash(record);
     const prev = manifest.objects[id];
-    const op = { id, slug: fw.slugify(object.title), type: object.type, collection, rkey: id, record, hash };
-    if (!prev) plan.create.push(op);
-    else if (prev.hash === hash) plan.skip.push(id);
-    else plan.update.push({ ...op, swapRecord: prev.cid });
+    const op = { id, slug, type: schema, collection, rkey: id, record, hash };
+    if (!prev) plan.create.push(op); else if (prev.hash === hash) plan.skip.push(id); else plan.update.push({ ...op, swapRecord: prev.cid });
   }
-  for (const [id, prev] of Object.entries(manifest.objects)) {
-    if (!seen.has(id)) plan.delete.push({ id, slug: prev.slug, type: prev.type, collection: fw.nsidFor(prev.type, authority), rkey: prev.rkey });
-  }
-  if (plan.errors.length) return { ...plan, ok: false, create: [], update: [], delete: [], skip: [] };
-  return plan;
+  for (const [id, prev] of Object.entries(manifest.objects)) if (!seen.has(id)) plan.delete.push({ id, slug: prev.slug, type: prev.type, collection: fw.nsidFor(prev.type, authority), rkey: prev.rkey });
+  return plan.errors.length ? { ...plan, ok: false, create: [], update: [], delete: [], skip: [] } : plan;
 }
 
 export async function applyPublish(plan, { client, did, now = () => new Date().toISOString() }) {
   if (!plan.ok) throw new Error('applyPublish called with a failed plan');
-  const manifest = { version: 1, objects: { ...plan.manifestObjects } };
-  const out = { applied: { created: 0, updated: 0, deleted: 0 }, failures: [], manifest };
-  // carry forward skipped entries untouched
+  const manifest = { version: 1, objects: {} };
   for (const id of plan.skip) manifest.objects[id] = plan.previous[id];
-
-  for (const [kind, ops] of [['create', plan.create], ['update', plan.update]]) {
+  const out = { applied: { created: 0, updated: 0, deleted: 0 }, failures: [], manifest };
+  for (const [kind, ops] of [['created', plan.create], ['updated', plan.update]]) {
     for (const op of ops) {
       try {
         const { uri, cid } = await client.putRecord({ repo: did, collection: op.collection, rkey: op.rkey, record: op.record, swapRecord: op.swapRecord });
         manifest.objects[op.id] = { slug: op.slug, type: op.type, rkey: op.rkey, atUri: uri, cid, hash: op.hash, publishedAt: now() };
-        out.applied[kind === 'create' ? 'created' : 'updated']++;
-      } catch (e) {
-        out.failures.push({ id: op.id, error: e.message });
-        if (kind === 'update') manifest.objects[op.id] = plan.previous[op.id]; // keep last-known-good
-      }
+        out.applied[kind]++;
+      } catch (e) { out.failures.push({ id: op.id, error: e.message }); if (kind === 'updated') manifest.objects[op.id] = plan.previous[op.id]; }
     }
   }
   for (const op of plan.delete) {
@@ -1059,34 +1004,17 @@ export async function applyPublish(plan, { client, did, now = () => new Date().t
 }
 ```
 
-`applyPublish` needs the previous manifest entries; make `planPublish` attach them: at the end of `planPublish`, before returning, set `plan.previous = manifest.objects; plan.manifestObjects = {};`. (Both are plain data; the test's `assert.deepEqual` on `plan.skip` etc. is unaffected.)
-
-- [ ] **Step 4: Run tests** — `cd packages/org-os-kms && npm test` → PASS. If `fw.slugify` is not re-exported, it is — `framework.mjs` already exports it from `storage.mjs`.
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/org-os-kms/src/atproto/publish.mjs packages/org-os-kms/test/atproto-publish.test.mjs
-git commit -m "feat(kms): publish planner (validate-all, diff by content hash) + per-record applier"
-```
+- [ ] **Step 4: Run** → PASS. **Commit:** `feat(kms): publish planner + per-record applier`
 
 ---
 
-### Task 9: Static surface
+### Task 10: Static surface
 
 **Files:**
 - Create: `packages/org-os-kms/src/static/surface.mjs`
 - Test: `packages/org-os-kms/test/static-surface.test.mjs`
 
-**Interfaces:**
-- Produces: `writeStaticSurface({ dir, outDir = 'public', items, manifest, config }) → { files: string[] }`. Writes, relative to `join(dir, outDir)`:
-  - `api/<type>.json` → `{ "@context": "/kb/context.jsonld", type, count, items: [entry] }`
-  - `api/<type>/<id>.json` → `entry`
-  - `api/index.json` → `{ name, description, endpoints: [{path, description}], access: {readOnly:true, authentication:'none'} }` (Open Haven's shape — cheap, and their consumers expect it; `.well-known/knowledge.json` remains the DAOstar discovery doc)
-  - `.well-known/knowledge.json` → DAOstar `KnowledgeManifest` with `exchange.published_domains` = the NSIDs published, `subscribed_domains` = peer DIDs + static-source base URLs from `config.connectors`, `sources` = published `source-system` entries' `{title, url?, steward}`, plus `geo: config.geo`, `did: config.atproto?.did`.
-  - copies every `<dir>/.well-known/*.json` that is not `knowledge.json` into `<outDir>/.well-known/`.
-  - `entry` = `{ "@context": "/kb/context.jsonld", ...object, atUri, cid }` where `atUri`/`cid` come from the manifest (absent if not yet on AT Proto).
-  - Only `items` that are publishable are written (caller passes the filtered list from `ensureIds`).
+**Interfaces:** `writeStaticSurface({ dir, outDir = 'public', items, allItems, manifest, config }) → { files }`. Grouped by `item.schema`. Writes `api/context.jsonld` (from `fw.toJsonLdContext()`), `api/<schema>.json`, `api/<schema>/<id>.json`, `api/index.json`, `.well-known/knowledge.json`; copies root `.well-known/*.json` except `knowledge.json` (**this includes members/finances/meetings — they are already the instance's DAOstar public manifests; if an instance does not want them served, it must not keep them in root `.well-known/`**). `@context` is `/api/context.jsonld`. `sources` = source-system objects from `allItems` (the full listing) whose `public_use` is publishable — cards are metadata about the instance, not records, so opt-in doesn't apply.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1099,129 +1027,133 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { writeStaticSurface } from '../src/static/surface.mjs';
 
-test('writes api/, index.json, .well-known/knowledge.json and copies other .well-known files', () => {
+test('api/, context.jsonld, index.json, knowledge.json, .well-known copy', () => {
   const dir = mkdtempSync(join(tmpdir(), 'kms-static-'));
   mkdirSync(join(dir, '.well-known'));
   writeFileSync(join(dir, '.well-known', 'dao.json'), '{"type":"DAO"}');
-  const items = [
-    { schema: 'resource', ref: 'r#a', object: { title: 'A', type: 'resource', public_use: 'ok-with-caveat', id: 'id-a' } },
-    { schema: 'source-system', ref: 's#s', object: { title: 'S', type: 'source-system', public_use: 'ok-with-caveat', id: 'id-s', steward: 'x', return_path: 'y' } },
-  ];
+  const self = { schema: 'source-system', ref: 's#self', object: { title: 'S', type: 'knowledge-garden', public_use: 'ok-with-caveat', url: 'https://kc', steward: 'x', return_path: 'y' } };
+  const items = [{ schema: 'resource', ref: 'r#a', object: { title: 'A', type: 'resource', public_use: 'ok-with-caveat', id: 'id-a' } }];
+  const allItems = [...items, self, { schema: 'source-system', ref: 's#priv', object: { title: 'P', type: 'database', public_use: 'internal-only' } }];
   const manifest = { version: 1, objects: { 'id-a': { slug: 'a', type: 'resource', rkey: 'id-a', atUri: 'at://d/c/id-a', cid: 'cid-a', hash: 'h', publishedAt: 't' } } };
-  const config = { atproto: { did: 'did:plc:me', nsid_authority: 'xyz.regencoordination.kb' }, geo: { parent_space: 'p', space: null },
+  const config = { instance: 't', atproto: { did: 'did:plc:me', nsid_authority: 'xyz.regencoordination.kb' }, geo: { parent_space: 'p', space: null },
     connectors: [{ name: 'atproto', config: { peers: ['did:plc:peer'] } }, { name: 'static-json', config: { base_url: 'https://www.openhaven.net' } }] };
-
-  const { files } = writeStaticSurface({ dir, items, manifest, config });
+  const { files } = writeStaticSurface({ dir, items, allItems, manifest, config });
   const pub = (p) => JSON.parse(readFileSync(join(dir, 'public', p), 'utf8'));
-
+  assert.ok(pub('api/context.jsonld')['@vocab']);
   const all = pub('api/resource.json');
-  assert.equal(all['@context'], '/kb/context.jsonld');
-  assert.equal(all.count, 1);
-  assert.equal(all.items[0].atUri, 'at://d/c/id-a');
-  const one = pub('api/resource/id-a.json');
-  assert.equal(one.cid, 'cid-a');
-  const s = pub('api/source-system/id-s.json');
-  assert.equal(s.atUri, undefined, 'not yet on AT Proto');
-
-  const idx = pub('api/index.json');
-  assert.ok(idx.endpoints.some((e) => e.path === '/api/resource.json'));
-
+  assert.equal(all['@context'], '/api/context.jsonld'); assert.equal(all.count, 1); assert.equal(all.items[0].atUri, 'at://d/c/id-a');
+  assert.equal(pub('api/resource/id-a.json').cid, 'cid-a');
+  assert.ok(pub('api/index.json').endpoints.some((e) => e.path === '/api/resource.json'));
   const km = pub('.well-known/knowledge.json');
   assert.equal(km.type, 'KnowledgeManifest');
-  assert.deepEqual(km.exchange.published_domains, ['xyz.regencoordination.kb.resource', 'xyz.regencoordination.kb.sourceSystem']);
+  assert.deepEqual(km.exchange.published_domains, ['xyz.regencoordination.kb.resource']);
   assert.deepEqual(km.exchange.subscribed_domains, ['did:plc:peer', 'https://www.openhaven.net']);
-  assert.equal(km.sources[0].title, 'S');
-  assert.equal(km.did, 'did:plc:me');
-  assert.deepEqual(km.geo, { parent_space: 'p', space: null });
-
+  assert.deepEqual(km.sources.map((s) => s.title), ['S'], 'only publishable-public_use cards, from the full listing');
+  assert.equal(km.did, 'did:plc:me'); assert.deepEqual(km.geo, { parent_space: 'p', space: null });
   assert.ok(existsSync(join(dir, 'public', '.well-known', 'dao.json')));
-  assert.ok(files.length >= 6);
+  assert.ok(files.includes('api/context.jsonld') && files.includes('.well-known/knowledge.json'));
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — FAIL, module not found
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
 
 ```js
-// packages/org-os-kms/src/static/surface.mjs — the non-AT-Proto publication target (spec Q1/Q2/Q13/Q18). Pure over (items, manifest, config).
+// packages/org-os-kms/src/static/surface.mjs — the non-AT-Proto publication target. Pure over (items, allItems, manifest, config).
 import { mkdirSync, writeFileSync, readdirSync, copyFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import * as fw from '../framework.mjs';
 
-const CONTEXT = '/kb/context.jsonld';
+const CONTEXT = '/api/context.jsonld';
 
-export function writeStaticSurface({ dir, outDir = 'public', items, manifest, config }) {
-  const out = join(dir, outDir);
-  const files = [];
+export function writeStaticSurface({ dir, outDir = 'public', items, allItems = items, manifest, config }) {
+  const out = join(dir, outDir); const files = [];
   const write = (rel, data) => { const p = join(out, rel); mkdirSync(join(p, '..'), { recursive: true }); writeFileSync(p, JSON.stringify(data, null, 2) + '\n'); files.push(rel); };
 
-  const byType = new Map();
-  for (const { object } of items) {
+  write('api/context.jsonld', fw.toJsonLdContext());
+  const bySchema = new Map();
+  for (const { schema, object } of items) {
     const m = manifest.objects[object.id];
     const entry = { '@context': CONTEXT, ...object, ...(m ? { atUri: m.atUri, cid: m.cid } : {}) };
-    if (!byType.has(object.type)) byType.set(object.type, []);
-    byType.get(object.type).push(entry);
+    if (!bySchema.has(schema)) bySchema.set(schema, []);
+    bySchema.get(schema).push(entry);
   }
-  const types = [...byType.keys()].sort();
-  for (const t of types) {
-    const entries = byType.get(t);
-    write(`api/${t}.json`, { '@context': CONTEXT, type: t, count: entries.length, items: entries });
-    for (const e of entries) write(`api/${t}/${e.id}.json`, e);
+  const schemas = [...bySchema.keys()].sort();
+  for (const s of schemas) {
+    const entries = bySchema.get(s);
+    write(`api/${s}.json`, { '@context': CONTEXT, type: s, count: entries.length, items: entries });
+    for (const e of entries) write(`api/${s}/${e.id}.json`, e);
   }
-
   write('api/index.json', {
     name: `${config.instance || 'org-os-kms'} knowledge API`,
-    description: 'Static, read-only JSON-LD over the published knowledge objects of this instance. Each entry carries its AT Proto atUri when published there.',
-    endpoints: types.flatMap((t) => [{ path: `/api/${t}.json`, description: `All ${t} entries.` }, { path: `/api/${t}/{id}.json`, description: `One ${t} by id.` }]),
+    description: 'Static, read-only JSON-LD over the published knowledge objects of this instance. Entries carry atUri when published to AT Proto.',
+    endpoints: schemas.flatMap((s) => [{ path: `/api/${s}.json`, description: `All ${s} entries.` }, { path: `/api/${s}/{id}.json`, description: `One ${s} by id.` }]),
     access: { readOnly: true, authentication: 'none' },
   });
-
   const authority = config.atproto?.nsid_authority;
   const subscribed = (config.connectors || []).flatMap((c) => c.name === 'atproto' ? (c.config?.peers || []) : c.config?.base_url ? [c.config.base_url] : []);
+  const cards = allItems.filter((i) => i.schema === 'source-system' && fw.PUBLISHABLE_PUBLIC_USE.includes(i.object.public_use)).map(({ object }) => ({ title: object.title, url: object.url, steward: object.steward }));
   write('.well-known/knowledge.json', {
-    '@context': 'https://www.daostar.org/schemas',
-    type: 'KnowledgeManifest',
-    did: config.atproto?.did,
-    geo: config.geo,
-    domains: types,
-    exchange: { published_domains: authority ? types.map((t) => fw.nsidFor(t, authority)) : [], subscribed_domains: subscribed },
-    sources: (byType.get('source-system') || []).map((s) => ({ title: s.title, url: s.url, steward: s.steward, atUri: s.atUri })),
+    '@context': 'https://www.daostar.org/schemas', type: 'KnowledgeManifest', did: config.atproto?.did, geo: config.geo, domains: schemas,
+    exchange: { published_domains: authority ? schemas.map((s) => fw.nsidFor(s, authority)) : [], subscribed_domains: subscribed }, sources: cards,
   });
-
   const wk = join(dir, '.well-known');
-  if (existsSync(wk)) for (const f of readdirSync(wk)) {
-    if (f.endsWith('.json') && f !== 'knowledge.json') { mkdirSync(join(out, '.well-known'), { recursive: true }); copyFileSync(join(wk, f), join(out, '.well-known', f)); files.push(`.well-known/${f}`); }
-  }
+  if (existsSync(wk)) for (const f of readdirSync(wk)) if (f.endsWith('.json') && f !== 'knowledge.json') { mkdirSync(join(out, '.well-known'), { recursive: true }); copyFileSync(join(wk, f), join(out, '.well-known', f)); files.push(`.well-known/${f}`); }
   return { files };
 }
 ```
 
-- [ ] **Step 4: Run tests** — PASS
+If `toJsonLdContext` is not in `framework.mjs`'s re-export list, add it (it is exported by `toolkit-framework/src/index.mjs:119`).
 
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/org-os-kms/src/static/surface.mjs packages/org-os-kms/test/static-surface.test.mjs
-git commit -m "feat(kms): static JSON-LD surface + .well-known/knowledge.json from the publish manifest"
-```
+- [ ] **Step 4: Run** → PASS. **Commit:** `feat(kms): static JSON-LD surface + .well-known/knowledge.json`
 
 ---
 
-### Task 10: `publish` op, lifecycle binding, config
+### Task 11: Instance gate hook + `publish` op + lifecycle binding
 
 **Files:**
-- Modify: `packages/org-os-kms/src/ops.mjs`
-- Modify: `packages/org-os-kms/src/bind.mjs:27` (close list)
-- Modify: `packages/org-os-kms/src/config.mjs` (defaults)
-- Modify: repo root `kms.yaml`, `.env.example`
-- Test: `packages/org-os-kms/test/publish-op.test.mjs`
+- Create: `packages/org-os-kms/src/gate.mjs`
+- Modify: `src/ops.mjs`, `src/bind.mjs`, **`profile/profile.yaml`** (lifecycle twin — `test/bind.test.mjs:44` enforces sync), `src/config.mjs`
+- Modify: `test/bind.test.mjs:35` (close list assertion)
+- Modify: root `kms.yaml`, `.env.example`
+- Test: `test/gate.test.mjs`, `test/publish-op.test.mjs`
 
 **Interfaces:**
-- Consumes: `ensureIds`, `readManifest/writeManifest`, `planPublish/applyPublish`, `createClient`, `writeStaticSurface`.
-- Produces: `OPS.publish = { kind:'exec', write:true, run(ctx) }`; `ctx.deps` may inject `{ createClient, env }` for tests. Report shape: `{ ok, report: { minted, atproto: {status:'applied'|'not-configured'|'failed', created, updated, deleted, skipped, failures} , static: { files } , dry } }`. `ctx.flags?.dry === true` → plan + static preview, no PDS writes, no manifest write.
+- `loadInstanceGate(dir, config) → Promise<fn | null>`; `buildGateContext(allItems) → { sourceSystems: Record<slug, object>, boundaries: object[] }` keyed by `slugFromRef(ref)` and `schema`; `applyGate(gate, items, ctx) → { passed, rejected: [{slug, reason}] }`.
+- `OPS.publish` (`write: true`, async). Sequence: `all = adapter.list` → `types = publishableTypes(config)` → `candidates = all.filter(isPublishable(object, {schema, types}))` → instance gate → `ensureIds({ items: candidates, write: !dry })` → `planPublish` → (unless dry / not configured) `login` + `applyPublish` → static surface (unless `publish.static === false`) → manifest (unless dry). Report `{ minted, dry, gate?, atproto: {status, …}, static, errors? }`. `ctx.deps` = `{ createClient, env }` injectable; `ctx.flags.dry`.
 
-- [ ] **Step 1: Write the failing test**
+- [ ] **Step 1: Write the failing tests**
+
+```js
+// packages/org-os-kms/test/gate.test.mjs
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { loadInstanceGate, buildGateContext, applyGate } from '../src/gate.mjs';
+
+test('buildGateContext: source-systems by ref slug (schema-keyed), boundaries structurally', () => {
+  const ctx = buildGateContext([
+    { schema: 'source-system', ref: 'data/kb/source-system.yaml#refi-dao-blog', object: { title: 'ReFi Blog', type: 'blog', url: 'https://blog.refidao.com' } },
+    { schema: 'public-use-boundary', ref: 'b#x', object: { tier: 'never-publish-without-consent', source_lineage: 'https://x' } },
+    { schema: 'resource', ref: 'r#r', object: { title: 'R', type: 'resource' } },
+  ]);
+  assert.ok(ctx.sourceSystems['refi-dao-blog']); assert.equal(ctx.boundaries.length, 1);
+});
+
+test('loadInstanceGate imports the module; missing export is fail-hard; absent config → null', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'kms-gate-'));
+  writeFileSync(join(dir, 'gate.mjs'), 'export function isPublishable(o){ return o.title === "yes" ? { ok: true } : { ok: false, reason: "no" }; }');
+  const gate = await loadInstanceGate(dir, { publish: { gate: 'gate.mjs' } });
+  const { passed, rejected } = applyGate(gate, [{ ref: 'x#yes', object: { title: 'yes' } }, { ref: 'x#no', object: { title: 'no' } }], {});
+  assert.equal(passed.length, 1); assert.deepEqual(rejected, [{ slug: 'no', reason: 'no' }]);
+  writeFileSync(join(dir, 'bad.mjs'), 'export const x = 1;');
+  await assert.rejects(loadInstanceGate(dir, { publish: { gate: 'bad.mjs' } }), /isPublishable/);
+  assert.equal(await loadInstanceGate(dir, {}), null);
+});
+```
 
 ```js
 // packages/org-os-kms/test/publish-op.test.mjs
@@ -1234,95 +1166,134 @@ import yaml from 'js-yaml';
 import { OPS } from '../src/ops.mjs';
 import { LIFECYCLE_BINDINGS } from '../src/bind.mjs';
 
-function instance({ atproto = true } = {}) {
+function instance({ atproto = true, gate = false } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'kms-pub-'));
   mkdirSync(join(dir, 'data', 'kb'), { recursive: true });
   writeFileSync(join(dir, 'data', 'kb', 'resource.yaml'), yaml.dump({ entries: {
     a: { title: 'A', type: 'resource', public_use: 'ok-with-caveat' },
-    i: { title: 'I', type: 'resource', public_use: 'internal-only' },
-  } }));
+    b: { title: 'B', type: 'resource', public_use: 'ok-with-caveat', maturity: 'reviewed' },
+    i: { title: 'I', type: 'resource', public_use: 'internal-only' } } }));
+  writeFileSync(join(dir, 'data', 'kb', 'source-system.yaml'), yaml.dump({ entries: { card: { title: 'Card', type: 'blog', public_use: 'ok-with-caveat', steward: 's', return_path: 'r' } } }));
+  if (gate) writeFileSync(join(dir, 'gate.mjs'), 'export function isPublishable(o){ return o.maturity === "reviewed" ? { ok: true } : { ok: false, reason: "not reviewed" }; }');
   writeFileSync(join(dir, 'kms.yaml'), yaml.dump({ instance: 't', adapter: 'repo-data', target: '.',
+    ...(gate ? { publish: { gate: 'gate.mjs' } } : {}),
     ...(atproto ? { atproto: { did: 'did:plc:me', handle: 'kc.test', pds: 'https://pds.test', nsid_authority: 'xyz.regencoordination.kb' } } : {}) }));
   return dir;
 }
+const fakeClientFactory = (log) => () => ({
+  async login() { log.push('login'); return { did: 'did:plc:me' }; },
+  async putRecord(op) { log.push(['put', op.rkey]); return { uri: `at://did:plc:me/${op.collection}/${op.rkey}`, cid: 'cid1' }; },
+  async deleteRecord(op) { log.push(['del', op.rkey]); },
+});
+const env = { ATPROTO_APP_PASSWORD: 'pw' };
 
-function fakeClientFactory(log) {
-  return () => ({
-    async login() { log.push('login'); return { did: 'did:plc:me' }; },
-    async putRecord(op) { log.push(['put', op.rkey]); return { uri: `at://did:plc:me/${op.collection}/${op.rkey}`, cid: 'cid1' }; },
-    async deleteRecord(op) { log.push(['del', op.rkey]); },
-  });
-}
-
-test('publish is registered and bound after render.site, before sync.push', () => {
+test('publish registered; bound after render.site, before sync.push', () => {
   assert.ok(OPS.publish && OPS.publish.write === true);
   const c = LIFECYCLE_BINDINGS.close;
-  assert.ok(c.indexOf('publish') > c.indexOf('render.site'));
-  assert.equal(c.indexOf('publish'), c.indexOf('sync.push') - 1);
+  assert.ok(c.indexOf('publish') > c.indexOf('render.site')); assert.equal(c.indexOf('publish'), c.indexOf('sync.push') - 1);
 });
 
-test('publish: mints ids, writes to PDS, writes manifest + static surface', async () => {
+test('publish: gates by schema (card not published by default), mints, writes PDS + manifest + static', async () => {
   const dir = instance(); const log = [];
-  const res = await OPS.publish.run({ dir, deps: { createClient: fakeClientFactory(log), env: { ATPROTO_APP_PASSWORD: 'pw' } } });
+  const res = await OPS.publish.run({ dir, deps: { createClient: fakeClientFactory(log), env } });
   assert.equal(res.ok, true, JSON.stringify(res.report));
-  assert.equal(res.report.minted, 1);
-  assert.equal(res.report.atproto.status, 'applied');
-  assert.equal(res.report.atproto.created, 1);
-  assert.deepEqual(log[0], 'login');
+  assert.equal(res.report.minted, 2);
+  assert.equal(res.report.atproto.status, 'applied'); assert.equal(res.report.atproto.created, 2);
   assert.ok(existsSync(join(dir, 'data', 'kms-published.json')));
   assert.ok(existsSync(join(dir, 'public', 'api', 'resource.json')));
-  const m = JSON.parse(readFileSync(join(dir, 'data', 'kms-published.json'), 'utf8'));
-  assert.equal(Object.keys(m.objects).length, 1);
+  assert.ok(!existsSync(join(dir, 'public', 'api', 'source-system.json')), 'opt-in type not published');
+  const disk = yaml.load(readFileSync(join(dir, 'data', 'kb', 'resource.yaml'), 'utf8')).entries;
+  assert.ok(disk.a.id && disk.b.id && !disk.i.id);
 });
 
-test('publish: second run is all skips', async () => {
-  const dir = instance(); const log = [];
-  const deps = { createClient: fakeClientFactory(log), env: { ATPROTO_APP_PASSWORD: 'pw' } };
+test('publish: instance gate narrows; ids minted only for gate-passing objects', async () => {
+  const dir = instance({ gate: true }); const log = [];
+  const res = await OPS.publish.run({ dir, deps: { createClient: fakeClientFactory(log), env } });
+  assert.equal(res.report.gate.passed, 1); assert.equal(res.report.gate.rejected, 1);
+  assert.deepEqual(res.report.gate.by_reason, { 'not reviewed': 1 });
+  assert.equal(res.report.minted, 1); assert.equal(res.report.atproto.created, 1);
+  const disk = yaml.load(readFileSync(join(dir, 'data', 'kb', 'resource.yaml'), 'utf8')).entries;
+  assert.ok(disk.b.id && !disk.a.id);
+});
+
+test('second run is all skips', async () => {
+  const dir = instance(); const log = []; const deps = { createClient: fakeClientFactory(log), env };
   await OPS.publish.run({ dir, deps });
   const res = await OPS.publish.run({ dir, deps });
-  assert.equal(res.report.atproto.skipped, 1);
-  assert.equal(res.report.atproto.created, 0);
+  assert.equal(res.report.atproto.skipped, 2); assert.equal(res.report.atproto.created, 0);
 });
 
-test('publish: not configured → static still written, atproto reported not-configured, ok', async () => {
+test('not configured (no atproto / no credential) → static still written, ok', async () => {
+  for (const dir of [instance({ atproto: false }), instance()]) {
+    const res = await OPS.publish.run({ dir, deps: { createClient: () => { throw new Error('must not be called'); }, env: {} } });
+    assert.equal(res.ok, true); assert.equal(res.report.atproto.status, 'not-configured');
+    assert.ok(existsSync(join(dir, 'public', 'api', 'resource.json')));
+  }
+});
+
+test('publish.static:false skips the surface', async () => {
   const dir = instance({ atproto: false });
-  const res = await OPS.publish.run({ dir, deps: { createClient: () => { throw new Error('must not be called'); }, env: {} } });
-  assert.equal(res.ok, true);
-  assert.equal(res.report.atproto.status, 'not-configured');
-  assert.ok(existsSync(join(dir, 'public', 'api', 'resource.json')));
+  const cfg = yaml.load(readFileSync(join(dir, 'kms.yaml'), 'utf8')); cfg.publish = { static: false }; writeFileSync(join(dir, 'kms.yaml'), yaml.dump(cfg));
+  const res = await OPS.publish.run({ dir, deps: { env: {} } });
+  assert.equal(res.report.static, 'disabled'); assert.ok(!existsSync(join(dir, 'public')));
 });
 
-test('publish: missing credential → not-configured (not a failure)', async () => {
-  const dir = instance();
-  const res = await OPS.publish.run({ dir, deps: { createClient: () => { throw new Error('must not be called'); }, env: {} } });
-  assert.equal(res.ok, true);
-  assert.equal(res.report.atproto.status, 'not-configured');
-});
-
-test('publish --dry: plans and previews, writes nothing to PDS or manifest', async () => {
+test('--dry: plans, mints nothing, writes nothing', async () => {
   const dir = instance(); const log = [];
-  const res = await OPS.publish.run({ dir, flags: { dry: true }, deps: { createClient: fakeClientFactory(log), env: { ATPROTO_APP_PASSWORD: 'pw' } } });
-  assert.equal(res.report.dry, true);
-  assert.equal(res.report.atproto.created, 1);
+  const res = await OPS.publish.run({ dir, flags: { dry: true }, deps: { createClient: fakeClientFactory(log), env } });
+  assert.equal(res.report.dry, true); assert.equal(res.report.atproto.status, 'planned'); assert.equal(res.report.atproto.created, 2);
   assert.equal(log.length, 0);
-  assert.ok(!existsSync(join(dir, 'data', 'kms-published.json')));
+  assert.ok(!existsSync(join(dir, 'data', 'kms-published.json'))); assert.ok(!existsSync(join(dir, 'public')));
+  assert.equal(yaml.load(readFileSync(join(dir, 'data', 'kb', 'resource.yaml'), 'utf8')).entries.a.id, undefined);
 });
 
-test('publish: validation failure fails hard before any PDS write', async () => {
+test('validation failure fails hard before any PDS write', async () => {
   const dir = instance(); const log = [];
   writeFileSync(join(dir, 'data', 'kb', 'resource.yaml'), yaml.dump({ entries: { a: { title: 'A', type: 'resource', public_use: 'ok-with-caveat', provenance: { score: 0.5 } } } }));
-  const res = await OPS.publish.run({ dir, deps: { createClient: fakeClientFactory(log), env: { ATPROTO_APP_PASSWORD: 'pw' } } });
-  assert.equal(res.ok, false);
-  assert.equal(log.length, 0);
-  assert.match(JSON.stringify(res.report.errors), /float/);
+  const res = await OPS.publish.run({ dir, deps: { createClient: fakeClientFactory(log), env } });
+  assert.equal(res.ok, false); assert.equal(log.length, 0); assert.match(JSON.stringify(res.report.errors), /float/);
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — `node --test test/publish-op.test.mjs` → FAIL (`OPS.publish` undefined)
+- [ ] **Step 2: Run** → FAIL
 
-- [ ] **Step 3: Implement the op**
+- [ ] **Step 3: Implement `src/gate.mjs`**
 
-In `packages/org-os-kms/src/ops.mjs` add imports at the top:
+```js
+// packages/org-os-kms/src/gate.mjs — the instance gate hook. Framework gate is the floor; this can only narrow.
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { slugFromRef } from './manifest.mjs';
+
+export async function loadInstanceGate(dir, config) {
+  const rel = config.publish?.gate;
+  if (!rel) return null;
+  const mod = await import(pathToFileURL(join(dir, rel)).href);
+  if (typeof mod.isPublishable !== 'function') throw new Error(`publish.gate ${rel} does not export isPublishable(obj, ctx)`);
+  return mod.isPublishable;
+}
+
+export function buildGateContext(allItems) {
+  const sourceSystems = {}; const boundaries = [];
+  for (const { schema, ref, object } of allItems) {
+    if (schema === 'source-system') sourceSystems[slugFromRef(ref)] = { ...object, slug: slugFromRef(ref) };
+    if (schema === 'public-use-boundary' || Object.prototype.hasOwnProperty.call(object, 'tier')) boundaries.push(object);
+  }
+  return { sourceSystems, boundaries };
+}
+
+export function applyGate(gate, items, ctx) {
+  const passed = []; const rejected = [];
+  for (const it of items) {
+    const v = gate({ ...it.object, type: it.object.type ?? it.schema, slug: slugFromRef(it.ref) }, ctx);
+    const ok = typeof v === 'boolean' ? v : Boolean(v?.ok);
+    if (ok) passed.push(it); else rejected.push({ slug: slugFromRef(it.ref), reason: (typeof v === 'object' && v?.reason) || 'rejected by instance gate' });
+  }
+  return { passed, rejected };
+}
+```
+
+**The `publish` op** — add imports to `ops.mjs`:
 
 ```js
 import { loadKmsConfig } from './config.mjs';
@@ -1331,9 +1302,10 @@ import { readManifest, writeManifest } from './manifest.mjs';
 import { planPublish, applyPublish } from './atproto/publish.mjs';
 import { createClient as defaultCreateClient } from './atproto/client.mjs';
 import { writeStaticSurface } from './static/surface.mjs';
+import { loadInstanceGate, buildGateContext, applyGate } from './gate.mjs';
 ```
 
-and add to `OPS` (before the `'csis-review'` skill entries):
+and the op:
 
 ```js
 'publish': { kind: 'exec', write: true, run: async (ctx) => {
@@ -1342,18 +1314,30 @@ and add to `OPS` (before the `'csis-review'` skill entries):
   const deps = { createClient: defaultCreateClient, env: process.env, ...(ctx.deps || {}) };
   const dry = ctx.flags?.dry === true;
   const target = join(dir, config.target);
+  const adapter = fw.getAdapter(config.adapter);
+  const report = { dry, atproto: { status: 'not-configured' }, static: null };
 
-  const { minted, items } = ensureIds({ adapter: config.adapter, target });
+  const all = adapter.list(target);
+  const types = fw.publishableTypes(config);
+  let candidates = all.filter(({ schema, object }) => fw.isPublishable(object, { schema, types }));
+  const gate = await loadInstanceGate(dir, config);
+  if (gate) {
+    const { passed, rejected } = applyGate(gate, candidates, buildGateContext(all));
+    candidates = passed;
+    const by_reason = {}; for (const r of rejected) by_reason[r.reason] = (by_reason[r.reason] || 0) + 1;
+    report.gate = { passed: passed.length, rejected: rejected.length, by_reason };
+  }
+  const { minted, items } = ensureIds({ adapter: config.adapter, target, items: candidates, write: !dry });
+  report.minted = minted.length;
+
   const manifest = readManifest(dir);
-  const report = { minted: minted.length, dry, atproto: { status: 'not-configured' }, static: null };
-
-  const at = config.atproto;
-  const password = deps.env.ATPROTO_APP_PASSWORD;
   let next = manifest;
+  const at = config.atproto;
   if (at?.did && at?.pds && at?.nsid_authority) {
     const plan = planPublish({ items, manifest, did: at.did, authority: at.nsid_authority });
     if (!plan.ok) return { ok: false, report: { ...report, errors: plan.errors } };
     const counts = { created: plan.create.length, updated: plan.update.length, deleted: plan.delete.length, skipped: plan.skip.length };
+    const password = deps.env.ATPROTO_APP_PASSWORD;
     if (!password) report.atproto = { status: 'not-configured', reason: 'ATPROTO_APP_PASSWORD not set', ...counts };
     else if (dry) report.atproto = { status: 'planned', ...counts };
     else {
@@ -1364,70 +1348,56 @@ and add to `OPS` (before the `'csis-review'` skill entries):
       report.atproto = { status: applied.failures.length ? 'failed' : 'applied', ...applied.applied, skipped: plan.skip.length, failures: applied.failures };
     }
   }
-
-  report.static = writeStaticSurface({ dir, outDir: config.publish?.static_dir || 'public', items, manifest: next, config });
+  if (config.publish?.static === false) report.static = 'disabled';
+  else if (!dry) report.static = writeStaticSurface({ dir, outDir: config.publish?.static_dir || 'public', items, allItems: all, manifest: next, config });
+  else report.static = 'skipped (dry)';
   if (!dry) writeManifest(dir, next);
   return { ok: report.atproto.status !== 'failed', report };
 } },
 ```
 
-Make sure `join` is imported in `ops.mjs` (it already is — used by `index.rebuild`).
+`bind.mjs` close → `['csis-review','bridge','emit-contributions','federate.check','index.rebuild','render.site','render.dashboard','publish','sync.push']`; mirror it in `profile/profile.yaml` `lifecycle_bindings.close`; update `test/bind.test.mjs:35` to the same list. `config.mjs` defaults: `{ render: {}, peers: {}, connectors: [], publish: {}, ...cfg }`.
 
-In `packages/org-os-kms/src/bind.mjs`, change the `close` list to:
-
-```js
-close: ['csis-review', 'bridge', 'emit-contributions', 'federate.check', 'index.rebuild', 'render.site', 'render.dashboard', 'publish', 'sync.push'],
-```
-
-`executor.mjs` — confirm it `await`s `op.run(ctx)`. Open `src/executor.mjs`; if the call is `const r = op.run(ctx)` without `await`, change `runLifecycle` to `async` and the call to `const r = await op.run(ctx)`, then run the existing executor tests (they must still pass — synchronous ops are unaffected by `await`).
-
-`packages/org-os-kms/src/config.mjs` — in `loadKmsConfig`, extend the returned defaults: `return { render: {}, peers: {}, connectors: [], publish: {}, ...cfg };`.
-
-- [ ] **Step 4: Configure this instance**
-
-Append to repo-root `kms.yaml`:
+- [ ] **Step 4: Configure this instance** — append to root `kms.yaml`:
 
 ```yaml
-atproto:
-  did: null                              # filled after the dev account is created on the PDS (see docs/CONNECTORS.md)
-  handle: dev.kc.regencoordination.xyz   # dev identity — disposable; real handle kc.regencoordination.xyz awaits council validation
-  pds: null
-  nsid_authority: xyz.regencoordination.kb
-geo:
-  parent_space: bd727a6ad6ec4a058f681ea9002a1fbf   # Knowledge Commons topic space (Rather)
-  space: null                                       # Regen Knowledge Commons space — fill when bootstrapped
 publish:
   static_dir: public
+  types_opt_in: [source-system]          # our cards are the federation primitive; refi-dao-commons keeps them off
+atproto:
+  did: null                              # regen-toolkit is a PULLER first; fill when this instance gets its own account
+  handle: kc.regencoordination.xyz
+  pds: null                              # REQUIRED for pulling peers even while did is null (Task 15)
+  nsid_authority: xyz.regencoordination.kb
+geo:
+  parent_space: bd727a6ad6ec4a058f681ea9002a1fbf
+  space: null
 ```
 
-`did: null` keeps `publish` in `not-configured` for AT Proto until the account exists; the static surface publishes regardless.
+`.env.example`: `ATPROTO_APP_PASSWORD=`
 
-Append to `.env.example`: `ATPROTO_APP_PASSWORD=   # app password for the instance's AT Proto account; never commit`.
-
-- [ ] **Step 5: Run tests** — `cd packages/org-os-kms && npm test` → PASS. Also `cd ../.. && npm run build` must still succeed (the static surface writes into `public/`, which Astro copies; nothing else changed).
-
-- [ ] **Step 6: Commit**
+- [ ] **Step 5: Run** `npm test` → PASS; `cd ../.. && npm run build` succeeds. **Commit** (include `profile/profile.yaml`, `test/bind.test.mjs`):
 
 ```bash
-git add packages/org-os-kms/src/ops.mjs packages/org-os-kms/src/bind.mjs packages/org-os-kms/src/config.mjs packages/org-os-kms/src/executor.mjs packages/org-os-kms/test/publish-op.test.mjs kms.yaml .env.example
-git commit -m "feat(kms): publish op — mint ids, diff-publish to PDS, static surface, manifest; bound on close"
+git add packages/org-os-kms/src/{gate,ops,bind,config}.mjs packages/org-os-kms/profile/profile.yaml packages/org-os-kms/test/{gate,publish-op,bind}.test.mjs kms.yaml .env.example
+git commit -m "feat(kms): publish op with instance gate hook; bound on close"
 ```
 
 ---
 
-### Task 11: Connector contract + `runConnector` (framework)
+### Task 12: Connector contract + `runConnector`
 
 **Files:**
 - Create: `packages/toolkit-framework/src/connector.mjs`
-- Modify: `packages/org-os-kms/src/framework.mjs` (re-export)
+- Modify: `packages/org-os-kms/src/framework.mjs`
 - Test: `packages/toolkit-framework/test/connector.test.mjs`
 
 **Interfaces:**
-- Produces:
-  - `Connector = { name, protocol, capabilities: {ingest, subscribe, publish}, describe(config) → sourceSystemObject, pull(config, {cursor}) → Promise<{records, cursor}>, map(record, config) → [{schema, object}] }`
-  - `NOT_IMPLEMENTED` — an `Error` subclass with `.code = 'NOT_IMPLEMENTED'`
-  - `runConnector(connector, { config, cursor, adapter, target }) → Promise<{ source, pulled, candidates, stored, collisions, cursor, retractions }>` — `source` = the `describe()` card; `map()` results are stored via `getAdapter(adapter).store(target, candidates)`; every candidate is forced to `maturity: 'raw'`, `ai_assisted: false`, and `provenance.origin` = connector name + endpoint if absent; `cursor` is returned **only** if store succeeded.
-  - `retractions`: if `pull` returns `{ records, cursor, retracted: [sourceUri] }`, `runConnector` finds local objects with a matching `sourceUri` and updates them with `{ maturity: 'held', review_needs: 'retracted at origin <uri>' }`.
+- `NOT_IMPLEMENTED` error class (`.code`).
+- `runConnector(connector, { config, cursor, adapter, target }) → { source, pulled, candidates, stored, updated, collisions, cursor, retractions, errors }`.
+  - Every candidate is forced to `maturity: 'raw'`, `public_use: 'not-public-yet'`, `ai_assisted: false`, `provenance.origin` defaulted.
+  - **Upsert by origin:** if a local object has the same `sourceUri`, `adapter.update(target, ref, patch)` where `patch` = candidate minus `id`, `maturity`, `public_use`, `review_needs` (local review state and identity are kept), plus `review_needs: 'updated at origin'`. Otherwise `adapter.store`.
+  - `pull` may return `retracted: [sourceUri]` and `errors: [...]`; both surface.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1446,124 +1416,110 @@ function instance() {
   const dir = mkdtempSync(join(tmpdir(), 'fw-conn-'));
   mkdirSync(join(dir, 'data', 'kb'), { recursive: true });
   writeFileSync(join(dir, 'data', 'kb', 'resource.yaml'), yaml.dump({ entries: {
-    old: { title: 'Old', type: 'resource', sourceUri: 'at://peer/x/old', maturity: 'reviewed' } } }));
+    old: { title: 'Old', type: 'resource', sourceUri: 'at://peer/x/old', maturity: 'reviewed', public_use: 'ok-with-caveat', id: 'local-id', notes: 'v1' } } }));
   return dir;
 }
-
 const fake = (over = {}) => ({
   name: 'fake', protocol: 'test', capabilities: { ingest: true, subscribe: false, publish: false },
   describe: (cfg) => ({ title: 'Fake', type: 'dataset', steward: 'test', return_path: cfg.endpoint }),
   pull: async (cfg, { cursor }) => ({ records: [{ id: 'r1', name: 'One' }], cursor: (cursor || 0) + 1 }),
-  map: (r) => [{ schema: 'resource', object: { title: r.name, type: 'resource', maturity: 'reviewed' } }],
+  map: (r) => [{ schema: 'resource', object: { title: r.name, type: 'resource', maturity: 'reviewed', public_use: 'ok-with-caveat' } }],
   ...over,
 });
+const ctx = (dir) => ({ config: { endpoint: 'https://f' }, cursor: null, adapter: 'repo-data', target: dir });
 
-test('runConnector: describe → pull → map → store; forces raw; returns cursor', async () => {
+test('describe → pull → map → store; forces raw + not-public-yet', async () => {
   const dir = instance();
-  const out = await runConnector(fake(), { config: { endpoint: 'https://f' }, cursor: null, adapter: 'repo-data', target: dir });
-  assert.equal(out.source.title, 'Fake');
-  assert.equal(out.pulled, 1);
-  assert.equal(out.candidates, 1);
-  assert.equal(out.stored, 1);
-  assert.equal(out.cursor, 1);
+  const out = await runConnector(fake(), ctx(dir));
+  assert.equal(out.source.title, 'Fake'); assert.equal(out.pulled, 1); assert.equal(out.stored, 1); assert.equal(out.cursor, 1);
   const stored = getAdapter('repo-data').list(dir).find(({ object }) => object.title === 'One').object;
-  assert.equal(stored.maturity, 'raw', 'connector output is never trusted above raw');
-  assert.equal(stored.ai_assisted, false);
+  assert.equal(stored.maturity, 'raw'); assert.equal(stored.public_use, 'not-public-yet'); assert.equal(stored.ai_assisted, false);
   assert.ok(stored.provenance?.origin);
 });
 
-test('runConnector: map returning [] is fine; NOT_IMPLEMENTED propagates with code', async () => {
+test('upsert by sourceUri keeps local id, maturity, public_use; flags review', async () => {
   const dir = instance();
-  const out = await runConnector(fake({ map: () => [] }), { config: {}, cursor: null, adapter: 'repo-data', target: dir });
-  assert.equal(out.stored, 0);
-  const stub = fake({ pull: async () => { throw new NOT_IMPLEMENTED('fake'); } });
-  await assert.rejects(runConnector(stub, { config: {}, cursor: null, adapter: 'repo-data', target: dir }), (e) => e.code === 'NOT_IMPLEMENTED');
+  const c = fake({ map: () => [{ schema: 'resource', object: { title: 'Old', type: 'resource', sourceUri: 'at://peer/x/old', notes: 'v2', id: 'peer-id' } }] });
+  const out = await runConnector(c, ctx(dir));
+  assert.equal(out.updated, 1); assert.equal(out.stored, 0);
+  const all = getAdapter('repo-data').list(dir);
+  assert.equal(all.length, 1, 'no duplicate');
+  const o = all[0].object;
+  assert.equal(o.notes, 'v2'); assert.equal(o.id, 'local-id'); assert.equal(o.maturity, 'reviewed'); assert.equal(o.public_use, 'ok-with-caveat');
+  assert.match(o.review_needs, /updated at origin/);
 });
 
-test('runConnector: retracted sourceUris are held for review, never deleted', async () => {
+test('map [] fine; NOT_IMPLEMENTED propagates; pull errors surface', async () => {
   const dir = instance();
-  const c = fake({ pull: async () => ({ records: [], cursor: 1, retracted: ['at://peer/x/old'] }) });
-  const out = await runConnector(c, { config: {}, cursor: null, adapter: 'repo-data', target: dir });
+  assert.equal((await runConnector(fake({ map: () => [] }), ctx(dir))).stored, 0);
+  await assert.rejects(runConnector(fake({ pull: async () => { throw new NOT_IMPLEMENTED('fake'); } }), ctx(dir)), (e) => e.code === 'NOT_IMPLEMENTED');
+  const withErr = await runConnector(fake({ pull: async () => ({ records: [], cursor: 1, errors: [{ did: 'x', error: 'down' }] }) }), ctx(dir));
+  assert.equal(withErr.errors.length, 1);
+});
+
+test('retracted sourceUris are held, never deleted', async () => {
+  const dir = instance();
+  const out = await runConnector(fake({ pull: async () => ({ records: [], cursor: 1, retracted: ['at://peer/x/old'] }) }), ctx(dir));
   assert.equal(out.retractions, 1);
-  const old = getAdapter('repo-data').list(dir).find(({ object }) => object.title === 'Old').object;
-  assert.equal(old.maturity, 'held');
-  assert.match(old.review_needs, /retracted at origin at:\/\/peer\/x\/old/);
+  const old = getAdapter('repo-data').list(dir)[0].object;
+  assert.equal(old.maturity, 'held'); assert.match(old.review_needs, /retracted at origin at:\/\/peer\/x\/old/);
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — `cd packages/toolkit-framework && node --test test/connector.test.mjs` → FAIL
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
 
 ```js
-// packages/toolkit-framework/src/connector.mjs — seam 3: a Connector is a source driver (2026-07-19 spec).
-// describe() → source-system card · pull() → foreign records + opaque cursor · map() → KB candidates (pure).
-// runConnector is the only place that sequences describe → pull → map → store → retract.
+// packages/toolkit-framework/src/connector.mjs — seam 3: a Connector is a source driver (2026-07-19 spec). runConnector sequences describe → pull → map → upsert/store → retract.
 import { getAdapter } from './storage.mjs';
 
 export class NOT_IMPLEMENTED extends Error {
   constructor(name) { super(`connector ${name}: pull not implemented`); this.code = 'NOT_IMPLEMENTED'; }
 }
 
+const LOCAL_ONLY = ['id', 'maturity', 'public_use', 'review_needs'];
+
 export async function runConnector(connector, { config, cursor, adapter, target }) {
   const source = connector.describe(config);
-  const { records, cursor: nextCursor, retracted = [] } = await connector.pull(config, { cursor });
-  const candidates = records.flatMap((r) => connector.map(r, config)).map(({ schema, object }) => ({
-    schema,
-    object: {
-      ...object,
-      maturity: 'raw',
-      ai_assisted: false,
-      provenance: { origin: `${connector.name}:${source.return_path || source.title}`, ...(object.provenance || {}) },
-    },
-  }));
+  const { records, cursor: nextCursor, retracted = [], errors = [] } = await connector.pull(config, { cursor });
   const a = getAdapter(adapter);
-  const { stored, collisions = [] } = candidates.length ? a.store(target, candidates) : { stored: [], collisions: [] };
+  const local = a.list(target);
+  const byOrigin = new Map(local.filter((i) => i.object.sourceUri).map((i) => [i.object.sourceUri, i]));
+
+  const toStore = []; let updated = 0;
+  for (const r of records) for (const { schema, object } of connector.map(r, config)) {
+    const base = { ...object, provenance: { origin: `${connector.name}:${source.return_path || source.title}`, ...(object.provenance || {}) } };
+    const existing = object.sourceUri && byOrigin.get(object.sourceUri);
+    if (existing) {
+      const patch = {}; for (const [k, v] of Object.entries(base)) if (!LOCAL_ONLY.includes(k)) patch[k] = v;
+      a.update(target, existing.ref, { ...patch, review_needs: 'updated at origin' }); updated++;
+    } else toStore.push({ schema, object: { ...base, maturity: 'raw', public_use: 'not-public-yet', ai_assisted: false } });
+  }
+  const { stored, collisions = [] } = toStore.length ? a.store(target, toStore) : { stored: [], collisions: [] };
 
   let retractions = 0;
   if (retracted.length) {
     const set = new Set(retracted);
-    for (const { object, ref } of a.list(target)) {
-      if (object.sourceUri && set.has(object.sourceUri)) {
-        a.update(target, ref, { maturity: 'held', review_needs: `retracted at origin ${object.sourceUri}` });
-        retractions++;
-      }
-    }
+    for (const { object, ref } of a.list(target)) if (object.sourceUri && set.has(object.sourceUri)) { a.update(target, ref, { maturity: 'held', review_needs: `retracted at origin ${object.sourceUri}` }); retractions++; }
   }
-  return { source, pulled: records.length, candidates: candidates.length, stored: stored.length, collisions: collisions.length, cursor: nextCursor, retractions };
+  return { source, pulled: records.length, candidates: toStore.length + updated, stored: stored.length, updated, collisions: collisions.length, cursor: nextCursor, retractions, errors };
 }
 ```
 
-Add to `packages/org-os-kms/src/framework.mjs`:
+`framework.mjs`: `export { runConnector, NOT_IMPLEMENTED } from '../../toolkit-framework/src/connector.mjs';`
 
-```js
-export { runConnector, NOT_IMPLEMENTED } from '../../toolkit-framework/src/connector.mjs';
-```
-
-- [ ] **Step 4: Run tests** — both packages `npm test` → PASS. If `repo-data.store` returns a different shape for `collisions`, read `adapters/repo-data.mjs:51-71` and match it.
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/toolkit-framework/src/connector.mjs packages/toolkit-framework/test/connector.test.mjs packages/org-os-kms/src/framework.mjs
-git commit -m "feat(framework): Connector contract + runConnector (describe→pull→map→store→retract)"
-```
+- [ ] **Step 4: Run** both suites → PASS. If `repo-data.update` re-slugs on `title` change, read `adapters/repo-data.mjs:88-97`; the upsert must patch in place by ref. **Commit:** `feat(framework): Connector contract + runConnector with origin upsert`
 
 ---
 
-### Task 12: `atproto` connector
+### Task 13: `atproto` connector
 
 **Files:**
 - Create: `packages/org-os-kms/src/atproto/connector.mjs`
 - Test: `packages/org-os-kms/test/atproto-connector.test.mjs`
 
-**Interfaces:**
-- Consumes: `createClient`, `typeForNsid`, `PUBLISHABLE_TYPES`, `nsidFor`.
-- Produces: `atprotoConnector` (a `Connector`) + `createAtprotoConnector({ createClient })` for injection. Config: `{ peers: [did], pds_resolver?: (did) => pdsUrl }`; `self` (this instance's DID) is passed in `config.self` by the op. Cursor: `{ [did]: { rev, seen: [atUri] } }`.
-  - `pull`: for each peer: `getLatestCommit` → if `rev === cursor[did].rev`, skip the peer entirely; else `listAllRecords` for each publishable collection; `retracted` = previously `seen` URIs no longer listed.
-  - `map(record, config)`: `record = { uri, cid, value }` → `[]` if `typeForNsid(value.$type)` is null or the record's **origin** DID equals `config.self`; else one candidate `{ schema, object }` with `sourceUri` = `value.sourceUri || uri` (origin), `viaUri = uri`, `$type` removed, `id`/`grc20Id` carried as-is (`id` will be re-minted at the puller's own first publish because `ensureIds` only mints when absent — so **strip `id`** in map and keep `grc20Id`).
-  - `describe`: `{ title: 'AT Proto peers', type: 'knowledge-garden', steward: 'federation', return_path: peers.join(','), endpoint: config.pds }`.
-  - Unreachable peer → recorded in `pull`'s returned `errors: [{did, error}]`, other peers continue.
+**Interfaces:** `createAtprotoConnector({ createClient })`, `atprotoConnector`. Config `{ peers, pds, self, nsid_authority }`. **No peers → `{ records: [], cursor: cursor ?? {}, retracted: [], errors: [] }` without creating a client.** Lists every `ALL_TYPES` collection (peers may publish opt-in types). `map` never touches `type`; strips `id`; sets `sourceUri` (origin) and `viaUri`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1573,70 +1529,54 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createAtprotoConnector } from '../src/atproto/connector.mjs';
 
-const AUTH = 'xyz.regencoordination.kb';
-const RES = `${AUTH}.resource`;
+const AUTH = 'xyz.regencoordination.kb'; const RES = `${AUTH}.resource`; const SS = `${AUTH}.sourceSystem`;
+const fakeClient = (state) => () => ({
+  async getLatestCommit({ did }) { if (state[did]?.down) throw new Error('ECONNREFUSED'); return { cid: 'c', rev: state[did].rev }; },
+  async listAllRecords({ repo, collection }) { return (state[repo].records || []).filter((r) => r.uri.includes(`/${collection}/`)); },
+});
 
-function fakeClient(state) {
-  return () => ({
-    async getLatestCommit({ did }) { if (state[did]?.down) throw new Error('ECONNREFUSED'); return { cid: 'c', rev: state[did].rev }; },
-    async listAllRecords({ repo, collection }) { return (state[repo].records || []).filter((r) => r.uri.includes(`/${collection}/`)); },
-  });
-}
-
-test('map: foreign record → raw candidate with origin sourceUri, viaUri, no id, grc20Id kept; own-origin and unknown NSIDs skipped', () => {
+test('map: origin sourceUri, viaUri, no id, type untouched; own-origin and unknown skipped', () => {
   const c = createAtprotoConnector({ createClient: () => ({}) });
   const cfg = { self: 'did:plc:me', nsid_authority: AUTH };
   const rec = { uri: `at://did:plc:peer/${RES}/rk1`, cid: 'cid', value: { $type: RES, title: 'T', type: 'resource', id: 'peer-id', grc20Id: 'g1', public_use: 'ok-with-caveat' } };
   const [cand] = c.map(rec, cfg);
-  assert.equal(cand.schema, 'resource');
-  assert.equal(cand.object.sourceUri, rec.uri);
-  assert.equal(cand.object.viaUri, rec.uri);
-  assert.equal(cand.object.id, undefined);
-  assert.equal(cand.object.grc20Id, 'g1');
-  assert.equal(cand.object.$type, undefined);
-
+  assert.equal(cand.schema, 'resource'); assert.equal(cand.object.sourceUri, rec.uri); assert.equal(cand.object.viaUri, rec.uri);
+  assert.equal(cand.object.id, undefined); assert.equal(cand.object.grc20Id, 'g1'); assert.equal(cand.object.$type, undefined);
+  const card = { uri: `at://did:plc:peer/${SS}/k`, cid: 'x', value: { $type: SS, title: 'Blog', type: 'blog', steward: 's', return_path: 'r' } };
+  const [cc] = c.map(card, cfg);
+  assert.equal(cc.schema, 'source-system'); assert.equal(cc.object.type, 'blog', 'kind preserved');
   const republished = { uri: `at://did:plc:peer/${RES}/rk2`, cid: 'x', value: { $type: RES, title: 'R', type: 'resource', sourceUri: `at://did:plc:origin/${RES}/o1` } };
-  assert.equal(c.map(republished, cfg)[0].object.sourceUri, `at://did:plc:origin/${RES}/o1`, 'origin preserved through republish');
-  assert.equal(c.map(republished, cfg)[0].object.viaUri, republished.uri);
-
-  const mine = { uri: `at://did:plc:peer/${RES}/rk3`, cid: 'x', value: { $type: RES, title: 'M', type: 'resource', sourceUri: `at://did:plc:me/${RES}/m1` } };
-  assert.deepEqual(c.map(mine, cfg), [], 'my own origin is skipped');
+  assert.equal(c.map(republished, cfg)[0].object.sourceUri, `at://did:plc:origin/${RES}/o1`);
+  assert.deepEqual(c.map({ uri: `at://did:plc:peer/${RES}/rk3`, cid: 'x', value: { $type: RES, title: 'M', type: 'resource', sourceUri: `at://did:plc:me/${RES}/m1` } }, cfg), []);
   assert.deepEqual(c.map({ uri: 'at://did:plc:peer/com.other/x', cid: 'x', value: { $type: 'com.other' } }, cfg), []);
 });
 
-test('pull: skips unchanged peers by rev, lists changed ones, reports retractions and unreachable peers', async () => {
-  const state = {
-    'did:plc:a': { rev: 'r2', records: [{ uri: `at://did:plc:a/${RES}/1`, cid: 'c', value: { $type: RES, title: '1', type: 'resource' } }] },
-    'did:plc:b': { rev: 'r1' },
-    'did:plc:c': { down: true },
-  };
+test('pull: no peers → no client, empty; unchanged rev skipped; retractions + unreachable reported', async () => {
+  const c0 = createAtprotoConnector({ createClient: () => { throw new Error('must not be called'); } });
+  assert.deepEqual(await c0.pull({ peers: [], pds: null, nsid_authority: AUTH }, { cursor: null }), { records: [], cursor: {}, retracted: [], errors: [] });
+
+  const state = { 'did:plc:a': { rev: 'r2', records: [{ uri: `at://did:plc:a/${RES}/1`, cid: 'c', value: { $type: RES, title: '1', type: 'resource' } }] }, 'did:plc:b': { rev: 'r1' }, 'did:plc:c': { down: true } };
   const c = createAtprotoConnector({ createClient: fakeClient(state) });
   const cfg = { self: 'did:plc:me', nsid_authority: AUTH, pds: 'https://pds', peers: ['did:plc:a', 'did:plc:b', 'did:plc:c'] };
   const cursor = { 'did:plc:a': { rev: 'r1', seen: [`at://did:plc:a/${RES}/1`, `at://did:plc:a/${RES}/gone`] }, 'did:plc:b': { rev: 'r1', seen: [] } };
   const out = await c.pull(cfg, { cursor });
-  assert.equal(out.records.length, 1);
-  assert.deepEqual(out.retracted, [`at://did:plc:a/${RES}/gone`]);
-  assert.equal(out.cursor['did:plc:a'].rev, 'r2');
-  assert.deepEqual(out.cursor['did:plc:a'].seen, [`at://did:plc:a/${RES}/1`]);
-  assert.deepEqual(out.cursor['did:plc:b'], cursor['did:plc:b'], 'unchanged peer cursor carried');
-  assert.equal(out.errors.length, 1);
+  assert.equal(out.records.length, 1); assert.deepEqual(out.retracted, [`at://did:plc:a/${RES}/gone`]);
+  assert.equal(out.cursor['did:plc:a'].rev, 'r2'); assert.deepEqual(out.cursor['did:plc:b'], cursor['did:plc:b']);
   assert.equal(out.errors[0].did, 'did:plc:c');
 });
 
-test('describe returns a valid source-system card', () => {
-  const c = createAtprotoConnector({ createClient: () => ({}) });
-  const card = c.describe({ peers: ['did:plc:a'], pds: 'https://pds' });
+test('describe is a valid card', () => {
+  const card = createAtprotoConnector({ createClient: () => ({}) }).describe({ peers: ['did:plc:a'], pds: 'https://pds' });
   for (const k of ['title', 'type', 'steward', 'return_path']) assert.ok(card[k], k);
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — FAIL, module not found
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
 
 ```js
-// packages/org-os-kms/src/atproto/connector.mjs — pull peers' repos (spec: federation plane). listRecords has no "since",
-// so the cursor is {did: {rev, seen}}: skip a peer whose latest commit rev is unchanged; otherwise list fully and diff `seen` for retractions.
+// packages/org-os-kms/src/atproto/connector.mjs — pull peers' repos. Cursor {did: {rev, seen}}: skip unchanged peers; full list + seen-diff for retractions.
 import * as fw from '../framework.mjs';
 import { createClient as defaultCreateClient } from './client.mjs';
 
@@ -1644,36 +1584,28 @@ const originDid = (uri) => uri.split('/')[2];
 
 export function createAtprotoConnector({ createClient = defaultCreateClient } = {}) {
   return {
-    name: 'atproto',
-    protocol: 'AT Protocol (XRPC listRecords)',
-    capabilities: { ingest: true, subscribe: false, publish: false },
-
-    describe(config) {
-      return { title: 'AT Proto peers', type: 'knowledge-garden', steward: 'federation', return_path: (config.peers || []).join(','), endpoint: config.pds };
-    },
-
+    name: 'atproto', protocol: 'AT Protocol (XRPC listRecords)', capabilities: { ingest: true, subscribe: false, publish: false },
+    describe(config) { return { title: 'AT Proto peers', type: 'knowledge-garden', steward: 'federation', return_path: (config.peers || []).join(',') || 'none', endpoint: config.pds }; },
     async pull(config, { cursor }) {
-      const client = createClient({ pds: config.pds });
       const next = { ...(cursor || {}) };
+      const peers = config.peers || [];
+      if (!peers.length) return { records: [], cursor: next, retracted: [], errors: [] };
+      const client = createClient({ pds: config.pds });
       const records = []; const retracted = []; const errors = [];
-      for (const did of config.peers || []) {
+      for (const did of peers) {
         try {
           const { rev } = await client.getLatestCommit({ did });
           const prev = next[did] || { rev: null, seen: [] };
           if (prev.rev === rev) continue;
           const listed = [];
-          for (const type of fw.PUBLISHABLE_TYPES) {
-            listed.push(...await client.listAllRecords({ repo: did, collection: fw.nsidFor(type, config.nsid_authority) }));
-          }
+          for (const schema of fw.ALL_TYPES) listed.push(...await client.listAllRecords({ repo: did, collection: fw.nsidFor(schema, config.nsid_authority) }));
           const seen = listed.map((r) => r.uri);
           for (const u of prev.seen) if (!seen.includes(u)) retracted.push(u);
-          records.push(...listed);
-          next[did] = { rev, seen };
+          records.push(...listed); next[did] = { rev, seen };
         } catch (e) { errors.push({ did, error: e.message }); }
       }
       return { records, cursor: next, retracted, errors };
     },
-
     map(record, config) {
       const { uri, value } = record;
       const schema = fw.typeForNsid(value.$type, config.nsid_authority);
@@ -1681,42 +1613,25 @@ export function createAtprotoConnector({ createClient = defaultCreateClient } = 
       const sourceUri = value.sourceUri || uri;
       if (originDid(sourceUri) === config.self) return [];
       const { $type, id, ...rest } = value;
-      return [{ schema, object: { ...rest, type: schema, sourceUri, viaUri: uri } }];
+      return [{ schema, object: { ...rest, sourceUri, viaUri: uri } }];
     },
   };
 }
-
 export const atprotoConnector = createAtprotoConnector();
 ```
 
-- [ ] **Step 4: Run tests** — PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add packages/org-os-kms/src/atproto/connector.mjs packages/org-os-kms/test/atproto-connector.test.mjs
-git commit -m "feat(kms): atproto connector — pull peers by rev, origin-preserving map, retraction diff"
-```
+- [ ] **Step 4: Run** → PASS. **Commit:** `feat(kms): atproto connector`
 
 ---
 
-### Task 13: `static-json` connector + Open Haven mapper
+### Task 14: `static-json` connector + Open Haven mapper
 
 **Files:**
-- Create: `packages/org-os-kms/src/connectors/static-json/index.mjs`
-- Create: `packages/org-os-kms/src/connectors/static-json/openhaven.mjs`
-- Create: `packages/org-os-kms/test/fixtures/openhaven/{index,protocols,affordances,domains}.json`
+- Create: `packages/org-os-kms/src/connectors/static-json/index.mjs`, `openhaven.mjs`
+- Create: `packages/org-os-kms/test/fixtures/openhaven/{index,protocols,affordances,domains}.json` (collections trimmed to 3 items)
 - Test: `packages/org-os-kms/test/static-json.test.mjs`
 
-**Interfaces:**
-- Config: `{ base_url, index: '/api/index.json', mapper: 'openhaven', collections?: ['/api/protocols.json', '/api/affordances.json', '/api/domains.json'] }`. Cursor: `sha256(indexBody)`.
-- Mapper module exports `{ collections: string[], map(record) → [{schema, object}] }` where `record = { collection, item }`.
-- `createStaticJsonConnector({ fetchImpl, mappers })`; `MAPPERS = { openhaven }`.
-- Open Haven mapping (fields verified 2026-09-18 against the live API):
-  - `/api/protocols.json` item → `resource`: `title: name`, `url: communityLink`, `resource_type: entityType`, `notes: description`, `related_concepts: domainIds`, `original_source: 'openhaven:' + id`, `source_lineage: 'https://www.openhaven.net/api/protocols/' + id + '.json'`, `steward: owner`, `last_reviewed: lastInvestigated`.
-  - `/api/affordances.json` item → `signal`: `title: name`, `notes: description + '\n\n' + whatItEnables`, `related_concepts: domainIds`, `source_lineage: 'https://www.openhaven.net/api/affordances.json#' + id`.
-  - `/api/domains.json` item → `track`: `title: name`, `notes: description`, `source_lineage: 'https://www.openhaven.net/api/domains.json#' + id`.
-  - Only the non-localized fields are read (`name`, not `name_es`).
+**Mapping (fields verified 2026-09-18):** protocol → `resource` (`title: name`, `url: communityLink`, `resource_type: entityType`, `notes: description`, `related_concepts: domainIds`, `original_source`, `steward: owner`, `last_reviewed: lastInvestigated`, `source_lineage`); affordance → `signal` (**`signal_type: 'resource'`** — enum has no "affordance"; `suggested_action: 'route'`); domain → `track` (**`audience: 'general'`** — required by `track.yaml`).
 
 - [ ] **Step 1: Save fixtures**
 
@@ -1725,8 +1640,6 @@ mkdir -p packages/org-os-kms/test/fixtures/openhaven
 for f in index protocols affordances domains; do curl -sL "https://www.openhaven.net/api/$f.json" > "packages/org-os-kms/test/fixtures/openhaven/$f.json"; done
 node -e 'const p="packages/org-os-kms/test/fixtures/openhaven/";const fs=require("fs");for(const f of ["protocols","affordances","domains"]){const j=JSON.parse(fs.readFileSync(p+f+".json"));fs.writeFileSync(p+f+".json",JSON.stringify(j.slice(0,3),null,1))}'
 ```
-
-(Trim each collection to 3 items so fixtures stay small. Keep `index.json` whole.)
 
 - [ ] **Step 2: Write the failing test**
 
@@ -1745,45 +1658,30 @@ const fx = (f) => readFileSync(join(dirname(fileURLToPath(import.meta.url)), 'fi
 const fetchImpl = async (url) => new Response(fx(new URL(url).pathname.split('/').pop()), { status: 200 });
 const cfg = { base_url: 'https://www.openhaven.net', index: '/api/index.json', mapper: 'openhaven' };
 
-test('openhaven mapper: protocol → resource, affordance → signal, domain → track; all validate', () => {
+test('openhaven mapper: protocol→resource, affordance→signal, domain→track; all validate', () => {
   const p = JSON.parse(fx('protocols.json'))[0];
   const [r] = openhaven.map({ collection: '/api/protocols.json', item: p });
-  assert.equal(r.schema, 'resource');
-  assert.equal(r.object.title, p.name);
-  assert.equal(r.object.url, p.communityLink);
-  assert.equal(r.object.resource_type, p.entityType);
-  assert.deepEqual(r.object.related_concepts, p.domainIds);
+  assert.equal(r.schema, 'resource'); assert.equal(r.object.title, p.name); assert.equal(r.object.url, p.communityLink);
+  assert.equal(r.object.resource_type, p.entityType); assert.deepEqual(r.object.related_concepts, p.domainIds);
   assert.equal(validateObject('resource', r.object).valid, true);
-
-  const a = JSON.parse(fx('affordances.json'))[0];
-  const [s] = openhaven.map({ collection: '/api/affordances.json', item: a });
-  assert.equal(s.schema, 'signal');
-  assert.equal(validateObject('signal', s.object).valid, true, validateObject('signal', s.object).errors.join());
-
-  const d = JSON.parse(fx('domains.json'))[0];
-  const [t] = openhaven.map({ collection: '/api/domains.json', item: d });
-  assert.equal(t.schema, 'track');
-  assert.equal(validateObject('track', t.object).valid, true, validateObject('track', t.object).errors.join());
-
+  const [s] = openhaven.map({ collection: '/api/affordances.json', item: JSON.parse(fx('affordances.json'))[0] });
+  assert.equal(s.schema, 'signal'); assert.equal(validateObject('signal', s.object).valid, true, validateObject('signal', s.object).errors.join());
+  const [t] = openhaven.map({ collection: '/api/domains.json', item: JSON.parse(fx('domains.json'))[0] });
+  assert.equal(t.schema, 'track'); assert.equal(validateObject('track', t.object).valid, true, validateObject('track', t.object).errors.join());
   assert.deepEqual(openhaven.map({ collection: '/api/entity-types.json', item: {} }), []);
 });
 
-test('static-json connector: pull reads index + collections, cursor is content hash, unchanged → empty', async () => {
+test('connector: pull reads index + 3 collections (3 items each → 9); hash cursor; unchanged → empty', async () => {
   const c = createStaticJsonConnector({ fetchImpl });
   const first = await c.pull(cfg, { cursor: null });
-  assert.equal(first.records.length, 9);
-  assert.match(first.cursor, /^[a-f0-9]{64}$/);
+  assert.equal(first.records.length, 9); assert.match(first.cursor, /^[a-f0-9]{64}$/);
   const second = await c.pull(cfg, { cursor: first.cursor });
-  assert.equal(second.records.length, 0);
-  assert.equal(second.cursor, first.cursor);
-  const card = c.describe(cfg);
-  assert.equal(card.type, 'dataset');
-  assert.equal(card.return_path, 'https://www.openhaven.net');
-  assert.equal(c.map(first.records[0], cfg)[0].schema, 'resource');
+  assert.equal(second.records.length, 0); assert.equal(second.cursor, first.cursor);
+  assert.equal(c.describe(cfg).type, 'dataset'); assert.equal(c.map(first.records[0], cfg)[0].schema, 'resource');
 });
 ```
 
-- [ ] **Step 3: Run to verify it fails** — FAIL, module not found
+- [ ] **Step 3: Run** → FAIL
 
 - [ ] **Step 4: Implement**
 
@@ -1796,23 +1694,19 @@ export function map({ collection, item }) {
   if (collection === '/api/protocols.json') return [{ schema: 'resource', object: {
     title: item.name, type: 'resource', url: item.communityLink, resource_type: item.entityType, notes: item.description,
     related_concepts: item.domainIds || [], original_source: `openhaven:${item.id}`, steward: item.owner, last_reviewed: item.lastInvestigated,
-    source_lineage: `${BASE}/api/protocols/${item.id}.json`,
-  } }];
+    source_lineage: `${BASE}/api/protocols/${item.id}.json` } }];
   if (collection === '/api/affordances.json') return [{ schema: 'signal', object: {
-    title: item.name, type: 'signal', notes: [item.description, item.whatItEnables].filter(Boolean).join('\n\n'),
-    related_concepts: item.domainIds || [], source_lineage: `${BASE}/api/affordances.json#${item.id}`,
-  } }];
+    title: item.name, type: 'signal', signal_type: 'resource', suggested_action: 'route',
+    notes: [item.description, item.whatItEnables].filter(Boolean).join('\n\n'), related_concepts: item.domainIds || [],
+    source_lineage: `${BASE}/api/affordances.json#${item.id}` } }];
   if (collection === '/api/domains.json') return [{ schema: 'track', object: {
-    title: item.name, type: 'track', notes: item.description, source_lineage: `${BASE}/api/domains.json#${item.id}`,
-  } }];
+    title: item.name, type: 'track', audience: 'general', notes: item.description, source_lineage: `${BASE}/api/domains.json#${item.id}` } }];
   return [];
 }
 ```
 
-If `validateObject('signal'|'track', …)` reports a missing required field, open that schema's `required:` list and add the field with a sensible constant (e.g. `signal_type: 'affordance'`) — the test will name it.
-
 ```js
-// packages/org-os-kms/src/connectors/static-json/index.mjs — a static source: read-only JSON + discovery doc, no protocol client (CONTEXT.md "Static source").
+// packages/org-os-kms/src/connectors/static-json/index.mjs — a static source: read-only JSON + discovery doc, no protocol client.
 import { createHash } from 'node:crypto';
 import * as openhaven from './openhaven.mjs';
 
@@ -1821,12 +1715,8 @@ export const MAPPERS = { openhaven };
 export function createStaticJsonConnector({ fetchImpl = globalThis.fetch, mappers = MAPPERS } = {}) {
   const get = async (url) => { const r = await fetchImpl(url); if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`); return r.text(); };
   return {
-    name: 'static-json',
-    protocol: 'static JSON over HTTPS',
-    capabilities: { ingest: true, subscribe: false, publish: false },
-    describe(config) {
-      return { title: `Static source ${new URL(config.base_url).hostname}`, type: 'dataset', steward: 'external', return_path: config.base_url, endpoint: config.base_url + (config.index || '/api/index.json') };
-    },
+    name: 'static-json', protocol: 'static JSON over HTTPS', capabilities: { ingest: true, subscribe: false, publish: false },
+    describe(config) { return { title: `Static source ${new URL(config.base_url).hostname}`, type: 'dataset', steward: 'external', return_path: config.base_url, endpoint: config.base_url + (config.index || '/api/index.json') }; },
     async pull(config, { cursor }) {
       const indexBody = await get(config.base_url + (config.index || '/api/index.json'));
       const hash = createHash('sha256').update(indexBody).digest('hex');
@@ -1834,42 +1724,29 @@ export function createStaticJsonConnector({ fetchImpl = globalThis.fetch, mapper
       const mapper = mappers[config.mapper];
       if (!mapper) throw new Error(`static-json: unknown mapper ${config.mapper}`);
       const records = [];
-      for (const collection of config.collections || mapper.collections) {
-        const items = JSON.parse(await get(config.base_url + collection));
-        for (const item of items) records.push({ collection, item });
-      }
+      for (const collection of config.collections || mapper.collections) for (const item of JSON.parse(await get(config.base_url + collection))) records.push({ collection, item });
       return { records, cursor: hash };
     },
     map(record, config) { return mappers[config.mapper].map(record); },
   };
 }
-
 export const staticJsonConnector = createStaticJsonConnector();
 ```
 
-- [ ] **Step 5: Run tests** — PASS
+If `validateObject` still reports a missing required field for `signal`/`track`, the test names it — add it as a constant in the mapper.
 
-- [ ] **Step 6: Commit**
-
-```bash
-git add packages/org-os-kms/src/connectors/static-json packages/org-os-kms/test/static-json.test.mjs packages/org-os-kms/test/fixtures/openhaven
-git commit -m "feat(kms): static-json connector + Open Haven mapper (protocol→resource, affordance→signal, domain→track)"
-```
+- [ ] **Step 5: Run** → PASS. **Commit:** `feat(kms): static-json connector + Open Haven mapper`
 
 ---
 
-### Task 14: Connector registry, `ingest.pull` op, lifecycle, docs
+### Task 15: Connector registry, `ingest.pull` op, lifecycle, docs
 
 **Files:**
-- Create: `packages/org-os-kms/src/connectors/index.mjs`
-- Modify: `packages/org-os-kms/src/ops.mjs`, `src/bind.mjs`, `src/config.mjs`
-- Create: `packages/org-os-kms/docs/CONNECTORS.md`
-- Modify: repo-root `kms.yaml`
-- Test: `packages/org-os-kms/test/ingest-pull-op.test.mjs`
+- Create: `packages/org-os-kms/src/connectors/index.mjs`, `packages/org-os-kms/docs/CONNECTORS.md`
+- Modify: `src/ops.mjs`, `src/bind.mjs`, `profile/profile.yaml`, `test/bind.test.mjs`, root `kms.yaml`
+- Test: `test/ingest-pull-op.test.mjs`
 
-**Interfaces:**
-- `connectors/index.mjs`: `CONNECTORS = { atproto: atprotoConnector, 'static-json': staticJsonConnector }`, `getConnector(name)` throws on unknown.
-- `OPS['ingest.pull']` — `write: true`. For each `config.connectors[i]`: resolve, `runConnector` with `{ config: { ...c.config, self: config.atproto?.did, nsid_authority: config.atproto?.nsid_authority, pds: config.atproto?.pds }, cursor: c.cursor, adapter, target }`, write cursor back into `kms.yaml` (`connectors[i].cursor`), report per connector. `NOT_IMPLEMENTED` → report `not-implemented`, continue. Any other throw → report `failed`, continue to next connector, and the op returns `ok:false` at the end (fail-hard, but with every connector attempted so partial progress is visible). `ctx.deps.registry` injectable.
+**Interfaces:** `CONNECTORS`, `getConnector(name, registry)`; `OPS['ingest.pull']` (`write: true`, async): per declared connector → `runConnector` with `{ ...shared, ...decl.config }` where `shared = { self: atproto.did, nsid_authority, pds }`; cursor written back to `kms.yaml` (**comments in the `connectors:` block are lost on write-back — keep comments elsewhere**); `NOT_IMPLEMENTED` → `not-implemented`, continue; other error → `failed`, continue, op returns `ok:false` at the end.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1897,42 +1774,35 @@ const good = { name: 'good', protocol: 't', capabilities: { ingest: true }, desc
 const stub = { ...good, name: 'stub', pull: async () => { throw new NOT_IMPLEMENTED('stub'); } };
 const broken = { ...good, name: 'broken', pull: async () => { throw new Error('boom'); } };
 
-test('ingest.pull is registered and first in close', () => {
-  assert.ok(OPS['ingest.pull']?.write === true);
-  assert.equal(LIFECYCLE_BINDINGS.close[0], 'ingest.pull');
+test('ingest.pull registered and first in close', () => {
+  assert.ok(OPS['ingest.pull']?.write === true); assert.equal(LIFECYCLE_BINDINGS.close[0], 'ingest.pull');
 });
 
-test('ingest.pull runs each connector, writes cursors back, continues past NOT_IMPLEMENTED', async () => {
+test('runs each connector, writes cursors back, continues past NOT_IMPLEMENTED', async () => {
   const dir = instance([{ name: 'good', config: {}, cursor: null }, { name: 'stub', config: {}, cursor: null }]);
   const res = await OPS['ingest.pull'].run({ dir, deps: { registry: { good, stub } } });
   assert.equal(res.ok, true, JSON.stringify(res.report));
-  assert.equal(res.report.connectors[0].stored, 1);
-  assert.equal(res.report.connectors[1].status, 'not-implemented');
+  assert.equal(res.report.connectors[0].stored, 1); assert.equal(res.report.connectors[1].status, 'not-implemented');
   const cfg = yaml.load(readFileSync(join(dir, 'kms.yaml'), 'utf8'));
-  assert.equal(cfg.connectors[0].cursor, 1);
-  assert.equal(cfg.connectors[1].cursor, null);
+  assert.equal(cfg.connectors[0].cursor, 1); assert.equal(cfg.connectors[1].cursor, null);
 });
 
-test('ingest.pull: a failing connector does not stop the others; op reports ok:false', async () => {
+test('a failing connector does not stop the others; op reports ok:false', async () => {
   const dir = instance([{ name: 'broken', config: {}, cursor: null }, { name: 'good', config: {}, cursor: null }]);
   const res = await OPS['ingest.pull'].run({ dir, deps: { registry: { good, broken } } });
-  assert.equal(res.ok, false);
-  assert.equal(res.report.connectors[0].status, 'failed');
-  assert.equal(res.report.connectors[1].stored, 1);
+  assert.equal(res.ok, false); assert.equal(res.report.connectors[0].status, 'failed'); assert.equal(res.report.connectors[1].stored, 1);
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — FAIL
+- [ ] **Step 2: Run** → FAIL
 
 - [ ] **Step 3: Implement**
 
 ```js
-// packages/org-os-kms/src/connectors/index.mjs — the connector registry (composition root for source drivers).
+// packages/org-os-kms/src/connectors/index.mjs — connector registry (composition root for source drivers).
 import { atprotoConnector } from '../atproto/connector.mjs';
 import { staticJsonConnector } from './static-json/index.mjs';
-
 export const CONNECTORS = { atproto: atprotoConnector, 'static-json': staticJsonConnector };
-
 export function getConnector(name, registry = CONNECTORS) {
   const c = registry[name];
   if (!c) throw new Error(`unknown connector: ${name} (available: ${Object.keys(registry).join(', ')})`);
@@ -1940,15 +1810,7 @@ export function getConnector(name, registry = CONNECTORS) {
 }
 ```
 
-In `ops.mjs` add imports:
-
-```js
-import { readFileSync, writeFileSync } from 'node:fs';
-import yaml from 'js-yaml';
-import { getConnector, CONNECTORS } from './connectors/index.mjs';
-```
-
-and the op:
+`ops.mjs` imports: `import { readFileSync, writeFileSync } from 'node:fs'; import yaml from 'js-yaml'; import { getConnector, CONNECTORS } from './connectors/index.mjs';` and the op:
 
 ```js
 'ingest.pull': { kind: 'exec', write: true, run: async (ctx) => {
@@ -1957,19 +1819,15 @@ and the op:
   const registry = ctx.deps?.registry || CONNECTORS;
   const target = join(dir, config.target);
   const shared = { self: config.atproto?.did, nsid_authority: config.atproto?.nsid_authority, pds: config.atproto?.pds };
-  const report = { connectors: [] };
-  let ok = true;
+  const report = { connectors: [] }; let ok = true;
   const kmsPath = join(dir, 'kms.yaml');
-  const raw = yaml.load(readFileSync(kmsPath, 'utf8'));
-  raw.connectors = raw.connectors || [];
-
+  const raw = yaml.load(readFileSync(kmsPath, 'utf8')); raw.connectors = raw.connectors || [];
   for (let i = 0; i < (config.connectors || []).length; i++) {
     const decl = config.connectors[i];
     try {
-      const connector = getConnector(decl.name, registry);
-      const r = await fw.runConnector(connector, { config: { ...shared, ...(decl.config || {}) }, cursor: decl.cursor ?? null, adapter: config.adapter, target });
+      const r = await fw.runConnector(getConnector(decl.name, registry), { config: { ...shared, ...(decl.config || {}) }, cursor: decl.cursor ?? null, adapter: config.adapter, target });
       raw.connectors[i].cursor = r.cursor ?? null;
-      report.connectors.push({ name: decl.name, status: 'ok', pulled: r.pulled, candidates: r.candidates, stored: r.stored, collisions: r.collisions, retractions: r.retractions });
+      report.connectors.push({ name: decl.name, status: 'ok', pulled: r.pulled, candidates: r.candidates, stored: r.stored, updated: r.updated, collisions: r.collisions, retractions: r.retractions, errors: r.errors });
     } catch (e) {
       if (e.code === 'NOT_IMPLEMENTED') report.connectors.push({ name: decl.name, status: 'not-implemented' });
       else { ok = false; report.connectors.push({ name: decl.name, status: 'failed', error: e.message }); }
@@ -1980,19 +1838,15 @@ and the op:
 } },
 ```
 
-`bind.mjs` close list becomes:
+`bind.mjs` close → `['ingest.pull','csis-review','bridge','emit-contributions','federate.check','index.rebuild','render.site','render.dashboard','publish','sync.push']`; mirror in `profile/profile.yaml`; update `test/bind.test.mjs:35`.
 
-```js
-close: ['ingest.pull', 'csis-review', 'bridge', 'emit-contributions', 'federate.check', 'index.rebuild', 'render.site', 'render.dashboard', 'publish', 'sync.push'],
-```
-
-Repo-root `kms.yaml` — append:
+Root `kms.yaml` — append (no comments inside this block):
 
 ```yaml
 connectors:
   - name: atproto
     config:
-      peers: []                          # refi-dao-os DID once it has an account (handle knowledge.refidao.com)
+      peers: []
     cursor: null
   - name: static-json
     config:
@@ -2002,62 +1856,33 @@ connectors:
     cursor: null
 ```
 
-Write `packages/org-os-kms/docs/CONNECTORS.md`:
-
-```markdown
-# Connectors and the publication plane
-
-**Vocabulary:** see the repo-root `CONTEXT.md`. **Design:** `docs/plans/2026-09-18-org-os-kms-atproto-publication-plane-design.md`, ADR-0001.
-
-## Lifecycle
-`close` = `ingest.pull` → review → bridge → … → `render.site` → `publish` → `sync.push`.
-- `ingest.pull` runs every `kms.yaml.connectors[]` entry through `runConnector`; pulled objects land at `maturity: raw`; cursors are written back into `kms.yaml`.
-- `publish` selects `isPublishable` objects, mints `id`/`grc20Id` if absent, diff-publishes to the AT Proto repo (`data/kms-published.json` is the manifest) and regenerates `public/api/**` + `public/.well-known/`.
-- `org-os-kms lifecycle close --dry` previews the publish diff without writing to the PDS or manifest.
-
-## Connectors
-| name | source-system type | cursor | map |
-|---|---|---|---|
-| `atproto` | knowledge-garden | `{did: {rev, seen[]}}` | Lexicon record → framework schema; origin `sourceUri` preserved; own-origin skipped; missing URIs → retraction (held) |
-| `static-json` | dataset | sha256 of the index body | per-source mapper module (`static-json/openhaven.mjs`) |
-
-## Setting up the AT Proto identity (one-time, manual)
-1. Run a PDS (`@atproto/pds`, one for the federation) or use an existing one.
-2. Create the instance's account there → note the `did:plc:…` and set an app password.
-3. `kms.yaml.atproto`: `did`, `handle`, `pds`, `nsid_authority`. `.env`: `ATPROTO_APP_PASSWORD`.
-4. Publish the Lexicon DNS record: `_lexicon.kb.regencoordination.xyz TXT "did=<did>"` (AT Proto Lexicon resolution).
-5. Development uses a disposable dev identity; wipe its repo before the first real publish.
-```
+Write `packages/org-os-kms/docs/CONNECTORS.md` (lifecycle order; the two connectors' cursor models; **install = vendor both packages unedited, pinned**; a *puller* needs `atproto.pds` even with `did: null`; identity setup steps: PDS → account → `did:plc` + app password → `kms.yaml.atproto` + `.env` → DNS `_lexicon.<nsid host>` TXT → dev identity wiped before first real publish; `--dry` semantics; `public/api/**` is committed).
 
 - [ ] **Step 4: Run everything**
 
 ```bash
 cd packages/org-os-kms && npm test && cd ../toolkit-framework && npm test && cd ../.. && npm run build
 ```
-Expected: all PASS; site builds. Then `cd packages/org-os-kms && node src/cli.mjs lifecycle close --dir ../.. --dry` (if the CLI already parses `--dry` into `ctx.flags`; if not, add `flags: { dry: flags.dry === true || flags.dry === 'true' }` to the `runLifecycle` call in `cli.mjs:35`) → the report shows `ingest.pull` pulling Open Haven (227 protocols + affordances + domains as raw `resource`/`signal`/`track` candidates) and `publish` with `atproto.status: 'not-configured'` and the static file count.
 
-**Do not commit the Open Haven pull result into `data/kb/` from this dry run** — run it against a scratch copy or `git checkout -- data/kb` afterwards. The real first pull belongs to a `close` the operator reviews.
+Then a real dry run: `node packages/org-os-kms/src/cli.mjs lifecycle close --dir . --dry` → `ingest.pull` report: atproto `pulled: 0` (no peers), static-json `pulled: 227+43+10`, `stored: …`; `publish`: `atproto.status: 'not-configured'`, `static: 'skipped (dry)'`, `minted: 0`.
 
-- [ ] **Step 5: Commit**
+**Note:** `--dry` is honoured by `publish` only; `ingest.pull` has no dry mode — the Open Haven pull above **stores** ~280 raw candidates into `data/kb/`. Run it on a scratch copy of the repo, or review and commit them as the first real pull (they are `raw` + `not-public-yet`; nothing publishes).
 
-```bash
-git add packages/org-os-kms/src/connectors/index.mjs packages/org-os-kms/src/ops.mjs packages/org-os-kms/src/bind.mjs packages/org-os-kms/src/cli.mjs packages/org-os-kms/docs/CONNECTORS.md packages/org-os-kms/test/ingest-pull-op.test.mjs kms.yaml
-git commit -m "feat(kms): ingest.pull op + connector registry; bind pull/publish on close; document setup"
-```
+- [ ] **Step 5: Commit** (include `profile/profile.yaml`, `test/bind.test.mjs`): `feat(kms): ingest.pull op + connector registry; bind on close; document setup`
 
 ---
 
-### Task 15: Opt-in end-to-end round trip
+### Task 16: First publish artefacts committed
 
-**Files:**
-- Create: `packages/org-os-kms/test/e2e-atproto.test.mjs`
+- [ ] Run `node packages/org-os-kms/src/cli.mjs lifecycle close --dir .` once (no `--dry`) with `atproto.did: null`: mints ids for gate-passing objects, writes `data/kms-published.json`, `public/api/**`, `public/.well-known/`. Review `git diff --stat`; expect id/grc20Id lines on publishable objects (this repo: ~141 with a publishable `public_use`), ~700 new files under `public/`. Commit: `chore(kms): first static publish — ids, manifest, public/api`.
 
-**Interfaces:** env `ATPROTO_E2E=1`, `ATPROTO_E2E_PDS`, `ATPROTO_E2E_HANDLE`, `ATPROTO_E2E_PASSWORD`, `ATPROTO_E2E_DID`. Skipped (not failed) when unset.
+---
 
-- [ ] **Step 1: Write the test**
+### Task 17: Opt-in end-to-end round trip
+
+**Files:** `packages/org-os-kms/test/e2e-atproto.test.mjs` — as in revision 1, with `kms.yaml` for the puller including `atproto: { did: 'did:plc:other', pds: E.ATPROTO_E2E_PDS, nsid_authority }` (a puller needs `pds`). Skipped unless `ATPROTO_E2E=1` + `ATPROTO_E2E_PDS/HANDLE/PASSWORD/DID`.
 
 ```js
-// packages/org-os-kms/test/e2e-atproto.test.mjs — opt-in: publishes one object to a real PDS and pulls it back as a peer.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -2070,59 +1895,43 @@ import { getAdapter } from '../src/framework.mjs';
 const E = process.env;
 const enabled = E.ATPROTO_E2E === '1' && E.ATPROTO_E2E_PDS && E.ATPROTO_E2E_HANDLE && E.ATPROTO_E2E_PASSWORD && E.ATPROTO_E2E_DID;
 
-test('e2e: publish → pull round trip', { skip: !enabled && 'set ATPROTO_E2E=1 + PDS/HANDLE/PASSWORD/DID' }, async () => {
-  const mk = (extra) => {
+test('e2e: publish → pull → retract', { skip: !enabled && 'set ATPROTO_E2E=1 + PDS/HANDLE/PASSWORD/DID' }, async () => {
+  const mk = (x) => {
     const dir = mkdtempSync(join(tmpdir(), 'kms-e2e-'));
     mkdirSync(join(dir, 'data', 'kb'), { recursive: true });
-    writeFileSync(join(dir, 'data', 'kb', 'resource.yaml'), yaml.dump({ entries: extra.entries || {} }));
-    writeFileSync(join(dir, 'kms.yaml'), yaml.dump({ instance: extra.instance, adapter: 'repo-data', target: '.',
-      atproto: { did: extra.did, handle: E.ATPROTO_E2E_HANDLE, pds: E.ATPROTO_E2E_PDS, nsid_authority: 'xyz.regencoordination.kb' }, connectors: extra.connectors || [] }));
+    writeFileSync(join(dir, 'data', 'kb', 'resource.yaml'), yaml.dump({ entries: x.entries || {} }));
+    writeFileSync(join(dir, 'kms.yaml'), yaml.dump({ instance: x.instance, adapter: 'repo-data', target: '.',
+      atproto: { did: x.did, handle: E.ATPROTO_E2E_HANDLE, pds: E.ATPROTO_E2E_PDS, nsid_authority: 'xyz.regencoordination.kb' }, connectors: x.connectors || [] }));
     return dir;
   };
   const title = `E2E ${Date.now()}`;
   const publisher = mk({ instance: 'pub', did: E.ATPROTO_E2E_DID, entries: { e2e: { title, type: 'resource', public_use: 'ok-with-caveat', url: 'https://example.org' } } });
-  const pub = await OPS.publish.run({ dir: publisher, deps: { env: { ATPROTO_APP_PASSWORD: E.ATPROTO_E2E_PASSWORD } } });
-  assert.equal(pub.ok, true, JSON.stringify(pub.report));
-  assert.equal(pub.report.atproto.created, 1);
+  const deps = { env: { ATPROTO_APP_PASSWORD: E.ATPROTO_E2E_PASSWORD } };
+  const pub = await OPS.publish.run({ dir: publisher, deps });
+  assert.equal(pub.ok, true, JSON.stringify(pub.report)); assert.equal(pub.report.atproto.created, 1);
 
   const puller = mk({ instance: 'pull', did: 'did:plc:other', connectors: [{ name: 'atproto', config: { peers: [E.ATPROTO_E2E_DID] }, cursor: null }] });
   const pull = await OPS['ingest.pull'].run({ dir: puller });
   assert.equal(pull.ok, true, JSON.stringify(pull.report));
   const got = getAdapter('repo-data').list(puller).find(({ object }) => object.title === title);
-  assert.ok(got, 'pulled object present');
-  assert.equal(got.object.maturity, 'raw');
-  assert.equal(got.object.url, 'https://example.org');
+  assert.ok(got); assert.equal(got.object.maturity, 'raw'); assert.equal(got.object.public_use, 'not-public-yet'); assert.equal(got.object.url, 'https://example.org');
   assert.match(got.object.sourceUri, new RegExp(`^at://${E.ATPROTO_E2E_DID}/xyz\\.regencoordination\\.kb\\.resource/`));
 
-  // cleanup: demote locally → publish deletes the record
   writeFileSync(join(publisher, 'data', 'kb', 'resource.yaml'), yaml.dump({ entries: {} }));
-  const del = await OPS.publish.run({ dir: publisher, deps: { env: { ATPROTO_APP_PASSWORD: E.ATPROTO_E2E_PASSWORD } } });
-  assert.equal(del.report.atproto.deleted, 1);
+  assert.equal((await OPS.publish.run({ dir: publisher, deps })).report.atproto.deleted, 1);
+  const pull2 = await OPS['ingest.pull'].run({ dir: puller });
+  assert.equal(pull2.report.connectors[0].retractions, 1);
 });
 ```
 
-- [ ] **Step 2: Run without env** — `node --test test/e2e-atproto.test.mjs` → 1 skipped, 0 failed.
-
-- [ ] **Step 3: Run against a dev PDS** (operator step; document the result in the task's commit message)
-
-```bash
-ATPROTO_E2E=1 ATPROTO_E2E_PDS=https://<dev-pds> ATPROTO_E2E_HANDLE=dev.kc.regencoordination.xyz ATPROTO_E2E_PASSWORD=… ATPROTO_E2E_DID=did:plc:… node --test test/e2e-atproto.test.mjs
-```
-Expected: PASS. If `putRecord` returns `InvalidRecord` because the PDS validates unknown `$type` strictly, add `validate: false` to the `putRecord` body in `client.mjs` (the PDS then stores the record without Lexicon validation; ours already validated it).
-
-- [ ] **Step 4: Commit**
-
-```bash
-git add packages/org-os-kms/test/e2e-atproto.test.mjs
-git commit -m "test(kms): opt-in e2e publish→pull round trip against a real PDS"
-```
+- [ ] Run without env → 1 skipped. Against a dev PDS → PASS. **Commit:** `test(kms): opt-in e2e publish→pull→retract`
 
 ---
 
-## Self-review
+## Self-review (revision 2)
 
-**Spec coverage.** Gate (Q9/Q11) → T1. Fields (Q10 + grc20Id/sourceUri/viaUri) → T2. Lexicons generated + drift test + no floats + 1 MB → T3. Manifest → T4. Minting + write-back (Q8/Q10) → T5. Cross-refs (Q19) → T6. XRPC client → T7. Diff-publish, swapRecord, delete on demotion (Q7), validate-all-first → T8. Static surface + `.well-known/knowledge.json` + copy (Q1/Q2/Q13/Q18, geo block Q15) → T9. `publish` op, not-configured skip, `--dry`, lifecycle order → T10. `runConnector`, raw forcing, retraction-as-held → T11. Peer pull by rev, origin/own-origin rules (Q5/Q6), unreachable-peer continue → T12. Open Haven (Q1/Q14) → T13. `ingest.pull`, cursor write-back, NOT_IMPLEMENTED continue, first in close → T14. e2e → T15. Identity `did:plc`/handle/dev identity (Q16/Q17/Q21) → config + CONNECTORS.md in T10/T14 (no code depends on the DID method). Slug-collision suffixing on pull is delegated to `repo-data.store`'s existing B5 hash-suffix behaviour (`repo-data.mjs:59-68`) — not re-implemented. KOI sensor: backlogged, no task, per spec.
+**Spec coverage.** Gate (schema-keyed, opt-in) T1; fields T2; Lexicons over 12 T3; async + `--dry` T4; manifest + `slugFromRef` T5; minting only after every gate, dry mints nothing T6; refs T7; client with pds guard + `validate:false` T8; planner keyed on schema T9; static surface with served `context.jsonld` T10; instance gate hook + publish op + profile twin T11; `runConnector` with `not-public-yet`, origin upsert, errors T12; connector with no-peers guard, `ALL_TYPES`, type untouched T13; Open Haven with valid `signal_type`/`audience` T14; `ingest.pull` + registry + docs + puller needs `pds` T15; committed artefacts T16; e2e with retraction T17.
 
-**Placeholder scan.** None. The one conditional instruction (add `validate: false` if the PDS rejects) names the exact file and field.
+**Reviewer findings → tasks.** #1 → T1/T6/T9/T10/T11/T13. #2 → T4. #3 → T8/T13/T11 config. #6 → T11/T15. #7 → T12. #8 → T12 (+ pilot 3.3 reordered). #9 → T6/T11. #10 → T1/T2/T3/T5. #12 → constraints. #13 → T10. #14 → T12/T15. #15 → T14. #16 → T5/T9/T15 note. #17 → constraints/T10 note/T16.
 
-**Type consistency.** `planPublish` returns `{ok, errors, create, update, delete, skip, previous, manifestObjects}`; `applyPublish(plan, {client, did, now})` reads `plan.previous`/`plan.skip` — T8 test asserts on `applied`, `failures`, `manifest`. `runConnector` returns `{source, pulled, candidates, stored, collisions, cursor, retractions}` — T14 op reads exactly those. `ensureIds` returns `{minted, items}` — T10 op uses both. Manifest entry shape `{slug, type, rkey, atUri, cid, hash, publishedAt}` is identical in T4, T8, T9. Connector config keys `self`, `nsid_authority`, `pds`, `peers` match between T12 and T14.
+**Type consistency.** `isPublishable(object, {schema, types})` everywhere; `planPublish` returns `previous`; `applyPublish` reads `plan.previous`/`plan.skip`; manifest entry `{slug, type(schema), rkey, atUri, cid, hash, publishedAt}` in T5/T9/T10; `runConnector` returns `{…, updated, errors}` and T15 reports both; `ensureIds({items, write})` in T6/T11; connector config keys `self`, `nsid_authority`, `pds`, `peers` in T13/T15.
