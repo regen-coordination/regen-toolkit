@@ -29,6 +29,14 @@ For routing, see the **§16 routing table** (master doc lines 24604–24622).
 
 ---
 
+## New items — 2026-09-18 org-os-kms AT Proto design
+
+Parked from the brainstorm/grilling that produced [`2026-09-18-org-os-kms-atproto-publication-plane-design.md`](plans/2026-09-18-org-os-kms-atproto-publication-plane-design.md) and [ADR-0001](adr/0001-atproto-as-publication-plane.md).
+
+- **`context.jsonld` vocab authority** — `needs-owner` → route to Knowledge Commons / Governance. `data/kb/context.jsonld` declares `@vocab: https://regen-commons.org/ns/`, a domain nobody controls. It's an IRI (no DNS check), so nothing breaks, but it is the same question as the Lexicon NSID authority: which domain the KC group agrees owns the shared vocabulary. Decide once, apply to both.
+- **atproto→KOI sensor** — `candidate-integration` → route to Infra Stack. A koi-net sensor node consuming the instance's AT Proto collections (AT-URI as RID, CID as hash). **Trigger:** a koi-net *coordinator* exists that wants these collections. Today none does — GAIA's `regen-koi` API is a RAG surface, not a koi-net node — so building it would have no subscriber. Design sketched in the spec's research section.
+- **GRC-20 ↔ AT Proto compatibility claim** — `needs-info` (Luiz to ask Rather) → route to Infra Stack. The 09-17 call recorded "GRC-20 IDs are valid DIDs / Geo ontologies are valid AT Proto vocabularies"; the GRC-20 spec has no atproto/DID/Lexicon references. Nothing in the design depends on it, but the GeoBrowser item below should not repeat it as validated until confirmed.
+
 ## New items — 2026-07-16 biweekly + Matty 1-on-1
 
 Parked/exploratory items from the 2026-07-16 meetings. Active commitments live in [`HEARTBEAT.md`](../HEARTBEAT.md); these are the not-yet-active or unowned threads. Notes: `packages/operations/meetings/260716 *.md`.
@@ -37,7 +45,7 @@ Parked/exploratory items from the 2026-07-16 meetings. Active commitments live i
 - **Hermes opt-in ingestion model** — `needs-implementation-test` → route to Infra / Federation. Telegram groups **opt in** to pipe shared links through the ingestion pipeline → review → process. **Privacy constraint (high-risk):** no scraping bots; manual curation is the acceptable line. Pairs with the Hermes agent already live on the BCN Telegram.
 - **Bonfire as an alternative/complement to Hermes** — `needs-review` → route to Infra. Evaluate Bonfire for the opt-in-ingestion use case (vs the OpenCivics "Harmonica" demo, seen as less useful here). Threads with Koi's Bonfires substrate.
 - **Ron Teretsky overlap** — `needs-owner` (Luiz to open) → route to Federation / Partnerships. Built an automated project manager (Bread's PM tool); likely overlapping work; intro/direct conversation suggested. *(Also in HEARTBEAT as an active reach-out.)*
-- **GeoBrowser deep-dive** — `needs-review` → route to Infra Stack. One promising option identified; needs further review + fit assessment. Standing item from 2026-06-15; now paired with the Geo Protocol scoping doc.
+- **GeoBrowser deep-dive** — `candidate-integration` → route to Infra Stack. **Updated 2026-09-17:** Rather demoed GeoBrowser live; layering confirmed (Regen Knowledge Commons is the umbrella individual instances fork into); GRC-20 IDs claimed as valid DIDs / AT Proto vocabularies (**unverified against the GRC-20 spec — see 2026-09-18 items**); minimum viable adoption is agreeing on GRC-20 IDs only. Still open: whether the ontology should live in Git instead of Geo. See [`260917 GeoBrowser Knowledge Graph Architecture and Federation Strategy with Rather.md`](../packages/operations/meetings/260917%20GeoBrowser%20Knowledge%20Graph%20Architecture%20and%20Federation%20Strategy%20with%20Rather.md). Standing item from 2026-06-15; paired with the Geo Protocol scoping doc.
 - **`communityrule.info`** — `future-seed` → route to Resources / Deployment. Nathan Schneider's tool for organizational constitutions ("set up a garden" → constitution); candidate resource to ingest.
 - **Exit-to-community playbook** (Blockchain Governance / Nathan Schneider — OpenCivics / BreadCoop) — `needs-source` → route to Resources. Flagged as a key upcoming resource being released ~this week; capture the link + ingest once out.
 - **ReFi DAO carbon-copy project DB integration** — `needs-implementation-test` → route to Source Systems. Not yet pulled cleanly; important source; part of the iterative feed-the-engine process.
