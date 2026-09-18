@@ -1,12 +1,12 @@
 # org-os-kms — AT Proto Publication Plane — Design Spec
 
-**Date:** 2026-09-18 (revised after grilling, same day)
+**Date:** 2026-09-18 (revised after grilling and after the fit review, same day — revision 3)
 **Status:** approved design, awaiting implementation plan
 **Decision record:** [`docs/adr/0001-atproto-as-publication-plane.md`](../adr/0001-atproto-as-publication-plane.md)
 **Vocabulary:** [`CONTEXT.md`](../../CONTEXT.md) — terms below are used as defined there
 **Packages:** `packages/org-os-kms` (drivers, ops), `packages/toolkit-framework` (contract, Lexicon generator)
 **Supersedes:** the `atproto` stub in `2026-07-19-org-os-kms-connector-layer-design.md` (org-os repo). Builds on that spec's `connector.mjs` contract, which is still unbuilt.
-**Layer:** 6 (Infrastructure & Substrate) primarily; touches 3 (Knowledge Commons) via schema fields.
+**Layer:** 10 (Infrastructure & Substrate — Luiz) primarily; touches 2 (Knowledge Commons / Encyclopedia) via the identity fields and 3 (Resource Graph) via the `resource` mapping. Per Layer 10 / MASTER §14: static JSON-LD export is Phase 3; AT Proto federation is Phase 4 — so regen-toolkit pulls before it publishes.
 
 ## Summary
 
@@ -21,22 +21,22 @@ Every published object gets a DID-rooted, Lexicon-typed, permanently citable ide
 | — | Substrate, plane, or connector? | **Plane.** See ADR-0001. |
 | — | What is org-os-kms for? | Cross-org **public** knowledge commons. The private org tier (`data/*.yaml` registries, `memory/`, `HEARTBEAT.md`) never touches AT Proto. |
 | — | Who owns a record? | **One DID per instance.** Contributors are attributed in fields. |
-| Q1 | Open Haven's role | **Both** peer (first `static-json` source) and pattern (our static surface). |
+| Q1 | Open Haven's role | **Pattern** (our static surface) now; **peer** as framework capability only — the `static-json` connector + Open Haven mapper are built and fixture-tested but **no instance activates it** until a source-system card exists and Rather's call with Brandon has happened (backlogged, `needs-owner`, Layer 3). The domain→track mapping was dropped. |
 | Q2 | Publication surfaces | **One `publish` op, two targets, one manifest.** Static entries cite the `at://` URI + CID. |
 | Q3/Q12/Q17 | NSID authority | **`xyz.regencoordination.kb.*`** (DNS `_lexicon.kb.regencoordination.xyz`). No `dev.` prefix in NSIDs. A neutral commons authority is a KC-group decision; migration cost is one regeneration + one republish. |
 | Q4 | PDS hosting | **One self-hosted PDS for the federation**, hosting every instance's account. |
 | Q5 | `sourceUri` | **Origin** (first publisher's AT-URI), immutable across republishes. Pull skips records whose origin DID is mine. Dedupe by origin URI only. |
 | Q6 | Republishing | **Allowed.** Origin and `grc20Id` preserved. |
 | Q7 | Retraction | **`deleteRecord`** when an object leaves the publishable set; peers flag, never auto-delete. |
-| Q8 | `grc20Id` minting | **Origin mints UUIDv4 at first publish**, written back to yaml; operator pastes Geo's ID if the entity already exists there. |
-| Q9 | Publication gate | `public_use ∈ {ok-with-caveat, source-linked-unreviewed, reviewed-for-explanation, reviewed-for-guidance}`. **Maturity is not a gate.** |
+| Q8 | `grc20Id` minting | **Only when `kms.yaml.geo.space` is set** (the Regen KC Geo space does not exist yet, so no local Geo ids are minted that would later need reconciling). When set: origin mints UUIDv4 at first publish, written back to yaml; operator pastes Geo's ID if the entity already exists there. |
+| Q9 | Publication gate | **Floor:** `public_use ∈ {ok-with-caveat, source-linked-unreviewed, reviewed-for-explanation, reviewed-for-guidance}`; maturity is not part of the floor. **Ceiling:** an optional instance gate (`kms.yaml.publish.gate`, e.g. ReFi DAO's fail-closed `publication-gate.mjs`) may only narrow. The floor admits `source-linked-unreviewed` only because instances narrow it — regen-toolkit, where that value is a script default on 141 AI drafts, does not publish. |
 | Q10 | Stable identity | Optional `id` (UUIDv4) on the frontmatter schema; origin mints at first publish, writes back to yaml; required for publishable objects; **`rkey = id`**. |
-| Q11 | Publishable types | **All hub types except `person`** (12): `claim-evidence, concept-lineage, encyclopedia-entry, implementation-record, option-entry, organization, public-use-boundary, relationship-record, resource, signal, source-system, track`. |
+| Q11 | Publishable types | **10 by default**, keyed on the adapter's **schema** (never `object.type` — `source-system.type` is a kind enum and boundary records have no `type`): `claim-evidence, concept-lineage, encyclopedia-entry, implementation-record, option-entry, organization, relationship-record, resource, signal, track`. `source-system` and `public-use-boundary` are **opt-in** per instance (cards describe PII-holding systems; boundaries are the consent map). `person` never. |
 | Q13 | `.well-known/` | **Copied into `public/.well-known/` at build.** Root stays the source of truth. |
 | Q14 | Static-json field mapping | **One pure mapper module per source** (`openhaven.mjs`), selected by config. |
 | Q15 | Geo space ID | `kms.yaml.geo: { parent_space, space }`, surfaced in `knowledge.json`. Parent = Knowledge Commons topic space `bd727a6ad6ec4a058f681ea9002a1fbf`; `space` null until Rather bootstraps the Regen KC space. |
 | Q16/Q21 | Identity | **`did:plc`** with handle `kc.regencoordination.xyz` (refi-dao-os: `knowledge.refidao.com`). Handle can change; DID cannot and need not. Dev identity is a separate disposable `did:plc`. |
-| Q18 | Static surface | Open Haven layout, JSON with `@context` → valid JSON-LD; `.well-known/knowledge.json` is the discovery doc. |
+| Q18 | Static surface | Open Haven layout, JSON with an **absolute** `@context` (`<publish.base_url>/api/context.jsonld` — root-relative paths break under GitHub Pages `base`); every entry passes the **`publicView` projection** (no `notes`, `work_order`, `reviewed_by`, `review_needs`, `interpretation`, `uncertainty`, `tensions`, `risks_of_flattening`, `high_risk`, `consent_note`, `salvaged_from`, `legacy_status`, `additional_provenance`, `provenance.surfaced_by`); `.well-known/knowledge.json` is the discovery doc, **merged into** the one `generate:schemas` produces (one shape, one document); root `.well-known/` copy is an **allowlist** (`dao.json` only) — `meetings.json`/`members.json`/`activities.json` never leave the repo. |
 | Q19 | Cross-references | **Origin AT-URI** when the target is published; slug left as is when it isn't; next diff repairs it. Not strong refs (they pin versions; the commons links concepts). |
 | Q20 | KOI sensor | **Backlogged** (`candidate-integration`) — no koi-net coordinator exists to consume it. |
 
@@ -150,7 +150,7 @@ Credentials (`ATPROTO_APP_PASSWORD` / OAuth token) live in `.env`, never in `kms
 
 **`connectors/static-json/index.mjs`** — `describe()` → source-system card `{type: 'dataset', endpoint: base_url}`; `pull` → GET index, GET each listed collection, cursor = sha256 of the index body (skip if unchanged); `map` delegates to the configured mapper module. **`openhaven.mjs`** — pure; fixture-tested against a saved copy of Open Haven's index + one entry per collection.
 
-**`static/surface.mjs`** — pure over (manifest, objects). Emits `public/api/<type>.json` (all), `public/api/<type>/<id>.json` (one), each with `"@context": "/kb/context.jsonld"`, `atUri`, `cid`; and `public/.well-known/knowledge.json` filled from the manifest (`exchange.published_domains` = collections; `subscribed_domains` = peer DIDs + static sources; `sources` = source-system cards; `geo` block). Also copies root `.well-known/*.json`.
+**`static/surface.mjs`** — pure over (manifest, objects, config). Emits `public/api/context.jsonld`, `public/api/<schema>.json` (all), `public/api/<schema>/<id>.json` (one), each a `publicView` of the object with absolute `@context`, `atUri`, `cid`; and `public/.well-known/knowledge.json` = the root manifest merged with `did`, `geo`, `exchange.published_domains` (collections), `subscribed_domains` (peer DIDs + static sources), `sources` (publishable-`public_use` source-system cards). Copies only `dao.json` from root `.well-known/`.
 
 **`publish` op** — `kind: 'exec'`, `write: true` (fail-hard), targets `[atproto, static]`.
 1. Select objects with `isPublishable`. Mint `id` (and `grc20Id` if absent) for any that lack one; write back to yaml.
@@ -159,7 +159,8 @@ Credentials (`ATPROTO_APP_PASSWORD` / OAuth token) live in `.env`, never in `kms
 4. AT Proto target: for each object, `cid = dagCbor(object)`; skip if unchanged; `putRecord` with `swapRecord: manifest[id]?.cid`. For each manifest entry no longer publishable: `deleteRecord`, drop from manifest.
 5. Static target: regenerate `public/api/**` and `public/.well-known/` from the manifest. No network; cannot fail on the PDS.
 6. Write `data/kms-published.json`; `sync.push` commits it and the yaml write-backs.
-7. `--dry` prints create/update/delete/skip per target, writes nothing. Missing `kms.yaml.atproto` or credentials → AT Proto target reports `not configured` and is skipped; static target still runs.
+7. `--dry` prints create/update/delete/skip per target, writes nothing (not even ids). **Without `--apply`** (or `publish.apply: true`), the op runs in **plan mode**: it reports what it would write to the PDS but writes nothing there and no manifest — this is what `close` does by default (draft-and-present). Missing `kms.yaml.atproto` or credentials → `not-configured`; static target still runs unless `publish.static: false`.
+8. `ingest` is a CLI verb (`org-os-kms ingest [--connector X] [--dry]`), **not** bound to `close`; it is fail-soft per source; candidates are validated (`validateObject` + `checkInvariants`) and stamped (`work_order`, `source_lineage`) before store; the source's `describe()` card is upserted as a source-system.
 
 ### Sequencing on `close`
 
@@ -198,7 +199,7 @@ Network-free except one opt-in e2e.
 - **`publishable.mjs`:** table test over every (type, public_use) pair.
 - **`lexicon.mjs`:** generate from the 12 publishable schemas → snapshot-compare to committed `lexicons/`; drift test; every publishable fixture object validates; float field → error.
 - **`publish` op + `atproto/storage.mjs`:** fake XRPC client; assert id/grc20Id minting + yaml write-back, cross-ref rewriting, diff-only writes, `swapRecord` on update, `deleteRecord` on demotion, manifest write-back, abort-before-first-write on validation failure, `not configured` skip with static still running, `--dry` writes nothing.
-- **`static/surface.mjs`:** golden files for `api/` layout + `knowledge.json`; `@context` present; copies root `.well-known/`.
+- **`static/surface.mjs`:** golden files for `api/` layout + merged `knowledge.json`; projection applied; absolute `@context`; only `dao.json` copied, `meetings.json` never.
 - **`atproto/connector.mjs`:** pure `map` per NSID; own-origin skip; `runConnector` with fake connector for cursor, retraction, collision, republish-dedupe.
 - **`static-json` + `openhaven.mjs`:** `map` against saved Open Haven fixtures; hash-cursor skip.
 - **e2e (opt-in, `ATPROTO_E2E=1`):** publish to a local `@atproto/pds` dev container from one instance config, pull from a second; byte-equal after round-trip.
@@ -206,14 +207,14 @@ Network-free except one opt-in e2e.
 
 ## Proving ground
 
-- **Publisher:** regen-toolkit (this instance), dev identity first.
-- **First peer / puller:** refi-dao-os (104 typed entries; handle `knowledge.refidao.com`). Success = its `close` pulls this instance's published objects into its review queue without disturbing its existing entries.
-- **First static source:** Open Haven — its entities land as `resource` candidates in this instance's review queue.
-- **Cold start:** org-os canonical (empty scaffold) pulls from regen-toolkit.
+- **Publisher:** `refi-dao-commons` (see the pilot plan in refi-dao-os) — it has a fail-closed instance gate and reviewed objects to publish.
+- **First peer / puller:** regen-toolkit (this instance), `did: null`, `publish.static: false`, `publish.apply: false`. It publishes nothing until the pilot's Phase 2 passes, the name-flagging privacy gate (HEARTBEAT `task-260716-…`) closes, and the 141 objects carrying `public_use: source-linked-unreviewed` (a script default from `process-content.mjs`, all `ai_assisted`) are reviewed.
+- **Static sources:** none activated. Open Haven is capability + fixtures only.
+- **Cold start:** org-os canonical (empty scaffold) pulls from refi-dao-commons, later.
 
 ## Non-goals this pass
 
-Spaces / private repos; labelers; feed generators; our own AppView (we use `listRecords` per peer); contributor DIDs; Geo write-side; blobs; real `publish` capability on connectors (contribute-back to *other* orgs' repos stays draft-and-present); KOI sensor (backlogged); Notion / Synthefy / Radicle connectors; `context.jsonld` authority fix (backlogged).
+Spaces / private repos; labelers; feed generators; our own AppView (we use `listRecords` per peer); contributor DIDs; Geo write-side; blobs; real `publish` capability on connectors (contribute-back to *other* orgs' repos stays draft-and-present); KOI sensor (backlogged); Notion / Synthefy / Radicle connectors; `context.jsonld` authority fix (backlogged); Open Haven activation (backlogged); wiring `lifecycle close` into `/close` (nothing invokes it today); regen-toolkit publishing.
 
 ## Open questions (external, not blocking)
 
