@@ -21,3 +21,8 @@ atproto:
 geo:
   parent_space: bd727a6ad6ec4a058f681ea9002a1fbf
   space: null                            # no Regen KC space in Geo yet => no grc20Id minted
+connectors:
+  - name: atproto
+    config:
+      peers: []
+    cursor: null
