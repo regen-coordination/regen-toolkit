@@ -19,6 +19,8 @@ import {
   buildStub,
   findAmbiguousIds,
   hubMemberLine,
+  IDENTITY_FIELDS,
+  stripIdentityFields,
 } from './generate-kb-viz.mjs';
 
 function fixtureArticlesDir() {
@@ -243,4 +245,52 @@ test('hubMemberLine path-qualifies the wikilink so ambiguous ids resolve per typ
     hubMemberLine('resource', { id: 'y', data: { title: 'A|B [C]' } }),
     '- [[resource/y|A B  C]]'
   );
+});
+
+// --- Identity/provenance fields (framework schema Task 2): never references ---
+
+// Values deliberately equal another object's id, so a walker that read them
+// as references would emit an edge/link.
+const identityData = (extra = {}) => ({
+  id: 'res-one', grc20Id: 'res-one', sourceUri: 'res-one', viaUri: 'res-one', ...extra,
+});
+
+test('IDENTITY_FIELDS is the four framework identity/provenance keys', () => {
+  assert.deepEqual([...IDENTITY_FIELDS].sort(), ['grc20Id', 'id', 'sourceUri', 'viaUri']);
+});
+
+test('stripIdentityFields drops only the four top-level keys and does not mutate', () => {
+  const data = identityData({ title: 'T', nested: { id: 'keep-me' } });
+  const stripped = stripIdentityFields(data);
+  assert.deepEqual(stripped, { title: 'T', nested: { id: 'keep-me' } });
+  assert.equal(data.id, 'res-one'); // input untouched
+  assert.deepEqual(stripIdentityFields(undefined), undefined);
+});
+
+test('deriveEdges ignores identity fields but still derives edges from ordinary reference fields', () => {
+  const objs = [
+    { id: 'res-one', type: 'resource', corpus: 'articles', data: {} },
+    { id: 'src', type: 'source-system', corpus: 'articles', data: identityData({ related: 'res-one' }) },
+  ];
+  assert.deepEqual(deriveEdges(objs), [
+    { from: 'source-system', to: 'resource', label: 'related', count: 1 },
+  ]);
+});
+
+test('buildSchemaGraph output is identical with or without identity fields', () => {
+  const plain = [
+    { id: 'res-one', type: 'resource', corpus: 'articles', data: { maturity: 'raw' } },
+    { id: 'src', type: 'source-system', corpus: 'articles', data: { maturity: 'reviewed', related: 'res-one' } },
+  ];
+  const withIds = plain.map((o) => ({ ...o, data: { ...o.data, ...identityData() } }));
+  assert.equal(JSON.stringify(buildSchemaGraph(withIds)), JSON.stringify(buildSchemaGraph(plain)));
+});
+
+test('buildStub does not list identity-field values as Related', () => {
+  const objs = [
+    { id: 'res-one', type: 'resource', corpus: 'articles', data: {} },
+    { id: 'src', type: 'source-system', corpus: 'articles', data: identityData({ title: 'Src' }) },
+  ];
+  const idToType = new Map(objs.map((o) => [o.id, o.type]));
+  assert.ok(!buildStub(objs[1], idToType).includes('Related:'));
 });

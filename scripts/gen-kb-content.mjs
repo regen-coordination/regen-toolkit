@@ -9,7 +9,7 @@ import { writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import { loadArticlesCorpus, loadHandoffCorpus } from './generate-kb-viz.mjs';
+import { loadArticlesCorpus, loadHandoffCorpus, stripIdentityFields } from './generate-kb-viz.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -75,7 +75,7 @@ export function deriveObjectLinks(objects) {
   return objects.map((o) => {
     const seen = new Set();
     const links = [];
-    walkStrings(o.data, (field, value) => {
+    walkStrings(stripIdentityFields(o.data), (field, value) => {
       for (const hit of byId.get(value) ?? []) {
         if (hit.corpus === o.corpus && hit.type === o.type && hit.id === o.id) continue;
         const key = `${field}|${hit.corpus}/${hit.type}/${hit.id}`;
@@ -108,7 +108,8 @@ export function buildSnapshot(objects) {
     // an unstamped object is certainly not reviewed, so it belongs in "awaiting review".
     by_maturity: count((o) => o.data?.maturity ?? 'raw'),
     layers: LAYERS,
-    objects,
+    // Identity/provenance fields (id, grc20Id, sourceUri, viaUri) are not page content.
+    objects: objects.map((o) => ({ ...o, data: stripIdentityFields(o.data) })),
   };
 }
 

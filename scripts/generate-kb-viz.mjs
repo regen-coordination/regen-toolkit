@@ -78,6 +78,18 @@ export function loadHandoffCorpus(objDir) {
   return out;
 }
 
+// Identity/provenance fields (framework schema: id, grc20Id, sourceUri, viaUri).
+// They carry identifiers/URIs about the object itself, never cross-references, so
+// edge/link derivation must ignore them and they must not be serialized into the
+// site data. Defined once here; gen-kb-content.mjs imports it.
+export const IDENTITY_FIELDS = ['id', 'grc20Id', 'sourceUri', 'viaUri'];
+
+// Copy of an object's data without the top-level identity fields (input untouched).
+export function stripIdentityFields(data) {
+  if (data == null || typeof data !== 'object' || Array.isArray(data)) return data;
+  return Object.fromEntries(Object.entries(data).filter(([k]) => !IDENTITY_FIELDS.includes(k)));
+}
+
 // Depth-first over every string value, remembering the nearest field name
 // (arrays inherit the array's field name).
 function walkValues(node, field, visit) {
@@ -97,7 +109,7 @@ export function deriveEdges(objects, ambiguous = new Set()) {
   const idToType = new Map(objects.map((o) => [o.id, o.type]));
   const tally = new Map();
   for (const o of objects) {
-    walkValues(o.data, null, (field, value) => {
+    walkValues(stripIdentityFields(o.data), null, (field, value) => {
       if (value === o.id || !idToType.has(value) || ambiguous.has(value)) return;
       const key = `${o.type}|${idToType.get(value)}|${field}`;
       tally.set(key, (tally.get(key) ?? 0) + 1);
@@ -152,7 +164,7 @@ const safeName = (s) => String(s).replace(/[/\\:#|?*"<>]/g, '-');
 export function buildStub(o, idToType, ambiguous = new Set()) {
   const title = (typeof o.data?.title === 'string' && o.data.title.trim()) || o.id;
   const related = new Set();
-  walkValues(o.data, null, (_field, value) => {
+  walkValues(stripIdentityFields(o.data), null, (_field, value) => {
     if (value !== o.id && idToType.has(value) && !ambiguous.has(value)) related.add(value);
   });
   const rel = [...related].sort(cmp);

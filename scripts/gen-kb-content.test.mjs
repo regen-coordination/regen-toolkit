@@ -68,3 +68,42 @@ test('buildSnapshot counts by corpus, type, layer, maturity — and keeps object
   assert.equal(snap.objects.length, 3);
   assert.ok(snap.layers[3].includes('Resource Graph'));
 });
+
+// --- Identity/provenance fields (framework schema Task 2): never references, never rendered ---
+
+const identityData = (extra = {}) => ({
+  id: 'decentralization', grc20Id: 'decentralization',
+  sourceUri: 'decentralization', viaUri: 'decentralization', ...extra,
+});
+
+test('deriveObjectLinks ignores identity fields but still links ordinary reference fields', () => {
+  const target = obj('articles', 'concept-lineage', 'decentralization');
+  const carrier = obj('articles', 'encyclopedia-entry', 'e1', identityData({ related_concepts: ['decentralization'] }));
+  const entry = deriveObjectLinks([target, carrier]).find((o) => o.id === 'e1');
+  assert.deepEqual(entry.links, [
+    { field: 'related_concepts', corpus: 'articles', type: 'concept-lineage', id: 'decentralization' },
+  ]);
+
+  const onlyIdentity = obj('articles', 'encyclopedia-entry', 'e2', identityData());
+  assert.deepEqual(deriveObjectLinks([target, onlyIdentity]).find((o) => o.id === 'e2').links, []);
+});
+
+test('buildSnapshot strips identity fields from serialized data, keeps the rest, does not mutate', () => {
+  const carrier = { ...obj('articles', 'encyclopedia-entry', 'e1', identityData({ title: 'E1', maturity: 'raw' })), links: [] };
+  const snap = buildSnapshot([carrier]);
+  assert.deepEqual(snap.objects[0].data, { title: 'E1', maturity: 'raw' });
+  assert.equal(carrier.data.id, 'decentralization'); // caller's object untouched
+  assert.equal(snap.by_maturity.raw, 1);
+});
+
+test('snapshot with identity fields is identical to one without, except the removed keys', () => {
+  const build = (withIds) => {
+    const ids = withIds ? identityData() : {};
+    const objects = [
+      obj('articles', 'concept-lineage', 'decentralization', { title: 'D', ...ids }),
+      obj('articles', 'encyclopedia-entry', 'e1', { title: 'E', maturity: 'raw', related_concepts: ['decentralization'], ...ids }),
+    ].map(withLayer);
+    return JSON.stringify(buildSnapshot(deriveObjectLinks(objects)));
+  };
+  assert.equal(build(true), build(false));
+});
