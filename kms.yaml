@@ -9,3 +9,15 @@ upstream: /03 Libraries/org-os/packages/org-os-kms
 render:
   site_data: src/data/kms-index.json
 peer_extensions: {}
+publish:
+  static: false                          # pull-only: regen-toolkit publishes nothing until the pilot's Phase 2 exit criteria pass, the name-flagging privacy gate closes, and someone reviews what a --dry publish would select
+  apply: false                           # even when enabled later, `close` only PLANS; real writes need `publish --apply`
+  base_url: https://regen-toolkit-site.vercel.app
+atproto:
+  did: null                              # regen-toolkit is a PULLER first; fill when this instance gets its own account
+  handle: kc.regencoordination.xyz
+  pds: null                              # REQUIRED for pulling peers even while did is null; filled when there is a peer to pull (pilot Phase 2.3)
+  nsid_authority: xyz.regencoordination.kb
+geo:
+  parent_space: bd727a6ad6ec4a058f681ea9002a1fbf
+  space: null                            # no Regen KC space in Geo yet => no grc20Id minted
