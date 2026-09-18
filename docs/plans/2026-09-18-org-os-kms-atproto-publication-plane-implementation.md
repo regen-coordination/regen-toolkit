@@ -10,6 +10,8 @@
 
 **Spec:** `docs/plans/2026-09-18-org-os-kms-atproto-publication-plane-design.md` · ADR: `docs/adr/0001-atproto-as-publication-plane.md` · Glossary: `CONTEXT.md`
 
+**Companion plan:** `refi-dao-os/docs/kms/2026-09-18-refi-dao-commons-atproto-pilot.md` — the first real publisher. Its Tasks A (publishable-type default → 10, opt-in for `source-system`/`public-use-boundary`) and B (instance gate hook `publish.gate`, `publish.static: false`) amend Tasks 1, 3, 5, 10, 12 here and should be executed right after Task 15, before any instance adopts. Proving-ground order is reversed by that plan: refi-dao-commons publishes, regen-toolkit pulls.
+
 ## Global Constraints
 
 - Publication gate: `type ∈ PUBLISHABLE_TYPES` (12 types, **never `person`**) ∧ `public_use ∈ {ok-with-caveat, source-linked-unreviewed, reviewed-for-explanation, reviewed-for-guidance}`. Maturity is not a gate.

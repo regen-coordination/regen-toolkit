@@ -25,8 +25,16 @@ One typed entry in an instance's knowledge base (a claim-evidence, an encycloped
 _Avoid_: record (reserved for the AT Proto form), entry, node, document
 
 **Publishable**:
-A knowledge object whose `public_use` value permits it to leave the editorial plane. Decided per object by the public-use axis, not by maturity.
+A knowledge object that passes the framework gate (type and `public_use`) **and** any stricter instance gate the instance declares. The framework gate is the floor, never the ceiling; maturity is not part of the framework gate.
 _Avoid_: canonical (a legacy crosswalk value, not a real state), final, approved
+
+**Instance gate**:
+A fail-closed rule an instance adds on top of the framework gate (ReFi DAO's requires reviewed maturity, a resolvable non-internal source, and no consent boundary). Declared in the instance's config; applied wherever `publish` runs.
+_Avoid_: override, policy
+
+**Consent boundary**:
+A record binding a consent tier (e.g. never-publish-without-consent) to a source lineage. ReFi DAO stores these as `public-use-boundary` objects; the toolkit's ontology uses the same type name for an axis of labels — do not conflate. A consent boundary is never itself published.
+_Avoid_: public-use-boundary (ambiguous across instances), restriction
 
 **Published**:
 A publishable object that currently exists on the instance's publication plane. Tracked by the publish manifest.
