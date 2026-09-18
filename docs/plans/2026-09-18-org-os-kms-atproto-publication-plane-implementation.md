@@ -4,6 +4,14 @@
 
 **Revision:** 3 (2026-09-18) — after the fit review. regen-toolkit is **pull-only** in this plan; Open Haven is framework capability with no instance activating it; every outbound record and static entry goes through a field projection; `.well-known` copy is an allowlist; `ingest` is fail-soft, validating, `--dry`-aware, and a CLI verb; `publish` on `close` runs in plan mode unless `publish.apply: true`; `grc20Id` is minted only when a Geo space is configured; layer relabelled.
 
+## Where to build (read first)
+
+**Package tasks run in the canonical framework repo: `/Users/luizfernando/Desktop/Workspaces/Zettelkasten/03 Libraries/org-os`** (branch `luizfernando`), in `packages/toolkit-framework/` and `packages/org-os-kms/`. That copy is ahead of regen-toolkit's vendored one (65 tests vs 44; extra `frontier.mjs`, `map.mjs`, `render-map-html.mjs`; four framework files differ) and regen-toolkit's `kms.yaml` already names it as `upstream`. Do **not** build on regen-toolkit's `packages/` copy.
+
+- **In org-os:** Tasks 1–5, 7–15 (package code, tests, `lexicons/`, `profile/profile.yaml`, `docs/CONNECTORS.md`), Task 17. Baseline there: `cd packages/org-os-kms && npm test` → **65 pass**; `cd packages/toolkit-framework && npm test` → record the count before Task 1. Every `file:line` reference in this plan was taken from regen-toolkit's copy — re-locate against org-os before editing (names are the same; line numbers may differ; `cli.mjs` differs in content).
+- **In regen-toolkit** (this repo): Task 6 step 4 (site generators `scripts/gen-kb-content.mjs`, `scripts/generate-kb-viz.mjs`), the root `kms.yaml` / `.env.example` steps of Tasks 11 and 15, Task 16 (design/backlog — already done in rev 3), and the dry-run verification in Task 15 step 4 — **after** syncing the built packages from org-os (`npm run sync:upstream`, or `rsync -a --delete --exclude node_modules` of both packages, then `git diff --stat packages/`).
+- **Tag** org-os when Task 17 passes (`kms-atproto-v0.1`); the pilot vendors from that tag.
+
 **Where "unchanged from revision 2" appears** (Tasks 3, 5, 7, 8, 9, 13, 17): the full code and tests are in revision 2 of this file — `git show eec2541e:docs/plans/2026-09-18-org-os-kms-atproto-publication-plane-implementation.md` — apply only the deltas stated in the task.
 
 **Layer:** 10 (Infrastructure & Substrate — Luiz). Touches 2 (Knowledge Commons / Encyclopedia — Heenal) through the identity fields on knowledge objects, and 3 (Resource Graph — Brandon) through the `resource` mapping in the static-json connector. Per `docs/layers/10-infrastructure-and-substrate.md` and `MASTER.md` §14: static JSON-LD export is a Phase-3 capability; AT Proto federation is Phase-4 ("only if workflows and governance are ready") — which is why this instance pulls and does not publish yet.
@@ -33,7 +41,7 @@
 - `@context` and `index.json` paths are **absolute from `kms.yaml.publish.base_url`** (required when `publish.static` is on); never root-relative (GitHub Pages `base: /regen-toolkit/` would break them).
 - One `KnowledgeManifest` shape: the static surface **merges** `did`/`geo`/`exchange`/`sources` into the root `.well-known/knowledge.json` that `generate:schemas` produces; it does not invent a second document.
 - org-os-kms imports the framework only through `src/framework.mjs` (relative sibling path ⇒ adopters vendor **both** packages, unedited, pinned; `node_modules/@org-os/kms` does not work).
-- Test runner `node --test` from the package dir. **Baseline: org-os-kms 44, toolkit-framework 125.** Green after every task.
+- Test runner `node --test` from the package dir. **Baseline (org-os canonical): org-os-kms 65; toolkit-framework — record before Task 1.** Green after every task.
 - Deviation from spec, deliberate: no `atproto` storage adapter.
 
 ## File map
