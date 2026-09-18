@@ -222,3 +222,26 @@ Spaces / private repos; labelers; feed generators; our own AppView (we use `list
 2. **Council validation of `kc.regencoordination.xyz`** as the handle — gates first *real* publish, not development.
 3. **GRC-20 ↔ AT Proto claim** — ask Rather.
 4. **Regen KC Geo space ID** — fill `kms.yaml.geo.space` when Rather bootstraps it.
+
+## Implementation deltas (recorded during execution, 2026-09-18)
+
+Where the shipped `org-os-kms` differs from, or tightens, the design above:
+
+- **Static surface wipes `<static_dir>/api` on every write** (outDir guarded to a relative path inside the instance), so an object that is no longer gated in leaves no stale public copy.
+- **Source-system cards enter the public `knowledge.json` only when `source-system` is opted in** (`publish.types_opt_in`), because the type is opt-in and the card list must not bypass that gate.
+- **Inbound atproto records are projected with `publicView`, claims of origin by another LISTED peer are ignored, and malformed records / `sourceUri` are skipped instead of aborting the run**, because peer data is untrusted and one bad record must not stall the pull.
+- **`runConnector` never overwrites a local object on a slug collision (reports `collided`), dedupes candidates sharing a `sourceUri` within a pull, and keeps upserts within invariants** (drops the origin's `ai_assisted` if merging would violate AI-assisted != reviewed), so origin data can never silently clobber or de-review local work.
+- **The publish manifest is written immediately after apply, before the static surface; a static failure is reported (`ok:false`), not thrown**, because the manifest is the authoritative record of what is on the PDS and must survive any later throw.
+- **`static-json` / Open Haven mapper emits a stable https `sourceUri`, and its cursor covers the index and all collection bodies**, so re-pulled records upsert by `sourceUri` and change detection sees every body.
+- **Publish and bridge hardening from the whole-branch review:** `publish` mints ids only when a publication target exists (avoids rewriting tracked yaml on pull-only instances such as this one), refuses an apply that would delete everything from an empty selection (an unattended `close` must not wipe the corpus), and reports a failed login as `status: 'failed'` rather than throwing; `bridge` matches registry rows by id or slug so minted ids do not duplicate rows; `publish`/`ingest` exit non-zero on `ok:false` so scripts and CI can see failures.
+- **`ingest` writes `kms.yaml` atomically from a fresh read** (only cursor changes applied, tmp file + rename), so a concurrent edit is not lost and a kill mid-write cannot truncate the config.
+
+### Open questions
+
+- **No-op upsert skipping** — an unchanged re-pulled record still gets `review_needs: 'updated at origin'` (review fatigue); should unchanged content be skipped?
+- **Demotion on origin change** — should a locally reviewed object demote when origin content changes?
+- **Per-peer PDS resolution** — the atproto connector uses one PDS for all listed peers; resolve each peer's PDS via its DID document (or read a relay)?
+- **`kms.yaml` comment loss on first cursor write** — move cursors to a sidecar file so the operator's config is never re-serialized?
+- **Peer DIDs in the public manifest** — should `exchange.subscribed_domains` list peer DIDs at all?
+- **`relationship-record.confidence` axis** — is it modelled correctly for cross-instance claims?
+- **Gating `bridge`** — `bridge` copies every object of a bound schema into registries / site content with no publication gate; should it honour `public_use` / `maturity`?
