@@ -63,7 +63,7 @@ export function syncLedger(instances, now) {
 
 /** Hand-authored patch detail lines (creative residue). Derived default otherwise. */
 export const PKG_DETAIL = {
-  "toolkit-framework": [" 100/100 ✓ "],
+  "toolkit-framework": [" 167/167 ✓ "],
   "org-os-kms": [" 44/44 ✓ "],
   "org-os-federation-map": [" the torch·d3 "],
   operations: [" bcn·dao "],
