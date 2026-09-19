@@ -24,7 +24,7 @@ export const REGISTRY_BINDINGS = {
 /** org-os session lifecycle -> ordered framework op-names (resolved by src/ops.mjs). */
 export const LIFECYCLE_BINDINGS = {
   initialize: ['config.load', 'index.rebuild', 'review.list', 'render.dashboard', 'render.site'],
-  close: ['csis-review', 'bridge', 'emit-contributions', 'federate.check', 'index.rebuild', 'render.site', 'render.dashboard', 'sync.push'],
+  close: ['csis-review', 'bridge', 'emit-contributions', 'federate.check', 'index.rebuild', 'render.site', 'render.dashboard', 'publish', 'sync.push'],
 };
 
 /** Group framework objects by their target org-os registry. */

@@ -1,0 +1,108 @@
+{
+  "version": "1",
+  "generated_at": "2026-07-19T14:58:51.804Z",
+  "self": {
+    "id": "full-os",
+    "name": "full-os",
+    "type": "Hub",
+    "emoji": "🔦",
+    "url": null
+  },
+  "nodes": [
+    {
+      "id": "sibling-os",
+      "kind": "instance",
+      "name": "Sibling",
+      "type": "DAO",
+      "ring": 1,
+      "trust": "full",
+      "live": false,
+      "url": "https://github.com/example/sibling-os",
+      "repo": "example/sibling-os",
+      "counts": {},
+      "last_seen": null
+    },
+    {
+      "id": "child-os",
+      "kind": "instance",
+      "name": "Child",
+      "type": "LocalNode",
+      "ring": 1,
+      "trust": "full",
+      "live": true,
+      "url": "https://github.com/example/child-os",
+      "repo": "example/child-os",
+      "counts": {
+        "members": 3,
+        "projects": 2
+      },
+      "last_seen": "2026-07-19T14:58:51.804Z"
+    },
+    {
+      "id": "knowledge-peer",
+      "kind": "instance",
+      "name": "knowledge-peer",
+      "type": null,
+      "ring": 1,
+      "trust": null,
+      "live": false,
+      "url": null,
+      "repo": null,
+      "counts": {},
+      "last_seen": null
+    },
+    {
+      "id": "koi-network",
+      "kind": "source",
+      "name": "KOI Network",
+      "type": null,
+      "ring": 3,
+      "ecosystem": null,
+      "url": "https://example.org/koi",
+      "counts": {
+        "objects": 14
+      },
+      "portal": null
+    },
+    {
+      "id": "regen-registry",
+      "kind": "source",
+      "name": "Regen Registry",
+      "type": null,
+      "ring": 3,
+      "ecosystem": null,
+      "url": null,
+      "counts": {
+        "objects": 14
+      },
+      "portal": null
+    }
+  ],
+  "edges": [
+    {
+      "from": "full-os",
+      "to": "sibling-os",
+      "kind": "federation"
+    },
+    {
+      "from": "full-os",
+      "to": "child-os",
+      "kind": "downstream"
+    },
+    {
+      "from": "full-os",
+      "to": "knowledge-peer",
+      "kind": "knowledge"
+    },
+    {
+      "from": "koi-network",
+      "to": "full-os",
+      "kind": "provenance"
+    },
+    {
+      "from": "regen-registry",
+      "to": "full-os",
+      "kind": "provenance"
+    }
+  ]
+}

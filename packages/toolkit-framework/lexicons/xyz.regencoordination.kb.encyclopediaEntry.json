@@ -1,0 +1,146 @@
+{
+  "lexicon": 1,
+  "id": "xyz.regencoordination.kb.encyclopediaEntry",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "any",
+      "record": {
+        "type": "object",
+        "required": [
+          "title",
+          "type",
+          "page_type"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "maturity": {
+            "type": "string",
+            "knownValues": [
+              "raw",
+              "held",
+              "draft",
+              "candidate",
+              "source-linked",
+              "reviewed",
+              "field-informed",
+              "pattern-generating",
+              "deprecated",
+              "archived"
+            ]
+          },
+          "public_use": {
+            "type": "string",
+            "knownValues": [
+              "internal-only",
+              "raw-lead",
+              "ok-with-caveat",
+              "source-linked-unreviewed",
+              "reviewed-for-explanation",
+              "reviewed-for-guidance",
+              "requires-community-consent",
+              "requires-domain-review",
+              "not-public-yet",
+              "deprecated"
+            ]
+          },
+          "lifecycle_state": {
+            "type": "string",
+            "knownValues": [
+              "raw-lead",
+              "routed",
+              "extracted",
+              "source-linked",
+              "ai-synthesis",
+              "human-reviewed",
+              "field-informed",
+              "public-candidate",
+              "mature",
+              "compost"
+            ]
+          },
+          "ai_assisted": {
+            "type": "boolean"
+          },
+          "high_risk": {
+            "type": "boolean"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "function": {
+            "type": "string"
+          },
+          "source_lineage": {
+            "type": "string"
+          },
+          "steward": {
+            "type": "string"
+          },
+          "review_needs": {
+            "type": "string"
+          },
+          "last_reviewed": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "grc20Id": {
+            "type": "string"
+          },
+          "sourceUri": {
+            "type": "string"
+          },
+          "viaUri": {
+            "type": "string"
+          },
+          "page_type": {
+            "type": "string",
+            "knownValues": [
+              "concept",
+              "framework",
+              "comparison",
+              "guide",
+              "case-linked",
+              "anti-pattern",
+              "frontier"
+            ]
+          },
+          "summary": {
+            "type": "string"
+          },
+          "audience": {
+            "type": "string"
+          },
+          "known_tensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "related_concepts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "related_resources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

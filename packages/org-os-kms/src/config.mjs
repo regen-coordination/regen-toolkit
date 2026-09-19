@@ -9,5 +9,5 @@ export function loadKmsConfig(dir = '.') {
   if (!cfg.adapter) throw new Error('kms.yaml: missing "adapter"');
   // target: "" is a valid value (the instance dir itself), so only reject a truly-absent target
   if (cfg.target === undefined) throw new Error('kms.yaml: missing "target"');
-  return { render: {}, peers: {}, ...cfg };
+  return { render: {}, peers: {}, connectors: [], publish: {}, ...cfg };
 }

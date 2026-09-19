@@ -93,3 +93,70 @@ test('bridge does not line-fold long scalars (diff-clean YAML, lineWidth:-1)', (
   const raw = readFileSync(join(dir, 'data/resources.yaml'), 'utf8');
   assert.ok(raw.includes(longVal), 'the long scalar stays on one line (not folded)');
 });
+
+test('minted id migrates the slug-keyed registry row in place (no duplicate row)', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'kms-bridge-mint-'));
+  const a = fw.getAdapter('repo-data');
+  // First bridge: the object has NO id yet, so its registry row is keyed by the title slug.
+  a.store(dir, [{ schema: 'resource', object: { title: 'Res One', maturity: 'raw' } }]);
+  mkdirSync(join(dir, 'data'), { recursive: true });
+  writeFileSync(join(dir, 'data/resources.yaml'), yaml.dump({ resources: [{ id: 'instance-only', title: 'Instance Only' }] }));
+  const ctx = { dir, config: { adapter: 'repo-data', target: '.' } };
+  bridge(ctx);
+  let doc = yaml.load(readFileSync(join(dir, 'data/resources.yaml'), 'utf8'));
+  assert.ok(doc.resources.some((e) => e.id === 'res-one'), 'first bridge keys the row by slug');
+  // Publish mints a UUID id for the same object; bridging again must reuse the slug row.
+  a.store(dir, [{ schema: 'resource', object: { id: 'uuid-1', title: 'Res One', maturity: 'raw' } }]);
+  bridge(ctx);
+  doc = yaml.load(readFileSync(join(dir, 'data/resources.yaml'), 'utf8'));
+  const rows = doc.resources.filter((e) => e.title === 'Res One');
+  assert.equal(rows.length, 1, 'exactly one row for the object');
+  assert.equal(rows[0].id, 'uuid-1', 'the row migrated slug -> uuid in place');
+  assert.deepEqual(doc.resources.find((e) => e.id === 'instance-only'), { id: 'instance-only', title: 'Instance Only' });
+  assert.equal(doc.resources.length, 2);
+});
+
+// #10: encyclopedia-entry pages land under src/content/docs/kb/ with the object's fields as frontmatter,
+// i.e. on the built site. A pulled (not-public-yet) peer object, or one that is held/internal-only, must
+// never get a page. The org-os registry rows are internal state and stay as before.
+const mdPath = (dir, slug) => join(dir, 'src/content/docs/kb', `${slug}.md`);
+const bridgeEntries = (objects) => {
+  const dir = mkdtempSync(join(tmpdir(), 'kms-bridge-withhold-'));
+  fw.getAdapter('repo-data').store(dir, objects.map((object) => ({ schema: 'encyclopedia-entry', object: { body: 'B.', ...object } })));
+  return { dir, out: bridge({ dir, config: { adapter: 'repo-data', target: '.' } }) };
+};
+
+for (const [label, fields, reason] of [
+  ['public_use not-public-yet', { public_use: 'not-public-yet' }, 'not-public-yet'],
+  ['public_use internal-only', { public_use: 'internal-only' }, 'internal-only'],
+  ['maturity held (retracted at origin)', { public_use: 'ok-with-caveat', maturity: 'held' }, 'held'],
+]) {
+  test(`encyclopedia-entry with ${label} gets no markdown page and is reported as withheld`, () => {
+    const { dir, out } = bridgeEntries([{ id: 'w1', title: 'Withheld One', notes: 'internal only', ...fields }]);
+    assert.equal(out.ok, true);
+    assert.equal(existsSync(mdPath(dir, 'withheld-one')), false);
+    assert.deepEqual(out.report.withheld, [{ schema: 'encyclopedia-entry', title: 'Withheld One', reason }]);
+    assert.deepEqual(out.report.docs, []);
+  });
+}
+
+test('encyclopedia-entry that clears the floor (or declares no public_use) still gets its page; only the withheld one is skipped', () => {
+  const { dir, out } = bridgeEntries([
+    { id: 'p1', title: 'Public One', public_use: 'ok-with-caveat' },
+    { id: 'p2', title: 'Undeclared Two' },
+    { id: 'p3', title: 'Pulled Three', public_use: 'not-public-yet' },
+  ]);
+  assert.equal(existsSync(mdPath(dir, 'public-one')), true);
+  assert.equal(existsSync(mdPath(dir, 'undeclared-two')), true, 'no public_use declared: behaves as before');
+  assert.equal(existsSync(mdPath(dir, 'pulled-three')), false);
+  assert.deepEqual(out.report.withheld.map((w) => w.title), ['Pulled Three']);
+});
+
+test('registry rows are unaffected: a not-public-yet resource still bridges into data/resources.yaml', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'kms-bridge-rows-'));
+  fw.getAdapter('repo-data').store(dir, [{ schema: 'resource', object: { id: 'r9', title: 'Pulled Res', public_use: 'not-public-yet' } }]);
+  const out = bridge({ dir, config: { adapter: 'repo-data', target: '.' } });
+  assert.deepEqual(out.report.withheld, []);
+  const doc = yaml.load(readFileSync(join(dir, 'data/resources.yaml'), 'utf8'));
+  assert.ok(doc[Object.keys(doc).find((k) => Array.isArray(doc[k]))].some((e) => e.id === 'r9'));
+});

@@ -1,0 +1,5 @@
+ecosystems:
+  - id: regen-commons
+    name: Regen Commons
+    url: https://example.org/regen-commons
+    sources: [koi-network, regen-registry]

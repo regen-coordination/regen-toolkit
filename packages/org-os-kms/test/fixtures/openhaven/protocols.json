@@ -1,0 +1,264 @@
+[
+ {
+  "id": "nostr",
+  "name": "Nostr",
+  "domainIds": [
+   "communication",
+   "identity-trust"
+  ],
+  "entityType": "p2p-protocol",
+  "description": "Open protocol for decentralized, censorship-resistant social networking using cryptographically signed messages distributed via relay servers",
+  "devStatus": "Released / Active — widely deployed open protocol defined by NIPs; 250+ client apps and relay implementations; NIP-01 core stable; active NIP development for extensions including private DMs (NIP-17), file storage (NIP-96), and remote signing (NIP-46) [a]",
+  "devStatusCode": 9,
+  "devStatusNote": "Released / Active — widely deployed open protocol defined by NIPs; 250+ client apps and relay implementations; NIP-01 core stable; active NIP development for extensions including private DMs (NIP-17), file storage (NIP-96), and remote signing (NIP-46) [a]",
+  "owner": "fiatjaf (pseudonymous creator, identified as Giovanni Torres Parra) / Community-maintained [a][e]",
+  "governingBody": "None (community NIP process; no formal standards body or legal entity)",
+  "country": "Brazil (creator location) / International [a][e]",
+  "startYear": 2020,
+  "stack": "Multi-language (JavaScript, Rust, Go, C#, Python implementations) [b]",
+  "license": "Public Domain (unlicensed) [b]",
+  "funding": "Donations (Jack Dorsey $245k BTC in Dec 2022 direct to fiatjaf; $10M to OpenSats in May 2023) [a][d][e]",
+  "governanceModel": "community",
+  "captureRisk": 1,
+  "captureRiskReasoning": "Overall Minimal (1): a public-domain protocol with rough-consensus community governance and no entity able to capture it. Governance & legal control (≈1): the protocol is unlicensed/public domain and evolves through the community NIP process with no formal body or IP holder [b]. Funding & key-org dependency (≈2): creator fiatjaf is influential but pseudonymous, and funding is diversified through donations and the OpenSats foundation rather than a single controlling funder [a][d][e]. Forking viability (≈1): trivially forkable with many independent relay and client implementations [b]. Regulatory exposure and track record are minimal (no legal entity; no capture-favoring events) [a].",
+  "references": [
+   {
+    "tag": "a",
+    "url": "https://en.wikipedia.org/wiki/Nostr",
+    "note": "Protocol overview, fiatjaf creator, 2020 origin, Jack Dorsey donations"
+   },
+   {
+    "tag": "b",
+    "url": "https://github.com/nostr-protocol/nostr",
+    "note": "Protocol spec, NIPs"
+   },
+   {
+    "tag": "c",
+    "url": "https://www.freethink.com/internet/nostr",
+    "note": "fiatjaf interview, protocol architecture, relay model"
+   },
+   {
+    "tag": "d",
+    "url": "https://finance.yahoo.com/news/jack-dorsey-gives-decentralized-social-220259841.html",
+    "note": "14 BTC donation Dec 2022"
+   },
+   {
+    "tag": "e",
+    "url": "https://finance.yahoo.com/news/jack-dorsey-gave-10-million-091101257.html",
+    "note": "$10M to OpenSats foundation in May 2023 (not directly to Nostr, but to OpenSats which funds Nostr development)"
+   },
+   {
+    "tag": "f",
+    "url": "https://www.yahoo.com/tech/nostr-twitters-dreams-come-true-143506306.html",
+    "note": "Dorsey endorsement, Schnorr signatures, protocol details"
+   }
+  ],
+  "lastInvestigated": "2026-01-15",
+  "communityLink": "https://nostr.com/",
+  "affordanceIds": [
+   "e2e-encryption",
+   "protocol-federation",
+   "consent-audience",
+   "sovereign-identity"
+  ],
+  "searchKeywords": [],
+  "entityAttributes": {
+   "origins": "Social networking / Microblogging [a]",
+   "database": "Relay-specific (typically SQLite, PostgreSQL) [c]",
+   "queryLanguage": "Custom (Nostr filters/subscriptions via WebSocket) [b]",
+   "dataFormats": "JSON (Nostr Events) [b]",
+   "collaborativeLiveEditing": "N/A (broadcast protocol, not collaborative editing) [b]",
+   "richTextEditing": "Application-level (clients can support Markdown, etc.) [b]",
+   "mobileSupport": "Yes (Damus, Amethyst, etc.) [a]",
+   "webSupport": "Yes (web clients available) [a]",
+   "nativeApps": "Yes (mobile and desktop clients) [a]",
+   "terms": "Self-hosting (relays) + Free relays + Paid relays [c]",
+   "funds": "$10.25M+ (cumulative: ~$245k BTC direct to fiatjaf Dec 2022 + $10M to OpenSats May 2023) [a][d][e]",
+   "basedOn": "N/A (original protocol) [a]",
+   "p2pArchitecture": "Relay-based (WebSocket relays, not pure P2P) [b][c]",
+   "overlayNetwork": "User-defined (clients choose which relays to use) [b][c]",
+   "contentAddressing": "Event-based (events identified by hash) [b]",
+   "local-first": "N/A (relay-dependent, not local-first) [c]",
+   "e2ee": "Supported via NIPs (NIP-04, NIP-44 for encrypted DMs) [b]",
+   "crdtsLib": "N/A (append-only event log, not CRDTs) [b]",
+   "byzantineFaultTolerance": "Event signatures (prevents tampering, not consensus) [b]",
+   "signature": "Schnorr signatures (secp256k1, same as Bitcoin) [b][f]",
+   "permissions": "Relay-level (relays set their own acceptance rules) [b][c]",
+   "semanticWebCompatibility": "N/A (custom JSON schema) [b]",
+   "smartContract": "N/A (no smart contract capability) [b]",
+   "protocolStackPosition": "Application-layer (built on TCP/IP)",
+   "assetValueEmbedding": "None — Nostr is a bare relay-and-client messaging protocol with no native token. Zaps (Lightning Network micropayments via NIP-57) are an optional application-layer convention layered on top of the protocol, not a protocol-native economic mechanism. [b]",
+   "protocolMaturityStandardization": "De Facto Standard (NIP process — community-driven specification via Nostr Implementation Possibilities; no formal standards body; wide adoption) [b]"
+  }
+ },
+ {
+  "id": "tinyssb",
+  "name": "tinySSB",
+  "domainIds": [
+   "communication"
+  ],
+  "entityType": "p2p-protocol",
+  "description": "Minimal P2P protocol for append-only logs over extremely constrained networks (LoRa, BLE) with 120-byte packet limit, GOSET feed synchronization, and mesh networking",
+  "devStatus": "Released (spec complete) [a]",
+  "devStatusCode": 10,
+  "devStatusNote": "Released (spec complete) [a]",
+  "owner": "Christian Tschudin (University of Basel), with contributors Erick Lavoie, @mixmix, @nanomonkey [a][b]",
+  "governingBody": "Academic institution (University of Basel)",
+  "country": "Switzerland (University of Basel) [b]",
+  "startYear": 2020,
+  "stack": "Implementation-dependent (ESP32/Kotlin/Python/Swift implementations) [a][c]",
+  "license": "Open source (no specific license stated in spec) [a]",
+  "funding": "Community / research project (University of Basel) [b]",
+  "governanceModel": "community",
+  "captureRisk": 2,
+  "captureRiskReasoning": "Overall Low (2): a small but fully open academic protocol with no commercial control. Governance & legal control (≈2): developed openly within the University of Basel Computer Networks group as part of the SSB protocol family, with no proprietary licensing [a][b]. Funding & key-org dependency (≈3): a small research team led by Christian Tschudin is the main locus of activity, giving it meaningful key-person dependency, though it is university-supported rather than commercially steered [b]. Forking viability (≈2): an open, deliberately minimal protocol that others can reimplement. Regulatory exposure and track record are minimal.",
+  "references": [
+   {
+    "tag": "a",
+    "url": "https://github.com/ssbc/tinySSB",
+    "note": "GitHub repo: protocol spec, BLE/LoRa, 120-byte packets, ed25519"
+   },
+   {
+    "tag": "b",
+    "url": "https://cn.dmi.unibas.ch/en/research/",
+    "note": "University of Basel Computer Networks Group: Christian Tschudin, Erick Lavoie, project description, 128-byte format"
+   },
+   {
+    "tag": "c",
+    "url": "https://dicg-workshop.github.io/2022/papers/tschudin.pdf",
+    "note": "Academic paper by Tschudin: ed25519 public keys, LoRa mesh, compressed replication"
+   },
+   {
+    "tag": "d",
+    "url": "https://mixmix.nz/p/tiny-ssb/",
+    "note": "mixmix (contributor) project page"
+   },
+   {
+    "tag": "e",
+    "note": "Packet size discrepancy: GitHub says 120 bytes, University of Basel research page says 128 bytes. Using 120B from GitHub spec as primary"
+   }
+  ],
+  "lastInvestigated": "2026-01-15",
+  "communityLink": "https://github.com/tinySSB",
+  "affordanceIds": [
+   "e2e-encryption",
+   "offline-mesh"
+  ],
+  "searchKeywords": [
+   "tiny SSB"
+  ],
+  "entityAttributes": {
+   "origins": "Messaging / LoRa/BLE communication [a]",
+   "database": "Append-only logs (feed structure) [a]",
+   "queryLanguage": "N/A (no query language) [a]",
+   "dataFormats": "BIPF (Binary In-Place Format) [a]",
+   "collaborativeLiveEditing": "N/A (messaging protocol) [a]",
+   "mobileSupport": "Yes (designed for constrained devices; Tremola Android app) [a]",
+   "webSupport": "N/A (LoRa/BLE focus) [a]",
+   "nativeApps": "N/A (protocol spec) [a]",
+   "terms": "Self-hosting (peer devices) [a]",
+   "funds": "Unknown",
+   "basedOn": "Secure Scuttlebutt (SSB), adapted for LoRa [a]",
+   "p2pArchitecture": "Gossip-based (broadcast-only mesh network) [a]",
+   "overlayNetwork": "N/A (broadcast domain specific to network range) [a]",
+   "contentAddressing": "Hash-based message IDs (20-byte SHA256) [a]",
+   "local-first": "Local-First (messages stored on device) [a]",
+   "e2ee": "N/A (not specified in protocol) [a]",
+   "crdtsLib": "N/A (append-only logs with signature verification) [a]",
+   "byzantineFaultTolerance": "Signature-based integrity (ed25519) [a][c]",
+   "signature": "ed25519 signatures (64-byte) [a][c]",
+   "permissions": "N/A (protocol doesn't specify permissions) [a]",
+   "protocolStackPosition": "Application-layer (built on TCP/IP)",
+   "assetValueEmbedding": "None — tinySSB is an academic research protocol for constrained (BLE/LoRa) mesh environments with no token or economic layer. Resource sharing is purely cooperative/volunteer. [a]",
+   "protocolMaturityStandardization": "Academic / Research (university research project from University of Basel; published academic papers; builds on SSB protocol family) [b][c]"
+  }
+ },
+ {
+  "id": "lit-protocol",
+  "name": "Lit Protocol",
+  "domainIds": [
+   "identity-trust"
+  ],
+  "entityType": "p2p-protocol",
+  "description": "A decentralized key management and compute network using threshold cryptography and trusted execution environments (TEEs) to provide programmable signing, encryption, and access control across blockchains and off-chain platforms [a][b]",
+  "devStatus": "Released (Mainnet-Beta; v0 mainnet live; transitioning to v1 with LITKEY token launch) [b][e] Reclassified 2026-09-14: 'v0 mainnet live' is real production chain activity; 'Mainnet-Beta' is network branding (same pattern as Solana's own 'mainnet beta' naming), not a maturity claim.",
+  "devStatusCode": 9,
+  "devStatusNote": "Released (Mainnet-Beta; v0 mainnet live; transitioning to v1 with LITKEY token launch) [b][e] Reclassified 2026-09-14: 'v0 mainnet live' is real production chain activity; 'Mainnet-Beta' is network branding (same pattern as Solana's own 'mainnet beta' naming), not a maturity claim.",
+  "owner": "Lit Protocol (co-founded by David Sneider; backed by Lit Association) [c][d]",
+  "governingBody": "Company-controlled (Lit Protocol) | Lit Association (protocol stewardship)",
+  "country": "USA (San Francisco-based) [d]",
+  "startYear": 2020,
+  "stack": "Rust + JavaScript/TypeScript (node network in Rust; Lit Actions execute JavaScript in sealed VMs; client SDKs in TypeScript) [b][f]",
+  "license": "Permissive (Apache 2.0 — open source on GitHub) [f]",
+  "funding": "VC ($13M Series A led by 1kx in Sept 2022; additional funding totaling $15.2M+; investors include 1kx, RRE Ventures, OpenSea Ventures, Eniac Ventures, Protocol Labs, Collab+Currency) [c][d]",
+  "governanceModel": "single-company",
+  "captureRisk": 3,
+  "captureRiskReasoning": "Overall Moderate (3), at the high end: a company-and-token-controlled network softened by an open license. Governance & legal control (≈4): steered by the Lit Protocol company and Lit Association; Apache-2.0 mitigates closure but direction and brand are concentrated [c][d][f]. Funding & key-org dependency (≈4): heavily VC-funded ($15.2M+, investors including 1kx, RRE, Protocol Labs) with the founding company essential to continuity [c][d]. Regulatory / jurisdictional exposure (≈3): the LITKEY/veLITKEY staking token and US jurisdiction add regulatory exposure [e]. Forking viability (≈4): the live threshold-cryptography network depends on staked operators, making a competitive fork costly even though the code is open. Track record shows no capture events.",
+  "references": [
+   {
+    "tag": "a",
+    "url": "https://www.litprotocol.com/",
+    "note": "protocol overview, use cases, ecosystem partners"
+   },
+   {
+    "tag": "b",
+    "url": "https://spark.litprotocol.com/lit-protocol-a-primer/",
+    "note": "technical architecture primer: sealed nodes, threshold cryptography, TEEs, JavaScript execution environment"
+   },
+   {
+    "tag": "c",
+    "url": "https://www.coindesk.com/business/2022/09/22/cryptography-network-lit-protocol-raises-13m-to-bolster-web3-autonomy-and-interoperability",
+    "note": "$13M Series A, David Sneider as co-founder"
+   },
+   {
+    "tag": "d",
+    "url": "https://www.cbinsights.com/company/lit-protocol",
+    "note": "$15.2M total raised, investor list, San Francisco"
+   },
+   {
+    "tag": "e",
+    "url": "https://spark.litprotocol.com/lit-protocol-a-primer/",
+    "note": "LITKEY token, veLITKEY staking, v0 mainnet managing ~$400M"
+   },
+   {
+    "tag": "f",
+    "url": "https://github.com/LIT-Protocol",
+    "note": "open source repos, Rust and TypeScript code"
+   }
+  ],
+  "lastInvestigated": "2026-09-14",
+  "communityLink": "https://litprotocol.com/",
+  "affordanceIds": [
+   "contextual-disclosure"
+  ],
+  "searchKeywords": [],
+  "entityAttributes": {
+   "origins": "Ecosystem/SDK (decentralized access control and key management infrastructure for Web3) [a][b]",
+   "database": "N/A (not a data storage protocol; manages cryptographic key shares across distributed nodes) [a][b]",
+   "queryLanguage": "Custom (Lit Actions API — JavaScript programs executed within sealed nodes to evaluate access conditions and produce signatures) [a][b]",
+   "dataFormats": "Custom (access control conditions as JSON objects referencing on-chain state, off-chain data, or custom logic; encrypted data as ciphertext blobs) [a][b]",
+   "collaborativeLiveEditing": "N/A (key management/encryption infrastructure, not an editing tool) [a]",
+   "richTextEditing": "N/A [a]",
+   "mobileSupport": "N/A (infrastructure protocol; client SDKs primarily for server/browser environments) [a][f]",
+   "webSupport": "Yes (JavaScript/TypeScript SDK for browser integration; used by dApps for token-gating, wallet creation, signing) [a][f]",
+   "nativeApps": "N/A (infrastructure protocol) [a]",
+   "terms": "Self-hosting + Paid (node operators stake LITKEY tokens; network fees for signing/encryption operations; veLITKEY staking model) [a][e]",
+   "funds": "$15.2M+ (total raised per Crunchbase; ~$20M claimed by co-founder including all rounds) [c][d]",
+   "basedOn": "Original (novel threshold cryptography network; blockchain-agnostic middleware interacting with Ethereum, Solana, Cosmos, and other chains) [a][b]",
+   "p2pArchitecture": "Mesh network + Public Blockchain (distributed network of sealed TEE nodes performing threshold cryptography; LITKEY staking on Base L2; reads on-chain state from multiple blockchains) [a][b][e]",
+   "overlayNetwork": "Global (Lit nodes form a global network; any node can participate in threshold signing/decryption for any request) [a][b]",
+   "contentAddressing": "No (key management protocol; does not use content addressing for its core function) [a][b]",
+   "local-first": "N/A (network-dependent; signing and decryption require reaching threshold of distributed nodes) [a][b]",
+   "e2ee": "Yes (core functionality: identity-based encryption where data is encrypted such that only users meeting specified access conditions can decrypt via Lit's threshold decryption) [a][b]",
+   "crdtsLib": "N/A (not a data sync protocol) [a]",
+   "byzantineFaultTolerance": "Yes (threshold cryptography inherently tolerates up to t-of-n node failures/misbehavior; nodes run in TEEs to prevent key extraction) [b]",
+   "signature": "BLS Threshold signature + ECDSA (distributed key generation produces threshold key shares; supports BLS, ECDSA secp256k1 signatures across multiple chains) [a][b]",
+   "permissions": "Cryptographic Capabilities (programmable access control conditions: on-chain state checks, token ownership, DAO membership, custom JavaScript logic in Lit Actions determine who can sign/decrypt) [a][b]",
+   "semanticWebCompatibility": "N/A [a]",
+   "smartContract": "Yes (LITKEY token and staking contracts on Base L2; Lit reads smart contract state on multiple chains to evaluate access control conditions) [a][e]",
+   "protocolStackPosition": "Application-layer (built on TCP/IP)",
+   "assetValueEmbedding": "Native — LITKEY token is the protocol-native utility and governance token used to pay for threshold signing and decryption services, and staked by node operators (veLITKEY) to participate in the network. Launched on Lit's Chronicle chain. [e]",
+   "protocolMaturityStandardization": "Proprietary Open Standard (published threshold cryptography protocol; company-developed with open documentation) [b]"
+  }
+ }
+]

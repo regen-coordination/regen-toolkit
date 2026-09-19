@@ -1,0 +1,165 @@
+{
+  "lexicon": 1,
+  "id": "xyz.regencoordination.kb.sourceSystem",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "any",
+      "record": {
+        "type": "object",
+        "required": [
+          "title",
+          "type",
+          "steward",
+          "return_path"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "knownValues": [
+              "wiki",
+              "map",
+              "repo",
+              "forum",
+              "knowledge-garden",
+              "directory",
+              "archive",
+              "database",
+              "library",
+              "docs-site",
+              "convening",
+              "podcast",
+              "newsletter",
+              "dataset",
+              "blog",
+              "publication",
+              "organization",
+              "movement",
+              "platform"
+            ]
+          },
+          "maturity": {
+            "type": "string",
+            "knownValues": [
+              "raw",
+              "held",
+              "draft",
+              "candidate",
+              "source-linked",
+              "reviewed",
+              "field-informed",
+              "pattern-generating",
+              "deprecated",
+              "archived"
+            ]
+          },
+          "public_use": {
+            "type": "string",
+            "knownValues": [
+              "internal-only",
+              "raw-lead",
+              "ok-with-caveat",
+              "source-linked-unreviewed",
+              "reviewed-for-explanation",
+              "reviewed-for-guidance",
+              "requires-community-consent",
+              "requires-domain-review",
+              "not-public-yet",
+              "deprecated"
+            ]
+          },
+          "lifecycle_state": {
+            "type": "string",
+            "knownValues": [
+              "raw-lead",
+              "routed",
+              "extracted",
+              "source-linked",
+              "ai-synthesis",
+              "human-reviewed",
+              "field-informed",
+              "public-candidate",
+              "mature",
+              "compost"
+            ]
+          },
+          "ai_assisted": {
+            "type": "boolean"
+          },
+          "high_risk": {
+            "type": "boolean"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "function": {
+            "type": "string"
+          },
+          "source_lineage": {
+            "type": "string"
+          },
+          "steward": {
+            "type": "string"
+          },
+          "review_needs": {
+            "type": "string"
+          },
+          "last_reviewed": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "grc20Id": {
+            "type": "string"
+          },
+          "sourceUri": {
+            "type": "string"
+          },
+          "viaUri": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "what_it_curates": {
+            "type": "string"
+          },
+          "why_it_matters": {
+            "type": "string"
+          },
+          "how_to_credit": {
+            "type": "string"
+          },
+          "use_type": {
+            "type": "string"
+          },
+          "reuse_conditions": {
+            "type": "string"
+          },
+          "return_path": {
+            "type": "string"
+          },
+          "currentness": {
+            "type": "string"
+          },
+          "update_rhythm": {
+            "type": "string"
+          },
+          "extraction_status": {
+            "type": "string"
+          },
+          "toolkit_route": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

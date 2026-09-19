@@ -1,0 +1,9 @@
+identity:
+  name: "child-os"
+  type: "LocalNode"
+peers:
+  - name: "Grandpeer"
+    id: "grand-peer"
+    repo: "example/grand-peer"
+    url: "https://github.com/example/grand-peer"
+    type: "DAO"

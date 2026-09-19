@@ -33,7 +33,7 @@ test('lifecycle bindings are canonical op-names (initialize/close)', () => {
   assert.deepEqual(LIFECYCLE_BINDINGS.initialize,
     ['config.load', 'index.rebuild', 'review.list', 'render.dashboard', 'render.site']);
   assert.deepEqual(LIFECYCLE_BINDINGS.close,
-    ['csis-review', 'bridge', 'emit-contributions', 'federate.check', 'index.rebuild', 'render.site', 'render.dashboard', 'sync.push']);
+    ['csis-review', 'bridge', 'emit-contributions', 'federate.check', 'index.rebuild', 'render.site', 'render.dashboard', 'publish', 'sync.push']);
 });
 
 test('REGISTRY_BINDINGS keeps all 10 schema targets', () => {

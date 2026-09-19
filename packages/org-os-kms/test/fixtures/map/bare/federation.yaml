@@ -1,0 +1,12 @@
+identity:
+  name: "bare-os"
+  type: "Project"
+peers: []
+downstream:
+  - name: "Peer One"
+    id: "peer-one"
+    repo: "example/peer-one"
+    url: "https://github.com/example/peer-one"
+    type: "LocalNode"
+    trust: "full"
+    local_path: "../peer-one"

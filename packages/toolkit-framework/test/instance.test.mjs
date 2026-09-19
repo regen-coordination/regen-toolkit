@@ -163,3 +163,50 @@ test('federate check runs fork-compatibility over a peer extensions file', () =>
   assert.deepEqual(res.compatible, ['mediation-protocol']);
   assert.deepEqual(res.incompatible, ['vibes-object']);
 });
+
+// D1: re-adding a registered peer's (changed) card updates it in place. Peer cards
+// carry no id, so a content change used to look like a different object and left a
+// hash-suffixed duplicate, with peers.<slug> repointed and the old card orphaned.
+for (const adapter of ['kb-folder', 'repo-data']) {
+  const cardV1 = { title: 'ReFi DAO Commons', type: 'repo', steward: 'ReFi DAO', return_path: 'PRs to refi-dao-os', maturity: 'raw', ai_assisted: true, url: 'https://refi.example', what_it_curates: 'v1 scope' };
+  const setup = (prefix) => {
+    const dir = mkdtempSync(join(tmpdir(), prefix));
+    initInstance({ dir, name: 'home', adapter });
+    const write = (name, obj) => { const p = join(dir, name); writeFileSync(p, yaml.dump(obj)); return p; };
+    const peerCards = () => { const cfg = loadConfig(dir); return getAdapter(cfg.adapter).list(join(dir, cfg.target)).filter((e) => e.schema === 'source-system' && e.object.title !== 'home'); };
+    return { dir, write, peerCards };
+  };
+
+  test(`[${adapter}] federate add of a changed card for a registered peer updates in place (no duplicate, same ref, removed fields gone)`, () => {
+    const { dir, write, peerCards } = setup('tf-fed-readd-');
+    const first = federateAdd({ dir, cardPath: write('v1.yaml', cardV1) });
+    const v2 = { ...cardV1, steward: 'ReFi DAO Stewards' }; delete v2.what_it_curates;
+    const second = federateAdd({ dir, cardPath: write('v2.yaml', v2) });
+    assert.equal(second.ref, first.ref, 'same ref: updated, not re-issued');
+    const cards = peerCards();
+    assert.equal(cards.length, 1, 'no hash-suffixed duplicate');
+    assert.deepEqual(cards[0].object, v2, 'stored card is the new one, not a merge');
+    assert.equal(loadConfig(dir).peers['refi-dao-commons'], first.ref);
+  });
+
+  test(`[${adapter}] federate add stays idempotent for an unchanged card`, () => {
+    const { dir, write, peerCards } = setup('tf-fed-idem-');
+    const p = write('v1.yaml', cardV1);
+    const first = federateAdd({ dir, cardPath: p });
+    assert.equal(federateAdd({ dir, cardPath: p }).ref, first.ref);
+    assert.equal(peerCards().length, 1);
+  });
+
+  // The narrowing that keeps B5 alive: only a slug that is a REGISTERED PEER updates
+  // in place. A same-slug card that arrived another way (ingest, hand-authored) is a
+  // different object and must never be overwritten by `federate add`.
+  test(`[${adapter}] federate add never overwrites a same-slug card that is not a registered peer (B5)`, () => {
+    const { dir, write, peerCards } = setup('tf-fed-b5-');
+    const cfg = loadConfig(dir);
+    getAdapter(cfg.adapter).store(join(dir, cfg.target), [{ schema: 'source-system', object: { title: 'ReFi DAO Commons', type: 'wiki', steward: 'Someone Else', return_path: 'their PRs' } }]);
+    federateAdd({ dir, cardPath: write('v1.yaml', cardV1) });
+    const cards = peerCards();
+    assert.equal(cards.length, 2, 'both survive');
+    assert.equal(cards.find((c) => c.object.steward === 'Someone Else').object.return_path, 'their PRs', 'the unrelated card is untouched');
+  });
+}

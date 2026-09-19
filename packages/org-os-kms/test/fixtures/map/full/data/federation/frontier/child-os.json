@@ -1,0 +1,8 @@
+{
+  "fetched_at": "2026-07-19T11:00:00Z",
+  "source": "local",
+  "peers": [
+    { "id": "grand-peer", "name": "Grandpeer", "repo": "example/grand-peer", "url": null, "type": "DAO" },
+    { "id": "sibling-os", "name": "Sibling", "repo": "example/sibling-os", "url": null, "type": "DAO" }
+  ]
+}

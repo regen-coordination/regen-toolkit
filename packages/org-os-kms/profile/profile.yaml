@@ -30,7 +30,7 @@ registry_bindings:            # framework schema -> org-os registry (must match 
 
 lifecycle_bindings:
   initialize: [config.load, index.rebuild, review.list, render.dashboard, render.site]
-  close: [csis-review, bridge, emit-contributions, federate.check, index.rebuild, render.site, render.dashboard, sync.push]
+  close: [csis-review, bridge, emit-contributions, federate.check, index.rebuild, render.site, render.dashboard, publish, sync.push]
 
 federation: RegenOS (upstream/downstream; knowledge-source + organizational; self-qualifying adoption)
 replaceable: true             # swap this host without touching the framework

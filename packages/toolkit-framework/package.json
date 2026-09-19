@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "validate": "node src/cli.mjs validate"
+    "validate": "node src/cli.mjs validate",
+    "gen:lexicons": "node scripts/gen-lexicons.mjs"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"

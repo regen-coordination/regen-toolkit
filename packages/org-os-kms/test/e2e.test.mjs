@@ -12,7 +12,7 @@ import { bridge } from '../src/registry-bridge.mjs';
 import { renderSiteData, renderDashboardSection } from '../src/render.mjs';
 import { runLifecycle } from '../src/executor.mjs';
 
-test('e2e: framework store → bridge → index → render, under the org-os lifecycle', () => {
+test('e2e: framework store → bridge → index → render, under the org-os lifecycle', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'kms-e2e-'));
   // target = '.' (the framework convention: the package resolves join(dir, target)), with dir =
   // the temp instance root so the whole run stays hermetic (tests don't chdir). The real repo
@@ -45,7 +45,7 @@ test('e2e: framework store → bridge → index → render, under the org-os lif
   assert.match(section, /2 objects/);
 
   // 4) Lifecycle initialize runs end-to-end against this instance (real ops, no throw).
-  const report = runLifecycle('initialize', { dir });
+  const report = await runLifecycle('initialize', { dir });
   assert.equal(report.errors.length, 0, JSON.stringify(report.errors));
   // Guard against a vacuous pass: the five exec ops must actually have RUN and all returned ok
   // (catches a fail-soft op silently returning {ok:false}), and the lifecycle's own render.site

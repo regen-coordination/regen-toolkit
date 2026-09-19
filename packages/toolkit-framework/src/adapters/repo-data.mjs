@@ -2,9 +2,9 @@
 // files under data/kb/. Deliberately does NOT touch an instance's existing
 // data/*.yaml (different shapes); @org-os/kms bridges the two.
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync, renameSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { join, dirname, resolve } from 'node:path';
 import yaml from 'js-yaml';
-import { slugify, deriveIndex, sameStoredObject } from '../util.mjs';
+import { slugify, deriveIndex, sameStoredObject, isOwnKey } from '../util.mjs';
 import { hashContent } from '../workorder.mjs';
 import { toJsonLdContext } from '../index.mjs';
 
@@ -20,7 +20,7 @@ function safeSchema(schema) {
   return schema;
 }
 
-function slugFor(object) {
+export function slugFor(object) {
   return slugify(object.title || object.id || '') || `untitled-${hashContent(yaml.dump(object)).slice(0, 8)}`;
 }
 
@@ -52,12 +52,21 @@ export const repoDataAdapter = {
     const stored = [];
     const collisions = [];
     const byFile = new Map();
-    for (const { schema, object } of entries) {
+    for (const { schema, object, replaces } of entries) {
       const p = fileFor(target, schema);
       if (!byFile.has(p)) byFile.set(p, loadFile(p));
       const reg = byFile.get(p).entries;
       const slug = slugFor(object);
       let key = slug;
+      // `replaces`: see kb-folder — honored only for an existing key in THIS schema's registry
+      // file that derives from the entry's slug; anything else falls through to the normal path.
+      const at = replaces ? replaces.lastIndexOf('#') : -1;
+      const rKey = at > 0 ? replaces.slice(at + 1) : null;
+      if (rKey !== null && resolve(replaces.slice(0, at)) === resolve(p) && reg[rKey] !== undefined && isOwnKey(rKey, slug)) {
+        reg[rKey] = object;
+        stored.push(replaces);
+        continue;
+      }
       if (reg[key] !== undefined && !sameStoredObject(reg[key], object)) {
         // Same title-slug, different object (B5): never clobber — give the
         // newcomer a hash-suffixed key and report the collision.

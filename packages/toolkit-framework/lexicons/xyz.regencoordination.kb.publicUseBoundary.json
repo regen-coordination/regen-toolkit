@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "xyz.regencoordination.kb.publicUseBoundary",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "any",
+      "record": {
+        "type": "object",
+        "required": [
+          "tier"
+        ],
+        "properties": {
+          "tier": {
+            "type": "string",
+            "knownValues": [
+              "public",
+              "public-with-caveat",
+              "restricted-working-notes",
+              "private-steward-memory",
+              "anonymized-lessons",
+              "composted-patterns",
+              "never-publish-without-consent",
+              "requires-domain-review"
+            ]
+          },
+          "consent_note": {
+            "type": "string"
+          },
+          "review_type": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

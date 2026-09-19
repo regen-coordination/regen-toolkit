@@ -1,0 +1,19 @@
+identity:
+  name: "full-os"
+  type: "Hub"
+  emoji: "🔦"
+peers:
+  - name: "Sibling"
+    id: "sibling-os"
+    repo: "example/sibling-os"
+    url: "https://github.com/example/sibling-os"
+    type: "DAO"
+    trust: "full"
+downstream:
+  - name: "Child"
+    id: "child-os"
+    repo: "example/child-os"
+    url: "https://github.com/example/child-os"
+    type: "LocalNode"
+    trust: "full"
+    local_path: "siblings/child-os"

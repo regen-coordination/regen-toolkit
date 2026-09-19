@@ -19,3 +19,7 @@ fields:
   review_needs: { type: string }
   last_reviewed: { type: string }
   notes: { type: string }
+  id: { type: string }                      # stable object id (UUIDv4); minted at first publish — CONTEXT.md "Object ID"
+  grc20Id: { type: string }                 # Geo entity id for the same concept; minted only when a Geo space is configured
+  sourceUri: { type: string }               # origin URI (AT-URI, or canonical https URL for static sources); immutable across republishes
+  viaUri: { type: string }                  # immediate peer AT-URI this copy was pulled from

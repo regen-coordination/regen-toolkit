@@ -24,6 +24,13 @@ export function sameStoredObject(a, b) {
   return hashContent(yaml.dump(a)) === hashContent(yaml.dump(b));
 }
 
+// A stored key belongs to `slug` when it IS the slug or the hash-suffixed variant an adapter
+// issues on a B5 collision (`<slug>-<8 hex>`). Gates `replaces` (see storage.mjs): a caller's
+// ref may only supersede an object whose key derives from the entry's own title.
+export function isOwnKey(key, slug) {
+  return key === slug || (key.startsWith(`${slug}-`) && /^[0-9a-f]{8}$/.test(key.slice(slug.length + 1)));
+}
+
 /**
  * Shared derived-index computation over an adapter's list() output.
  * Lives here (a leaf module) rather than storage.mjs so adapters can import it

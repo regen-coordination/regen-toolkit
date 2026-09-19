@@ -6,18 +6,12 @@
 // grouped by target file so each registry is read+written once (linear, clean diffs).
 // encyclopedia-entry is the markdown special case, written under a generated kb/ subdir so it
 // can never overwrite a hand-authored article.
-import { readFileSync, writeFileSync, existsSync, mkdirSync, renameSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
 import yaml from 'js-yaml';
 import * as fw from './framework.mjs';
 import { REGISTRY_BINDINGS } from './bind.mjs';
-
-function atomicWrite(absPath, text) {
-  mkdirSync(dirname(absPath), { recursive: true });
-  const tmp = absPath + '.tmp';
-  writeFileSync(tmp, text);
-  renameSync(tmp, absPath);
-}
+import { atomicWrite } from './atomic-write.mjs';
 
 // Upsert many objects into one registry file: read once, upsert each by id, write once.
 function upsertRegistryMany(absPath, stem, objects) {
@@ -29,9 +23,12 @@ function upsertRegistryMany(absPath, stem, objects) {
   if (!Array.isArray(doc[key])) doc[key] = [];
   const results = [];
   for (const obj of objects) {
-    const id = obj.id || fw.slugify(obj.title || '');
+    const slug = fw.slugify(obj.title || '');
+    const id = obj.id || slug;
     const row = { id, ...obj };
-    const i = doc[key].findIndex((e) => e.id === id);
+    // Match by the current id OR the title slug: a row bridged before the object was minted an id is
+    // keyed by the slug, and must migrate slug -> id in place rather than be duplicated.
+    const i = doc[key].findIndex((e) => e.id === id || e.id === slug);
     if (i >= 0) doc[key][i] = { ...doc[key][i], ...row };
     else doc[key].push(row);
     results.push({ registry: absPath, key, id, action: i >= 0 ? 'update' : 'insert' });
@@ -47,18 +44,30 @@ function writeMarkdownDoc(absPath, obj) {
   return { doc: absPath };
 }
 
+// Markdown pages are the public site (frontmatter carries the object's fields). Never write one for an
+// object the publication floor would refuse for these reasons: still `not-public-yet` (e.g. freshly pulled
+// from a peer), `internal-only`, or `held` (retracted at origin / withheld). No declared public_use keeps the
+// old behavior. Registry rows are internal state and are not gated. Existing pages are never deleted.
+function withholdReason(obj) {
+  if (obj.public_use === 'not-public-yet' || obj.public_use === 'internal-only') return obj.public_use;
+  if (obj.maturity === 'held') return 'held';
+  return null;
+}
+
 export function bridge(ctx) {
   const { dir, config } = ctx;
   const items = fw.getAdapter(config.adapter).list(join(dir, config.target));
-  const report = { bridged: [], docs: [], skipped: [], errors: [] };
+  const report = { bridged: [], docs: [], withheld: [], skipped: [], errors: [] };
   const byRegistry = new Map(); // registryPath -> [objects]
 
   for (const { schema, object } of items) {
     const registry = REGISTRY_BINDINGS[schema];
     if (!registry) { if (!report.skipped.includes(schema)) report.skipped.push(schema); continue; }
     if (registry.endsWith('/')) {
+      const reason = withholdReason(object);
+      if (reason) { report.withheld.push({ schema, title: object.title, reason }); continue; }
       try {
-        const slug = object.id || fw.slugify(object.title || 'untitled');
+        const slug = fw.slugify(object.title || 'untitled');
         report.docs.push(writeMarkdownDoc(join(dir, registry, `${slug}.md`), object).doc);
       } catch (e) { report.errors.push(`${schema}: ${e.message}`); }
       continue;

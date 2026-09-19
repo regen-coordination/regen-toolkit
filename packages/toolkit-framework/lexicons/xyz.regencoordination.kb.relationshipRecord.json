@@ -1,0 +1,143 @@
+{
+  "lexicon": 1,
+  "id": "xyz.regencoordination.kb.relationshipRecord",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "any",
+      "record": {
+        "type": "object",
+        "required": [
+          "title",
+          "type",
+          "subject",
+          "predicate",
+          "object"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "maturity": {
+            "type": "string",
+            "knownValues": [
+              "raw",
+              "held",
+              "draft",
+              "candidate",
+              "source-linked",
+              "reviewed",
+              "field-informed",
+              "pattern-generating",
+              "deprecated",
+              "archived"
+            ]
+          },
+          "public_use": {
+            "type": "string",
+            "knownValues": [
+              "internal-only",
+              "raw-lead",
+              "ok-with-caveat",
+              "source-linked-unreviewed",
+              "reviewed-for-explanation",
+              "reviewed-for-guidance",
+              "requires-community-consent",
+              "requires-domain-review",
+              "not-public-yet",
+              "deprecated"
+            ]
+          },
+          "lifecycle_state": {
+            "type": "string",
+            "knownValues": [
+              "raw-lead",
+              "routed",
+              "extracted",
+              "source-linked",
+              "ai-synthesis",
+              "human-reviewed",
+              "field-informed",
+              "public-candidate",
+              "mature",
+              "compost"
+            ]
+          },
+          "ai_assisted": {
+            "type": "boolean"
+          },
+          "high_risk": {
+            "type": "boolean"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "function": {
+            "type": "string"
+          },
+          "source_lineage": {
+            "type": "string"
+          },
+          "steward": {
+            "type": "string"
+          },
+          "review_needs": {
+            "type": "string"
+          },
+          "last_reviewed": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "grc20Id": {
+            "type": "string"
+          },
+          "sourceUri": {
+            "type": "string"
+          },
+          "viaUri": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "predicate": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string",
+            "knownValues": [
+              "high",
+              "medium",
+              "low",
+              "unverified"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "knownValues": [
+              "directed",
+              "bidirectional"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+name: full-os
+adapter: repo-data
+target: "."
+peers:
+  knowledge-peer: "data/kb/cards/knowledge-peer.yaml"

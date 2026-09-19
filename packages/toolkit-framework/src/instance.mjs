@@ -125,16 +125,20 @@ export function federateAdd({ dir, cardPath }) {
   const { valid, errors } = validateObject('source-system', card);
   if (!valid) throw new Error(`peer card invalid:\n  - ${errors.join('\n  - ')}`);
   const slug = slugify(card.title);
-  // Adapters are idempotent by slug(title): a peer card slugging to the
-  // instance's own name would silently OVERWRITE the self card — external
-  // content replacing our steward/return_path through the primary federation
-  // verb (a return-path hijack). A peer can never be us; refuse before any write.
+  // A peer card slugging to the instance's own name must never reach the adapter:
+  // it would be a same-slug object next to the self card, and a peer that can pass
+  // for us is a return-path hijack (external content standing in for our
+  // steward/return_path). A peer can never be us; refuse before any write.
   if (slug === slugify(cfg.instance)) {
     throw new Error(`peer card collides with this instance's own identity ("${card.title}") — a peer cannot replace the self card`);
   }
   const a = getAdapter(cfg.adapter);
   const targetDir = join(dir, cfg.target);
-  const { stored } = a.store(targetDir, [{ schema: 'source-system', object: card }]);
+  // Re-adding a REGISTERED peer updates its card in place: peer cards carry no id, so
+  // without the hint a changed card reads as a different object (B5) and leaves a
+  // hash-suffixed duplicate. Only a slug we registered gets the hint — a same-slug card
+  // that arrived any other way stays a distinct object and is never overwritten here.
+  const { stored } = a.store(targetDir, [{ schema: 'source-system', object: card, replaces: (cfg.peers || {})[slug] }]);
   a.writeIndex(targetDir);
   const peers = { ...(cfg.peers || {}), [slug]: stored[0] };
   writeFileSync(join(dir, 'kms.yaml'), yaml.dump({ ...cfg, peers }));

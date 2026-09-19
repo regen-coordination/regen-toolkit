@@ -1,0 +1,56 @@
+[
+ {
+  "id": "sovereign-identity",
+  "name": "Sovereign identity",
+  "name_es": "Identidad soberana",
+  "name_pt-BR": "Identidade soberana",
+  "description": "Self-custodied credentials no central party can revoke",
+  "description_es": "Credenciales autocustodiadas que ninguna parte central puede revocar",
+  "description_pt-BR": "Credenciais autocustodiadas que nenhuma parte central pode revogar",
+  "whatItEnables": "Your identity exists independently of any platform or institution. Credentials — who you are, what roles you hold, what communities you belong to — are stored under your control and cannot be deactivated, shadow-banned, or revoked by a third party. The credential lives with you, not with the service that issued it.",
+  "whatItEnables_es": "Su identidad existe de forma independiente a cualquier plataforma o institución. Las credenciales — quién es usted, qué roles ocupa, a qué comunidades pertenece — se almacenan bajo su control y no pueden ser desactivadas, silenciadas ni revocadas por un tercero. La credencial permanece con usted, no con el servicio que la emitió.",
+  "whatItEnables_pt-BR": "Sua identidade existe de forma independente de qualquer plataforma ou instituição. As credenciais — quem você é, quais papéis você ocupa, a quais comunidades você pertence — ficam armazenadas sob seu controle e não podem ser desativadas, silenciadas ou revogadas por terceiros. A credencial permanece com você, não com o serviço que a emitiu.",
+  "whyItMatters": "Platform dependency is an existential risk for communities. When a platform bans an organizer or shuts down, their identity, relationships, and reputation disappear with it. Sovereign identity means a community's record of who its members are persists regardless of any vendor's decision.",
+  "whyItMatters_es": "La dependencia de una plataforma es un riesgo existencial para las comunidades. Cuando una plataforma bloquea a un organizador o cierra, su identidad, relaciones y reputación desaparecen con ella. La identidad soberana significa que el registro de quiénes son los miembros de una comunidad persiste sin importar la decisión de ningún proveedor.",
+  "whyItMatters_pt-BR": "A dependência de plataforma é um risco existencial para as comunidades. Quando uma plataforma bane um organizador ou encerra suas atividades, a identidade, os relacionamentos e a reputação dessa pessoa desaparecem junto. Identidade soberana significa que o registro de quem são os membros de uma comunidade persiste independentemente da decisão de qualquer fornecedor.",
+  "domainIds": [
+   "identity-trust"
+  ]
+ },
+ {
+  "id": "portable-attestations",
+  "name": "Portable attestations",
+  "name_es": "Atestaciones portátiles",
+  "name_pt-BR": "Atestações portáteis",
+  "description": "Vouches and verifications that travel across platforms",
+  "description_es": "Avales y verificaciones que viajan entre plataformas",
+  "description_pt-BR": "Avais e verificações que viajam entre plataformas",
+  "whatItEnables": "Claims about you — verified by others — travel when you move platforms. A credential from your community org attesting to your role, a reputation score earned on one network, or a badge from a training program can be presented and verified anywhere, without contacting the original issuer.",
+  "whatItEnables_es": "Las afirmaciones sobre usted — verificadas por otros — viajan cuando cambia de plataforma. Una credencial de su organización comunitaria que certifica su rol, una puntuación de reputación obtenida en una red, o una insignia de un programa de capacitación pueden presentarse y verificarse en cualquier lugar, sin contactar al emisor original.",
+  "whatItEnables_pt-BR": "Afirmações sobre você — verificadas por outros — viajam quando você muda de plataforma. Uma credencial da sua organização comunitária que atesta seu papel, uma pontuação de reputação obtida em uma rede, ou um selo de um programa de formação podem ser apresentados e verificados em qualquer lugar, sem contatar o emissor original.",
+  "whyItMatters": "Reputation is one of the most valuable community assets, but today it is trapped inside silos. When someone moves from one platform to another, they start from zero. Portable attestations let trust travel with people rather than residing in the database of whichever platform they happen to be using.",
+  "whyItMatters_es": "La reputación es uno de los activos comunitarios más valiosos, pero hoy está atrapada dentro de silos. Cuando alguien se muda de una plataforma a otra, empieza desde cero. Las atestaciones portátiles permiten que la confianza viaje con las personas, en lugar de residir en la base de datos de la plataforma que estén usando en ese momento.",
+  "whyItMatters_pt-BR": "A reputação é um dos ativos comunitários mais valiosos, mas hoje está presa dentro de silos. Quando alguém migra de uma plataforma para outra, começa do zero. As atestações portáteis permitem que a confiança viaje com as pessoas, em vez de residir no banco de dados da plataforma que elas estejam usando no momento.",
+  "domainIds": [
+   "identity-trust"
+  ]
+ },
+ {
+  "id": "contextual-disclosure",
+  "name": "Contextual disclosure",
+  "name_es": "Divulgación contextual",
+  "name_pt-BR": "Divulgação contextual",
+  "description": "Share different facets of identity in different contexts without correlation",
+  "description_es": "Comparta distintas facetas de su identidad en distintos contextos sin correlación",
+  "description_pt-BR": "Compartilhe diferentes facetas da identidade em diferentes contextos sem correlação",
+  "whatItEnables": "You can prove specific things about yourself — you are over 18, you are a resident of this city, you have completed this training — without revealing your full identity, and without those separate disclosures being cross-linked to each other or to your real name.",
+  "whatItEnables_es": "Puede demostrar cosas específicas sobre usted mismo — que es mayor de 18 años, que reside en esta ciudad, que completó esta capacitación — sin revelar su identidad completa, y sin que esas divulgaciones separadas queden vinculadas entre sí ni con su nombre real.",
+  "whatItEnables_pt-BR": "Você pode provar coisas específicas sobre si mesmo — que é maior de 18 anos, que reside nesta cidade, que concluiu este treinamento — sem revelar sua identidade completa, e sem que essas divulgações separadas sejam vinculadas entre si ou ao seu nome real.",
+  "whyItMatters": "Privacy and accountability are not opposites. Contextual disclosure lets communities build consent and accountability without requiring members to sacrifice anonymity in contexts where anonymity protects them — such as health support groups, survivor networks, or whistleblower channels.",
+  "whyItMatters_es": "La privacidad y la rendición de cuentas no son opuestas. La divulgación contextual permite a las comunidades construir consentimiento y rendición de cuentas sin exigir a sus miembros sacrificar el anonimato en contextos donde el anonimato los protege — como grupos de apoyo en salud, redes de sobrevivientes o canales para denunciantes.",
+  "whyItMatters_pt-BR": "Privacidade e responsabilização não são opostos. A divulgação contextual permite que as comunidades construam consentimento e responsabilização sem exigir que os membros sacrifiquem o anonimato em contextos nos quais o anonimato os protege — como grupos de apoio em saúde, redes de sobreviventes ou canais de denúncia.",
+  "domainIds": [
+   "identity-trust"
+  ]
+ }
+]
