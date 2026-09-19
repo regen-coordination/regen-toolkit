@@ -12,6 +12,15 @@ _A living checklist of active coordination tasks. Agents consult this on every s
 
 > **2026-06-16 checkpoint.** Gap-fill (260521 + 260604 biweeklies) processed; **new master doc 2026-06-15 working iteration** is canonical (30,847 lines — integration pass, 10-layer core stable; see [`docs/MASTER-DOC-CHANGES-2026-06-15.md`](docs/MASTER-DOC-CHANGES-2026-06-15.md)); **resource DB V3** staged at [`data/resources/`](data/resources/). **Convergence is parked behind an operator checkpoint** (site merge, branch cleanup, framework/instance split, full resource lift) — see ⏸ section below.
 
+### 2026-09-18 org-os-kms AT Proto plane — built, merged and pushed; close-out waits on the operator _(★ NEW 2026-09-18)_
+
+- [x] **Built, reviewed, fix-passed, merged, pushed (org-os).** All 17 plan tasks + the close-out fix pass (held un-publishes, no-op upserts skipped, `bridge` withholds unpublished pages, peer DIDs opt-in, cursors in `data/kms-cursors.json`, federate-add in place). org-os `main` = `c41900b`, tag `kms-atproto-v0.1-rc2` (both pushed). regen-toolkit vendors it unedited and pinned (`packages/org-os-kms/VENDORED.md`) and stays **pull-only by config**. Handoff: [`docs/plans/2026-09-18-org-os-kms-atproto-plane-closeout-handoff.md`](docs/plans/2026-09-18-org-os-kms-atproto-plane-closeout-handoff.md) · log: `memory/2026-09-18.md`.
+- [ ] **Luiz — live-PDS end-to-end test → final tag `kms-atproto-v0.1`.** Needs a dev PDS account you own (`ATPROTO_E2E_PDS` / `_HANDLE` / `_PASSWORD` (an *app* password, via env only, never a file) / `_DID`). Then re-vendor, update `VENDORED.md`, and update the pilot plan's P4 row in refi-dao-os (draft-and-present).
+- [ ] **Publishing from regen-toolkit stays OFF until all three gates hold:** (i) the refi-dao-commons pilot's Phase 2 exit criteria; (ii) `task-260716-luiz-name-flagging-privacy-gate` closes; (iii) someone reviews the ~138 objects a `--dry` publish selects (`public_use: source-linked-unreviewed` is a script default, not a decision).
+- [ ] **Luiz — compare/move org-os's untracked `memory/reports/instances-drift-2026-09-13.md`** (now a tracked file on `main`; it blocks checking `main` out in that tree). Never deleted by an agent.
+- [ ] **Cleanup after the e2e:** delete the two git-ignored `.superpowers/sdd/2026-09-18-org-os-kms-atproto-publication-plane-implementation/` workspaces (regen-toolkit + org-os) once anything worth keeping from `progress.md` (the ruling/deferred-Minors index, D6) is copied to docs/memory.
+- [ ] **Refresh at next weave/ratification:** the stale `100/100` / `22 schemas` in the ratified `docs/POSITIONING.md` and the generated `docs/QUILT.md`.
+
 ### Repo hygiene — deferred by decision _(★ NEW 2026-09-10)_
 
 Two operational items surfaced at close-out on 2026-09-10 and **deliberately held** — recorded so they

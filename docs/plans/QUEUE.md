@@ -1,7 +1,9 @@
 # Plan Queue — Toolkit (instance plans)
 
-> Last updated: 2026-07-19 (plan-surface validation vs the 07-16 biweekly + 07-19 session)
-> Prior: 2026-07-14
+> Last updated: 2026-09-18 (AT Proto publication plane built + merged in org-os; regen-toolkit vendors it pull-only)
+> Prior: 2026-07-19
+>
+> **2026-09-18 — AT Proto publication plane.** [`2026-09-18-org-os-kms-atproto-publication-plane-implementation.md`](2026-09-18-org-os-kms-atproto-publication-plane-implementation.md) (design: [`…-design.md`](2026-09-18-org-os-kms-atproto-publication-plane-design.md)): all 17 tasks built, reviewed and fix-passed; org-os `main` `c41900b` + tag `kms-atproto-v0.1-rc2` pushed; regen-toolkit vendors it unedited and stays pull-only. **Open:** the live-PDS e2e → `kms-atproto-v0.1` (needs operator credentials) and the three publish gates. See [`2026-09-18-org-os-kms-atproto-plane-closeout-handoff.md`](2026-09-18-org-os-kms-atproto-plane-closeout-handoff.md) and HEARTBEAT.
 >
 > **2026-07-19 — plan surface reconciled.** `framework-validation-pass` **complete** (V0–V4: 722
 > objects, 125 tests, artifacts live). `handoff-integration` T1/T2/T3a/T5/T4-core done → **T3b** is its
