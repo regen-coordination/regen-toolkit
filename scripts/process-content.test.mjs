@@ -202,14 +202,14 @@ test('journeyToTrack: required fields present — title, type=track, non-empty a
   assert.ok(t.audience.length > 0, 'audience must be a non-empty string');
 });
 
-test('journeyToTrack: outcome[] array is collapsed to a single string', () => {
-  const t = journeyToTrack(journeys.newcomer);
-  assert.equal(typeof t.outcome, 'string');
-  assert.ok(t.outcome.length > 0);
-  // each of the journey's outcome bullets must survive into the joined string.
-  for (const bullet of journeys.newcomer.outcome) {
-    assert.ok(t.outcome.includes(bullet), `outcome string missing bullet: ${bullet}`);
-  }
+test('journeyToTrack: outcome stays an array — one entry per bullet, in order, bullets never re-split or merged', () => {
+  const t = journeyToTrack({ ...journeys.newcomer, outcome: ['Set up a wallet; avoid scams', 'Take a first step', 3] });
+  assert.deepEqual(t.outcome, ['Set up a wallet; avoid scams', 'Take a first step', '3']);
+});
+
+test('journeyToTrack: a journey with no outcome yields an empty outcome array (schema type: array)', () => {
+  const { outcome, ...noOutcome } = journeys.newcomer;
+  assert.deepEqual(journeyToTrack(noOutcome).outcome, []);
 });
 
 test('journeyToTrack: concepts = flattened, ordered step slugs across all chapters', () => {

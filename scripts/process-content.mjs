@@ -301,8 +301,8 @@ function journeyStepSlugs(journey) {
  * (per Task 1, docs/reports/2026-06-17-content-through-framework-report.md).
  *
  * Honest-state: maturity = `field-informed` (Heenal's curated v1 journeys), NOT `reviewed`;
- * `options` left empty (journeys carry no option ids — not fabricated); `outcome[]` collapsed
- * to a single string (schema's `outcome` is a string, journey's is an array).
+ * `options` left empty (journeys carry no option ids — not fabricated); `outcome[]` carried over
+ * as an array of strings (schema's `outcome` is an array, like the journey's).
  */
 export function journeyToTrack(journey) {
   const track = {
@@ -310,7 +310,7 @@ export function journeyToTrack(journey) {
     title: journey.label,
     type: 'track',
     audience: String(journey.kicker || '').trim(),
-    outcome: (journey.outcome || []).map(String).join('; '),
+    outcome: (journey.outcome || []).map(String),
     concepts: journeyStepSlugs(journey),
     options: [], // journeys don't carry option ids — do not fabricate.
     maturity: TRACK_MATURITY,
