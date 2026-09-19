@@ -5,6 +5,17 @@
 # Usage: scripts/publish-framework.sh [remote-url]
 set -euo pipefail
 
+# GUARDED (2026-09): packages/toolkit-framework here is now an unedited, pinned COPY vendored from org-os
+# (see packages/org-os-kms/VENDORED.md); org-os is the canonical home. Publishing this copy would push the AT Proto
+# plane files and the org-os port to the PUBLIC repo below, with `rsync --delete` and a push. Do not run this
+# by accident. Whether the public repo keeps a role is an operator decision; until then it refuses.
+if [ "${PUBLISH_FRAMEWORK_OVERRIDE:-}" != "publish-the-vendored-copy" ]; then
+  echo "publish-framework.sh is disabled: packages/toolkit-framework is a vendored copy of org-os (canonical home)." >&2
+  echo "Change org-os, tag, re-vendor. To publish this copy anyway, set PUBLISH_FRAMEWORK_OVERRIDE=publish-the-vendored-copy" >&2
+  echo "(it rsyncs with --delete and PUSHES to a public repo; run it only with the operator present)." >&2
+  exit 2
+fi
+
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PKG="$REPO_ROOT/packages/toolkit-framework"
 REMOTE="${1:-https://github.com/luizfernandosg/toolkit-framework.git}"
