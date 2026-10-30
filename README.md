@@ -1,7 +1,5 @@
 # Regen Toolkit
 
-> Reference implementation lineage — `regen-toolkit-os` branch. This branch preserves the July handoff integration, toolkit-framework, raw kb-handoff migration records, and later Org OS/KMS experiments. It is not the public Toolkit's current main branch or a single approved Commons architecture. Dated commands, counts and links below may describe earlier checkpoints. See the [public Toolkit README](https://github.com/regen-coordination/regen-toolkit/blob/main/README.md) and [Commons project map](https://github.com/regen-coordination/knowledge-commons/blob/main/docs/MAP.md).
-
 Practical web3 knowledge for regenerative communities.
 
 **Live site:** [regen-toolkit-site.vercel.app](https://regen-toolkit-site.vercel.app)
@@ -65,13 +63,12 @@ scripts/                   # Both site pipeline scripts and org-os scripts
 .claude/                   # Claude Code commands (/initialize, /close)
 ```
 
-**Cloning:** this integration and research branch is `regen-toolkit-os`. External skills are submodules:
+**Cloning:** the org-os overlay lives on the `feature/org-os-overlay` branch (operating directly from the branch rather than via a merged PR). External skills are git submodules, so clone with `--recurse-submodules`:
 
 ```bash
-git clone --recurse-submodules -b regen-toolkit-os https://github.com/regen-coordination/regen-toolkit.git
-# Or, if already cloned:
-git fetch origin
-git checkout regen-toolkit-os
+git clone --recurse-submodules -b feature/org-os-overlay https://github.com/regen-coordination/regen-toolkit.git
+# or, if already cloned:
+git checkout feature/org-os-overlay
 git submodule update --init --recursive
 ```
 
