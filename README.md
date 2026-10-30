@@ -14,12 +14,6 @@ The Regen Toolkit is a curated, open-source knowledge base that helps regenerati
 - Local chapter builders setting up web3 coordination
 - DAO operators and governance researchers
 
-## Relationship to the Knowledge Commons and Garden
-
-Regen Toolkit is a separate public educational and practical knowledge product. Its articles and learning paths may inform the wider Regen Knowledge Garden without making Toolkit a subproject or automatically promoting its content into reviewed knowledge.
-
-Shared methods and Geo tooling are documented in [Knowledge Commons](https://github.com/regen-coordination/knowledge-commons). The [project map](https://github.com/regen-coordination/knowledge-commons/blob/main/docs/MAP.md) explains the relationships.
-
 ## Current State
 
 - **67 published articles** across foundations, applied topics, and playbooks
